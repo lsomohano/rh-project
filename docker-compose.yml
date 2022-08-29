@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  db:
+    image: mysql:5.7
+    expose: 
+        - 3306
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=rhdb_dev
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=some_password
+      - MYSQL_ROOT_PASSWORD=some_password
+    volumes:
+      - ./data/db:/var/lib/mysql
+      - ./data/log:/var/log/mysql
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/code
+    environment:
+      - MYSQL_NAME=rhdb_dev
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=some_password
+    depends_on:
+      - db
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    links: 
+      - db:db
+    ports:
+      - 8001:80
+    environment:
+      - MYSQL_USER=test
+      - MYSQL_PASSWORD=some_password
+      - MYSQL_ROOT_PASSWORD=some_password
+    networks:
+      - default
