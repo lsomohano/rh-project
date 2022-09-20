@@ -125,7 +125,6 @@ class canales_reclutamiento(Enum):
 class PuestosOperativos(models.Model):
     puesto_operativo = models.CharField(max_length=60)
     puestos_nominas = models.ForeignKey(PuestosNominas, on_delete=models.CASCADE)
-    #locaciones = models.ManyToManyField(Locaciones)
     canal_reclutamiento = models.CharField(max_length=7, choices=[(tag.name, tag.value) for tag in canales_reclutamiento])
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -145,7 +144,7 @@ class LocacionesPuestos(models.Model):
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
     puestos_operativos = models.ForeignKey(PuestosOperativos, on_delete=models.CASCADE)
     staf_requerido = models.IntegerField(null=True, blank=True, default=0)
-    staf_requerido = models.IntegerField(null=True, blank=True, default=0)
+    staf_contratado = models.IntegerField(null=True, blank=True, default=0)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
@@ -157,4 +156,4 @@ class LocacionesPuestos(models.Model):
         ordering = ["-locaciones"]
 
     def __str__(self):
-        return self.locaciones
+        return self.activo

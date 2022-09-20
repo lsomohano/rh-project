@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Entidades, Ciudades, Locaciones, Contactos, PuestosNominas, PuestosOperativos
+from .models import Entidades, Ciudades, Locaciones, Contactos, PuestosNominas, PuestosOperativos, LocacionesPuestos
 # Register your models here.
 
 class EntidadesAdmin(admin.ModelAdmin):
@@ -17,9 +17,12 @@ class ContactosInline(admin.StackedInline):
     readonly_fields = ('created','updated')
     #list_display = ('contacto','telefono','email','created')
 
+class LocacionesPuestosInline(admin.StackedInline):
+    model = LocacionesPuestos
+    list_display = ('locaciones','puestos_operativos','created')
 
 class LocacionesAdmin(admin.ModelAdmin):
-    inlines = [ContactosInline]
+    inlines = [ContactosInline,LocacionesPuestosInline]
     readonly_fields = ('created','updated','created')
     list_display = ('locacion','locacion_name','ciudades','zona_ciudad','codigo_postal','created')
 
@@ -31,7 +34,6 @@ class PuestosOperativosInline(admin.StackedInline):
 class PuestosNominasAdmin(admin.ModelAdmin):
     inlines = [PuestosOperativosInline]
     list_display = ('puesto_nomina','created')
-
 
 admin.site.register(Entidades, EntidadesAdmin)
 admin.site.register(Ciudades, CiudadesAdmin)
