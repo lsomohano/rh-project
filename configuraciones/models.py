@@ -7,14 +7,16 @@ class paises(Enum):
     mx = "México"
     us = "Estados Unidos"
 
+
 class activo(Enum):
     si = "Y"
     no = "N"
 
+
 class Entidades(models.Model):
     entidad = models.CharField(max_length=70)
     pais = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in paises])
-    activo = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in activo])
+    activo = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -26,6 +28,7 @@ class Entidades(models.Model):
 
     def __str__(self):
         return self.entidad
+
 
 class Ciudades(models.Model):
     ciudad = models.CharField(max_length=50)
@@ -76,6 +79,7 @@ class Locaciones(models.Model):
     def __str__(self):
         return self.locacion
 
+
 class Contactos(models.Model):
     contacto = models.CharField(max_length=100)
     telefono = models.CharField(max_length=10)
@@ -97,3 +101,60 @@ class Contactos(models.Model):
     def __str__(self):
         return self.contacto
 
+
+class PuestosNominas(models.Model):
+    puesto_nomina = models.CharField(max_length=60)
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        db_table =  "puestos_nominas"
+        verbose_name='puesto'
+        verbose_name_plural='puestos'  
+        ordering = ["-puesto_nomina"]
+
+    def __str__(self):
+        return self.puesto_nomina
+
+
+class canales_reclutamiento(Enum):
+    externo = "Externo"
+    interno = "Interno"
+
+class PuestosOperativos(models.Model):
+    puesto_operativo = models.CharField(max_length=60)
+    puestos_nominas = models.ForeignKey(PuestosNominas, on_delete=models.CASCADE)
+    #locaciones = models.ManyToManyField(Locaciones)
+    canal_reclutamiento = models.CharField(max_length=7, choices=[(tag.name, tag.value) for tag in canales_reclutamiento])
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        db_table =  "puestos_operativos"
+        verbose_name='puesto operativo'
+        verbose_name_plural='puestos operativos'  
+        ordering = ["-puesto_operativo"]
+
+    def __str__(self):
+        return self.puesto_operativo
+
+
+class LocacionesPuestos(models.Model):
+    locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
+    puestos_operativos = models.ForeignKey(PuestosOperativos, on_delete=models.CASCADE)
+    staf_requerido = models.IntegerField(null=True, blank=True, default=0)
+    staf_requerido = models.IntegerField(null=True, blank=True, default=0)
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    class Meta:
+        db_table =  "locaciones_puestos"
+        verbose_name='locacione puesto'
+        verbose_name_plural='locaciones puestos'  
+        ordering = ["-locaciones"]
+
+    def __str__(self):
+        return self.locaciones
