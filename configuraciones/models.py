@@ -15,7 +15,7 @@ class activo(Enum):
 
 class Entidades(models.Model):
     entidad = models.CharField(max_length=70)
-    pais = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in paises])
+    pais = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in paises], default='mx')
     activo = models.CharField(max_length=20, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -33,7 +33,7 @@ class Entidades(models.Model):
 class Ciudades(models.Model):
     ciudad = models.CharField(max_length=50)
     entidades = models.ForeignKey(Entidades, on_delete=models.CASCADE, verbose_name='Entidad')
-    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -65,8 +65,8 @@ class Locaciones(models.Model):
     horario_cierre = models.TimeField()
     dias_operativos = models.CharField(max_length=21)
     ciudades = models.ForeignKey(Ciudades, on_delete=models.CASCADE, verbose_name='Ciudad')
-    zona_ciudad = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in zonas_ciudades], verbose_name='Zona')
-    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    zona_ciudad = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in zonas_ciudades], verbose_name='Zona',default='apto')
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     
@@ -88,7 +88,7 @@ class Contactos(models.Model):
     horario_termino = models.TimeField()
     dias_atencion = models.CharField(max_length=21)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
-    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     
@@ -104,7 +104,7 @@ class Contactos(models.Model):
 
 class PuestosNominas(models.Model):
     puesto_nomina = models.CharField(max_length=60)
-    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
@@ -125,8 +125,8 @@ class canales_reclutamiento(Enum):
 class PuestosOperativos(models.Model):
     puesto_operativo = models.CharField(max_length=60)
     puestos_nominas = models.ForeignKey(PuestosNominas, on_delete=models.CASCADE)
-    canal_reclutamiento = models.CharField(max_length=7, choices=[(tag.name, tag.value) for tag in canales_reclutamiento])
-    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    canal_reclutamiento = models.CharField(max_length=7, choices=[(tag.name, tag.value) for tag in canales_reclutamiento], default='externo')
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
@@ -145,7 +145,7 @@ class LocacionesPuestos(models.Model):
     puestos_operativos = models.ForeignKey(PuestosOperativos, on_delete=models.CASCADE)
     staf_requerido = models.IntegerField(null=True, blank=True, default=0)
     staf_contratado = models.IntegerField(null=True, blank=True, default=0)
-    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo])
+    activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='si')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 

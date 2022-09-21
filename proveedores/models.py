@@ -1,5 +1,6 @@
 from django.db import models
 from enum import Enum
+from configuraciones.admin import Locaciones
 
 # Create your models here.
 
@@ -37,7 +38,7 @@ class ContactosProveedores(models.Model):
     telefono = models.CharField(max_length=10, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     tipo_contacto = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in tipos_contactos], default='A')
-    proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedros')
+    proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedores')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -50,3 +51,19 @@ class ContactosProveedores(models.Model):
 
     def __str__(self):
         return self.contacto_nombre
+
+class LocacionesProveedores(models.Model):
+    locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE, verbose_name='Locaciones')
+    proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedores')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table =  "locaciones_proveedores"
+        verbose_name = 'locacion proveedor'
+        verbose_name_plural = 'locaciones proveedores'
+        ordering = ["-locaciones"]
+
+    def __str__(self):
+        return self.activo
