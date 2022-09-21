@@ -129,5 +129,6 @@ dmypy.json
 .pyre/
 
 #Carpeta de base de datos
-data/
+/data/
 media/
+db/
