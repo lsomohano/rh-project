@@ -3,5 +3,5 @@ from proveedores import views
 
 urlpatterns = [
     path('',views.proveedores, name="Proveedores"),
-    path('create/',views.create, name="Create"),
+    path('create/',views.createView, name="Create"),
 ]
