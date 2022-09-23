@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Proveedores, ContactosProveedores
 from .forms import ProveedoresCreation
 
@@ -25,13 +24,21 @@ def createView(request):
     return render(request,"proveedores/create.html",{"titles":titles, "formulario":formulario})
 
 def editView(request, id):
-    titles = {"title_page":'Proveedores',"sub_title_page":'Editar proveedor.'}
+    titles = {"title_page":'Proveedores',"sub_title_page":'Editar información del proveedor.'}
     proveedor = Proveedores.objects.get(id=id)
-    formulario = ProveedoresCreation(request.POST or None, instance=proveedor)
     if request.method == "POST":
-        #formulario = ProveedoresCreation(request.POST or None)
+        formulario = ProveedoresCreation(request.POST or None, instance=proveedor)
         if formulario.is_valid():
             formulario.save()
             return redirect('Proveedores')
+    else:
+        formulario = ProveedoresCreation(instance=proveedor)
+
+    return render(request,"proveedores/edit.html",{"titles":titles, "formulario":formulario})
+
+def detailsView(request, id):
     
-    return render(request,"proveedores/create.html",{"titles":titles, "formulario":formulario})
+    titles = {"title_page":'Proveedores',"sub_title_page":'Información del proveedor.'}
+    proveedor = Proveedores.objects.get(id=id)
+
+    return render(request,"proveedores/details.html",{"titles":titles, "proveedor":proveedor})
