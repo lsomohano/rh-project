@@ -40,10 +40,9 @@
             <!-- /.col -->
             <div class="col-sm-4 invoice-col">
               <b>Estatus:  {{proveedor.activo}} </b><br>
-              <br>
-              <b>Order ID:</b> 4F3S8J<br>
-              <b>Payment Due:</b> 2/22/2014<br>
-              <b>Account:</b> 968-34567
+              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' proveedor.id %}', 'myModal')" >
+                <i class="fas fa-pencil-square"></i> Editar
+              </button>
             </div>
             <!-- /.col -->
           </div>
@@ -97,9 +96,34 @@
             <!-- /.col -->
           </div>
           <!-- /.row -->
+
+          <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg" id="myModal">
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+
         </div>
         <!-- /.invoice -->
       </div><!-- /.col -->
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->
+  <script>
+    /*
+    * 
+    *Carga una pagina en un div
+    *
+    */
+    function cargaModal(metodo, div){
+      $.ajax({
+          type: "GET",
+          url: metodo,
+          success: function(html){
+              $("#"+div).html(html);
+          }
+      });
+    };
+  </script>
 {% endblock content %}
