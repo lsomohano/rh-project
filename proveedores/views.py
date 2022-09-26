@@ -23,6 +23,7 @@ def createView(request):
        
     return render(request,"proveedores/create.html",{"titles":titles, "formulario":formulario})
 
+
 def editView(request, id):
     titles = {"title_page":'Proveedores',"sub_title_page":'Editar información del proveedor.'}
     proveedor = Proveedores.objects.get(id=id)
@@ -34,7 +35,8 @@ def editView(request, id):
     else:
         formulario = ProveedoresCreation(instance=proveedor)
 
-    return render(request,"proveedores/edit.html",{"titles":titles, "formulario":formulario})
+    return render(request,"proveedores/edit.html",{"titles":titles, "formulario":formulario, "id":id})
+
 
 def detailsView(request, id):
     
