@@ -29,20 +29,29 @@
               </address>
             </div>
             <!-- /.col -->
-            <div class="col-sm-4 invoice-col">
+            <div class="col-sm-5 invoice-col">
               Dirección
               <address>
                 <strong>C.P.: {{proveedor.codigo_postal}}</strong><br>
                 {{proveedor.direccion}}<br>
-                
               </address>
             </div>
             <!-- /.col -->
-            <div class="col-sm-4 invoice-col">
-              <b>Estatus:  {{proveedor.activo}} </b><br>
-              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' proveedor.id %}', 'myModal')" >
-                <i class="fas fa-pencil-square"></i> Editar
+            <div class="col-sm-3 invoice-col">
+              {% if proveedor.activo == "Y" %}
+                <button class="btn btn-success btn-sm btn-block disabled" >
+                  <i class="fas fa-thumbs-up"></i> Estatus: Activo
+                </button>
+              {% else %}
+                <button class="btn btn-secondary btn-sm btn-block disabled" >
+                  <i class="fas fa-thumbs-down"></i> Estatus: Inactivo
+                </button>
+              {% endif %}
+              
+              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' proveedor.id %}', 'myModal')" >
+                <i class="fas fa-edit"></i> Editar
               </button>
+              <a href="" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash-alt"></i> Eliminar</a>
             </div>
             <!-- /.col -->
           </div>
@@ -51,47 +60,83 @@
           <!-- Table row -->
           <div class="row">
             <div class="col-12 table-responsive">
-              <table class="table table-striped">
-                <thead>
-                <tr>
-                  <th>Qty</th>
-                  <th>Product</th>
-                  <th>Serial #</th>
-                  <th>Description</th>
-                  <th>Subtotal</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Call of Duty</td>
-                  <td>455-981-221</td>
-                  <td>El snort testosterone trophy driving gloves handsome</td>
-                  <td>$64.50</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Need for Speed IV</td>
-                  <td>247-925-726</td>
-                  <td>Wes Anderson umami biodiesel</td>
-                  <td>$50.00</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Monsters DVD</td>
-                  <td>735-845-642</td>
-                  <td>Terry Richardson helvetica tousled street art master</td>
-                  <td>$10.70</td>
-                </tr>
-                <tr>
-                  <td>1</td>
-                  <td>Grown Ups Blue Ray</td>
-                  <td>422-568-642</td>
-                  <td>Tousled lomo letterpress</td>
-                  <td>$25.99</td>
-                </tr>
-                </tbody>
-              </table>
+              <div class="card card-primary card-outline card-outline-tabs">
+                <div class="card-header p-0 border-bottom-0">
+                  <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Contactos</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Locaciones Asignadas</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="card-body">
+                  <div class="tab-content" id="custom-tabs-four-tabContent">
+                    <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                      <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>Nombre</th>
+                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th>Activo</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for contacto in contactos %}
+                          <tr>
+                            <td>{{contacto.contacto_nombre}}</td>
+                            <td>{{contacto.telefono}}</td>
+                            <td>{{contacto.email}}</td>
+                            <td>{{contacto.tipo_contacto}}</td>
+                            <td>{{contacto.activo}}</td>
+                            <td>
+                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' contacto.id %}', 'myModal')" >
+                                <i class="fas fa-edit"></i> Editar
+                              </button>
+                              <a href="{% url 'Details' contacto.id %}" class="btn btn-danger btn-xs"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                              
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                      <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>Locacion</th>
+                            <th>Ciudad</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for locacion in locaciones %}
+                          <tr>
+                            <td>{{locacion.locacion}}</td>
+                            <td>{{locacion.ciudad}}</td>
+                            <!--<td>{{locacion.email}}</td>
+                            <td>{{locacion.tipo_contacto}}</td>
+                            <td>{{locacion.activo}}</td>-->
+                            <td>
+                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' locacion.id %}', 'myModal')" >
+                                <i class="fas fa-edit"></i> Editar
+                              </button>
+                              <a href="{% url 'Details' locacion.id %}" class="btn btn-danger btn-xs"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                              
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>                    </div>
+                  </div>
+                </div>
+                <!-- /.card -->
+              </div>
             </div>
             <!-- /.col -->
           </div>
