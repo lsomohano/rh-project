@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Proveedores, ContactosProveedores, LocacionesProveedores
-from configuraciones.models import Locaciones
+from configuraciones.models import Locaciones, Ciudades
 from .forms import ProveedoresCreation
 
 # Create your views here.
@@ -18,7 +18,7 @@ def createView(request):
         formulario = ProveedoresCreation(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Proveedores')
+            return redirect('Details',id=formulario.id)
     
     formulario = ProveedoresCreation()
        
@@ -26,6 +26,7 @@ def createView(request):
 
 
 def editView(request, id):
+
     titles = {"title_page":'Proveedores',"sub_title_page":'Editar información del proveedor.'}
     proveedor = Proveedores.objects.get(id=id)
     if request.method == "POST":
@@ -44,10 +45,11 @@ def detailsView(request, id):
     titles = {"title_page":'Proveedores',"sub_title_page":'Información del proveedor.'}
     proveedor = Proveedores.objects.get(id=id)
     contactos = ContactosProveedores.objects.filter(proveedores_id=id)
-    locaciones = LocacionesProveedores.objects.filter(locaciones__proveedores_id=id)
+    locaciones = LocacionesProveedores.objects.filter(proveedores_id=id).select_related('locaciones')
 
     return render(request,"proveedores/details.html",{
         "titles":titles, 
         "proveedor":proveedor, 
         "contactos":contactos, 
         "locaciones":locaciones})
+

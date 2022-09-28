@@ -109,26 +109,27 @@
                       <table id="example1" class="table table-bordered table-striped">
                         <thead>
                           <tr>
-                            <th>Locacion</th>
+                            <th>Locación</th>
                             <th>Ciudad</th>
+                            <th>Zona</th>
+                            <th>Entidad</th>
                             <th>Acciones</th>
                           </tr>
                         </thead>
                         <tbody>
                           {% for locacion in locaciones %}
                           <tr>
-                            <td>{{locacion.locacion}}</td>
-                            <td>{{locacion.ciudad}}</td>
-                            <!--<td>{{locacion.email}}</td>
-                            <td>{{locacion.tipo_contacto}}</td>
-                            <td>{{locacion.activo}}</td>-->
+                            <td>{{locacion.locaciones.locacion}}</td>
+                            <td>{{locacion.locaciones.ciudades}}</td>
+                            <td>{{locacion.locaciones.zona_ciudad}}</td>
+                            <td>{{locacion.locaciones.ciudades.entidades}}</td>
+                            <!--<td>{{locacion.activo}}</td>-->
                             <td>
                               <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' locacion.id %}', 'myModal')" >
                                 <i class="fas fa-edit"></i> Editar
                               </button>
                               <a href="{% url 'Details' locacion.id %}" class="btn btn-danger btn-xs"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                              
-                            </td>
+                                   </td>
                           </tr>
                           {% endfor %}
                         </tbody>
