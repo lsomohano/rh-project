@@ -6,4 +6,6 @@ urlpatterns = [
     path('create/',views.createView, name="Create"),
     path('edit/<int:id>',views.editView, name="Edit"),
     path('details/<int:id>',views.detailsView, name="Details"),
+
+    path('create_contacto',views.createContactosView, name="CreateContacto"),
 ]

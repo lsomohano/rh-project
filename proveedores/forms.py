@@ -43,3 +43,31 @@ class ProveedoresCreation(forms.ModelForm):
         })
 
 
+class ContactosProveedoresCreation(forms.Form):
+    class Meta:
+        model = ContactosProveedores
+        fields = ['contacto_nombre','proveedores','telefono','email','tipo_contacto','activo']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['contacto_nombre'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Nombre de Contacto',
+        })
+        self.fields['telefono'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Telefono',
+        })
+        self.fields['email'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Email',
+        })
+        self.fields['tipo_contacto'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Tipo de Contacto',
+        })
+        self.fields['activo'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Activo',
+        })
