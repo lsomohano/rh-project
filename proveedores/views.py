@@ -44,7 +44,7 @@ def detailsView(request, id):
     titles = {"title_page":'Proveedores',"sub_title_page":'Información del proveedor.'}
     proveedor = Proveedores.objects.get(id=id)
     contactos = ContactosProveedores.objects.filter(proveedores_id=id)
-    locaciones = LocacionesProveedores.objects.filter(locaciones__proveedores_id=id)
+    locaciones = LocacionesProveedores.objects.filter(proveedores_id=id)
 
     return render(request,"proveedores/details.html",{
         "titles":titles, 
