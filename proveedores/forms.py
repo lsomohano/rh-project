@@ -4,8 +4,11 @@ from .models import Proveedores, ContactosProveedores, LocacionesProveedores
 class ProveedoresCreation(forms.ModelForm):
     class Meta:
         model = Proveedores
-        fields = ['proveedor','rfc','razon_social','direccion','codigo_postal','telefono','email','activo']
-    
+        fields = ['id','proveedor','rfc','razon_social','direccion','codigo_postal','telefono','email']
+        widgets = {
+            'id': forms.HiddenInput(),
+        }
+        
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -37,20 +40,25 @@ class ProveedoresCreation(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Dirección email',
         })
-        self.fields['activo'].widget.attrs.update({
-            'class':'form-control',
-            'placeholder':'Activo',
-        })
+        
 
 
-class ContactosProveedoresCreation(forms.Form):
+class ContactosProveedoresCreation(forms.ModelForm):
     class Meta:
         model = ContactosProveedores
-        fields = ['contacto_nombre','proveedores','telefono','email','tipo_contacto','activo']
+        fields = ['contacto_nombre','proveedores','telefono','email','tipo_contacto']
+        widgets = {
+            'proveedores': forms.HiddenInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['proveedores'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Proveedor',
+            'readonly':'readonly',
+        })
         self.fields['contacto_nombre'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Nombre de Contacto',
@@ -67,7 +75,23 @@ class ContactosProveedoresCreation(forms.Form):
             'class':'form-control',
             'placeholder':'Tipo de Contacto',
         })
-        self.fields['activo'].widget.attrs.update({
+
+class LocacionesProveedoresCreation(forms.ModelForm):
+    class Meta:
+        model = LocacionesProveedores
+        fields = ['locaciones','proveedores']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['locaciones'].widget.attrs.update({
             'class':'form-control',
-            'placeholder':'Activo',
+            'placeholder':'locaciones',
         })
+
+        self.fields['proveedores'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'proveedores',
+        })
+        
+        

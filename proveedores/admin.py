@@ -11,7 +11,7 @@ class LocacionesProveedoresInline(admin.StackedInline):
 
 class ProveedoresAdmin(admin.ModelAdmin):
     inlines = [ContactosProveedoresInline,LocacionesProveedoresInline]
-    list_display = ('proveedor', 'rfc', 'razon_social','created')
+    list_display = ('proveedor', 'rfc', 'razon_social','activo','created')
 
 
 admin.site.register(Proveedores, ProveedoresAdmin)

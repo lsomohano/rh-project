@@ -12,6 +12,7 @@ class tipos_contactos(Enum):
     P = "Principal"
     A = "Asociado"
 
+
 class Proveedores(models.Model):
     proveedor = models.CharField(max_length=70)
     rfc = models.CharField(max_length=13)
@@ -33,8 +34,9 @@ class Proveedores(models.Model):
     def __str__(self):
         return self.proveedor
 
+
 class ContactosProveedores(models.Model):
-    contacto_nombre = models.CharField(max_length=70)
+    contacto_nombre = models.CharField(max_length=70, verbose_name='Nombre')
     telefono = models.CharField(max_length=10, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     tipo_contacto = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in tipos_contactos], default='A')
@@ -51,6 +53,7 @@ class ContactosProveedores(models.Model):
 
     def __str__(self):
         return self.contacto_nombre
+
 
 class LocacionesProveedores(models.Model):
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE, verbose_name='Locaciones')

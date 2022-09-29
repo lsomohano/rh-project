@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import Proveedores, ContactosProveedores, LocacionesProveedores
-from configuraciones.models import Locaciones, Ciudades
-from .forms import ProveedoresCreation, ContactosProveedoresCreation
+from .forms import ProveedoresCreation, ContactosProveedoresCreation, LocacionesProveedoresCreation
 
 # Create your views here.
 
 def proveedores(request):
     titles = {"title_page":'Proveedores',"sub_title_page":'Gestión de info de Provedores.'}
-    proveedores = Proveedores.objects.all()
+    proveedores = Proveedores.objects.filter(activo='Y')
 
     return render(request,"proveedores/proveedores.html",{"titles":titles, "proveedores":proveedores})
 
@@ -18,7 +17,7 @@ def createView(request):
         formulario = ProveedoresCreation(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Details',id=formulario.id)
+            return redirect('Proveedores')
     
     formulario = ProveedoresCreation()
        
@@ -44,8 +43,8 @@ def detailsView(request, id):
     
     titles = {"title_page":'Proveedores',"sub_title_page":'Información del proveedor.'}
     proveedor = Proveedores.objects.get(id=id)
-    contactos = ContactosProveedores.objects.filter(proveedores_id=id)
-    locaciones = LocacionesProveedores.objects.filter(proveedores_id=id).select_related('locaciones')
+    contactos = ContactosProveedores.objects.filter(proveedores_id=id, activo='Y')
+    locaciones = LocacionesProveedores.objects.filter(proveedores_id=id, activo='Y').select_related('locaciones')
 
     return render(request,"proveedores/details.html",{
         "titles":titles, 
@@ -53,14 +52,78 @@ def detailsView(request, id):
         "contactos":contactos, 
         "locaciones":locaciones})
 
+def deleteView(request, id):
 
-def createContactosView(request):
+    proveedor = Proveedores.objects.get(id=id)
+    proveedor.activo='N'
+    proveedor.save()
+
+    return redirect('Proveedores')
+
+
+"""
+Vistas que controlan los evnetos de los contactos de los proveedores
+
+"""
+def createContactosView(request,proveedores_id):
+    
     titles = {"title_page":'Proveedores',"sub_title_page":'Agregar nuevo contacto.'}
     if request.method == "POST":
         formulario = ContactosProveedoresCreation(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Details',id=formulario.id)
+            return redirect('Details',id=proveedores_id)
     
     formulario = ContactosProveedoresCreation()
-    return render(request,"proveedores/create_contacto.html",{"titles":titles, "formulario":formulario, "id":id})
+
+    return render(request,"proveedores/create_contacto.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
+
+
+def editContactosView(request, id):
+
+    titles = {"title_page":'Proveedores',"sub_title_page":'Editar información del contactos.'}
+    contacto = ContactosProveedores.objects.get(id=id)
+    if request.method == "POST":
+        formulario = ContactosProveedoresCreation(request.POST or None, instance=contacto)
+        if formulario.is_valid():
+            proveedores_id = formulario['proveedores'].value()
+            formulario.save()
+            return redirect('Details',id=proveedores_id)
+    else:
+        formulario = ContactosProveedoresCreation(instance=contacto)
+
+    return render(request,"proveedores/edit_contacto.html",{"titles":titles, "formulario":formulario, "id":id})
+
+
+def DeleteContactosView(request, id):
+
+    contacto = ContactosProveedores.objects.get(id=id)
+    
+    proveedores_id = contacto.proveedores_id
+    contacto.activo='N'
+    contacto.save()
+
+    return redirect('Details',id=proveedores_id)
+
+"""Sección de gestion de las locaciones asignadas"""
+def createLocacionesViews(request, proveedores_id):
+    titles = {"title_page":'Proveedores',"sub_title_page":'Agregar nuevo contacto.'}
+    if request.method == "POST":
+        formulario = LocacionesProveedoresCreation(request.POST or None)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('Details',id=proveedores_id)
+    
+    formulario = LocacionesProveedoresCreation()
+
+    return render(request,"proveedores/create_locacion.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
+
+def DeleteLocacionesView(request, id):
+
+    locacion = LocacionesProveedores.objects.get(id=id)
+    
+    proveedores_id = locacion.proveedores_id
+    locacion.activo='N'
+    locacion.save()
+
+    return redirect('Details',id=proveedores_id)

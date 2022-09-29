@@ -51,7 +51,7 @@
               <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' proveedor.id %}', 'myModal')" >
                 <i class="fas fa-edit"></i> Editar
               </button>
-              <a href="" class="btn btn-danger btn-sm btn-block"><i class="fas fa-trash-alt"></i> Eliminar</a>
+              <a href="{% url 'Delete' proveedor.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Proveedor"><i class="fas fa-trash-alt"></i> Eliminar</a>
             </div>
             <!-- /.col -->
           </div>
@@ -75,70 +75,109 @@
                   <div class="tab-content" id="custom-tabs-four-tabContent">
                     <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
                       
-                      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContacto' %}', 'myModal')" >
-                        <i class="fas fa-plus-circle"></i> Nuevo contacto
-                      </button><br>
-                      
-                      <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                          <tr>
-                            <th>Nombre</th>
-                            <th>Telefono</th>
-                            <th>Email</th>
-                            <th>Tipo</th>
-                            <th>Activo</th>
-                            <th>Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for contacto in contactos %}
-                          <tr>
-                            <td>{{contacto.contacto_nombre}}</td>
-                            <td>{{contacto.telefono}}</td>
-                            <td>{{contacto.email}}</td>
-                            <td>{{contacto.tipo_contacto}}</td>
-                            <td>{{contacto.activo}}</td>
-                            <td>
-                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' contacto.id %}', 'myModal')" >
-                                <i class="fas fa-edit"></i> Editar
-                              </button>
-                              <a href="{% url 'Details' contacto.id %}" class="btn btn-danger btn-xs"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                              
-                            </td>
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
+                      <div class="row">
+                        <div class="col-12">
+                          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContacto' proveedor.id %}', 'myModal')" >
+                            <i class="fas fa-plus-circle"></i> Nuevo contacto
+                          </button>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="row">
+                        <div class="col-12">
+                          <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                              <tr>
+                                <th>Nombre</th>
+                                <th>Telefono</th>
+                                <th>Email</th>
+                                <th>Tipo</th>
+                                <th>Activo</th>
+                                <th>Acciones</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for contacto in contactos %}
+                              <tr>
+                                <td>{{contacto.contacto_nombre}}</td>
+                                <td>{{contacto.telefono}}</td>
+                                <td>{{contacto.email}}</td>
+                                <td>{{contacto.tipo_contacto}}</td>
+                                <td>
+                                  {% if contacto.activo == "Y" %}
+                                      <button class="btn btn-success btn-xs disabled" >
+                                        <i class="fas fa-thumbs-up"></i> Activo
+                                      </button>
+                                  {% else %}
+                                      <button class="btn btn-secondary btn-xs disabled" >
+                                        <i class="fas fa-thumbs-down"></i> Inactivo
+                                      </button>
+                                  {% endif %}</td>
+                                <td>
+                                  <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditContacto' contacto.id %}', 'myModal')" >
+                                    <i class="fas fa-edit"></i> Editar
+                                  </button>
+                                  <a href="{% url 'DeleteContacto' contacto.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Contacto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                                </td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
                     </div>
+
                     <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
-                      <table id="example1" class="table table-bordered table-striped">
-                        <thead>
-                          <tr>
-                            <th>Locación</th>
-                            <th>Ciudad</th>
-                            <th>Zona</th>
-                            <th>Entidad</th>
-                            <th>Acciones</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for locacion in locaciones %}
-                          <tr>
-                            <td>{{locacion.locaciones.locacion}}</td>
-                            <td>{{locacion.locaciones.ciudades}}</td>
-                            <td>{{locacion.locaciones.zona_ciudad}}</td>
-                            <td>{{locacion.locaciones.ciudades.entidades}}</td>
-                            <!--<td>{{locacion.activo}}</td>-->
-                            <td>
-                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' locacion.id %}', 'myModal')" >
-                                <i class="fas fa-edit"></i> Editar
-                              </button>
-                              <a href="{% url 'Details' locacion.id %}" class="btn btn-danger btn-xs"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                                   </td>
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>                    </div>
+                      <div class="row">
+                        <div class="col-12">
+                          <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateLocacion' proveedor.id %}', 'myModal')" >
+                            <i class="fas fa-plus-circle"></i> Agregar locaciones
+                          </button>
+                        </div>
+                      </div>
+                      <br>
+                      <div class="row">
+                        <div class="col-12">
+                          <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                              <tr>
+                                <th>Locación</th>
+                                <th>Ciudad</th>
+                                <th>Zona</th>
+                                <th>Entidad</th>
+                                <th>Estatus</th>
+                                <th>Acciones</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for locacion in locaciones %}
+                              <tr>
+                                <td>{{locacion.locaciones.locacion}}</td>
+                                <td>{{locacion.locaciones.ciudades}}</td>
+                                <td>{{locacion.locaciones.zona_ciudad}}</td>
+                                <td>{{locacion.locaciones.ciudades.entidades}}</td>
+                                <td>
+                                  {% if locacion.activo == "Y" %}
+                                      <button class="btn btn-success btn-xs disabled" >
+                                        <i class="fas fa-thumbs-up"></i> Activo
+                                      </button>
+                                  {% else %}
+                                      <button class="btn btn-secondary btn-xs disabled" >
+                                        <i class="fas fa-thumbs-down"></i> Inactivo
+                                      </button>
+                                  {% endif %}</td>
+                                </td>
+                                <td>
+                                 
+                                  <a href="{% url 'DeleteLocacion' locacion.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Contacto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                                </td>
+                              </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>  
+                        </div>
+                      </div>                  
+                    </div>
                   </div>
                 </div>
                 <!-- /.card -->
@@ -176,5 +215,15 @@
           }
       });
     };
+
+    $(function () {
+      $('a.elimina').confirm({
+        content: "¿Estas seguro de querer eliminar este registro?",
+        icon: 'fas fa-exclamation-triangle',
+        closeIcon: true,
+        closeIconClass: 'fas fa-times',
+      });
+    });
+    
   </script>
 {% endblock content %}
