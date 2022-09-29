@@ -4,11 +4,11 @@ from .models import Proveedores, ContactosProveedores, LocacionesProveedores
 class ProveedoresCreation(forms.ModelForm):
     class Meta:
         model = Proveedores
-        fields = ['id','proveedor','rfc','razon_social','direccion','codigo_postal','telefono','email']
+        fields = ['proveedor','rfc','razon_social','direccion','codigo_postal','telefono','email']
         widgets = {
             'id': forms.HiddenInput(),
         }
-        
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
