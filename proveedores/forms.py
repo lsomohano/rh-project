@@ -1,5 +1,5 @@
 from django import forms
-from .models import Proveedores
+from .models import Proveedores, ContactosProveedores, LocacionesProveedores
 
 class ProveedoresCreation(forms.ModelForm):
     class Meta:
@@ -41,3 +41,5 @@ class ProveedoresCreation(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Activo',
         })
+
+
