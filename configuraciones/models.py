@@ -123,9 +123,13 @@ class canales_reclutamiento(Enum):
     interno = "Interno"
 
 class PuestosOperativos(models.Model):
-    puesto_operativo = models.CharField(max_length=60)
+    puesto_operativo = models.CharField(max_length=60, verbose_name='Puesto')
     puestos_nominas = models.ForeignKey(PuestosNominas, on_delete=models.CASCADE)
-    canal_reclutamiento = models.CharField(max_length=7, choices=[(tag.name, tag.value) for tag in canales_reclutamiento], default='externo')
+    canal_reclutamiento = models.CharField(
+        max_length=7, 
+        choices=[(tag.name, tag.value) for tag in canales_reclutamiento], 
+        default='externo',
+        verbose_name='Reclutamiento')
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)

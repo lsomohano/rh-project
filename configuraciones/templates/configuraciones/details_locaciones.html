@@ -1,0 +1,162 @@
+{% extends "reclutamiento/base_adminlte.html" %}
+{% load static %}
+{% block content %} 
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <!-- Main content -->
+        <div class="invoice p-3 mb-3">
+          <!-- title row -->
+          <div class="row">
+            <div class="col-12">
+              <h4>
+                <i class="fas fa-user"></i> {{locacion.locacion_name}}
+                <small class="float-right">Alta: {{locacion.created}}</small>
+              </h4>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- info row -->
+          <div class="row invoice-info">
+            <div class="col-sm-2 invoice-col">
+                Información
+                <address>
+                  <strong>Locación: {{locacion.locacion}}</strong><br>
+                  {{locacion.ciudades}}, {{locacion.ciudades.entidades}}<br>
+                  Zona: {{locacion.zona_ciudad}}<br>
+                </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-8 invoice-col">
+              Dirección
+              <address>
+                <strong>C.P.: {{locacion.codigo_postal}}</strong><br>
+                {{locacion.latitud}}, {{locacion.longitud}} <br>
+                {{locacion.direccion}}<br>
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-2 invoice-col">
+                {% if puesto.activo == "Y" %}
+                <button class="btn btn-success btn-sm btn-block disabled" >
+                  <i class="fas fa-thumbs-up"></i> Estatus: Activo
+                </button>
+              {% else %}
+                <button class="btn btn-secondary btn-sm btn-block disabled" >
+                  <i class="fas fa-thumbs-down"></i> Estatus: Inactivo
+                </button>
+              {% endif %}
+              <!--<button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreatePuestoOperativo' locacion.id %}', 'myModal')" >
+                <i class="fas fa-edit"></i> Agregar Puesto Operativo
+              </button>-->
+              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditLocaciones' locacion.id %}', 'myModal')" >
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <a href="{% url 'DeletePuestosNominas' locacion.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <br>
+          <!-- Table row -->
+          <div class="row">
+            <div class="col-12 table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                        <th>Días Atención</th>
+                        <th>Horario</th>
+                        <th>Estatus</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for contacto in contactos %}
+                      <tr>
+                        <td>{{contacto.contacto}}</td>
+                        <td>{{contacto.telefono}}</td>
+                        <td>{{contacto.email}}</td>
+                        <td>{{contacto.dias_atencion}}</td>
+                        <td>{{contacto.horario_inicio}} a {{contacto.horario_cierre}}</td>
+                        <td>
+                          {% if contacto.activo == "Y" %}
+                              <button class="btn btn-success btn-xs disabled" >
+                                <i class="fas fa-thumbs-up"></i> Activo
+                              </button>
+                          {% else %}
+                              <button class="btn btn-secondary btn-xs disabled" >
+                                <i class="fas fa-thumbs-down"></i> Inactivo
+                              </button>
+                          {% endif %}</td>
+                        </td>
+                        <td>
+                          <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditPuestoOperativo' contacto.id %}', 'myModal')" >
+                            <i class="fas fa-edit"></i> Editar
+                          </button>
+                          <a href="{% url 'DeletePuestosOperativo' contacto.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>  
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+
+          <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg" id="myModal">
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+
+        </div>
+        <!-- /.invoice -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+  <script>
+    /*
+    * 
+    *Carga una pagina en un div
+    *
+    */
+    function cargaModal(metodo, div){
+      $.ajax({
+          type: "GET",
+          url: metodo,
+          success: function(html){
+              $("#"+div).html(html);
+          }
+      });
+    };
+
+    $(function () {
+      $('a.elimina').confirm({
+        content: "¿Estas seguro de querer eliminar este registro?",
+        icon: 'fas fa-exclamation-triangle',
+        closeIcon: true,
+        closeIconClass: 'fas fa-times',
+      });
+    });
+
+    $(function () {
+    
+        $('#example1').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });
+    });
+  </script>
+{% endblock content %}

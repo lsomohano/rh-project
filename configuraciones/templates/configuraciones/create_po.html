@@ -1,0 +1,36 @@
+<div class="modal-content">
+    <!--<div class="overlay">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>-->
+    <div class="modal-header">
+      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
+      <div class="modal-body">
+        {% if form.errors %}
+          <p style="color: red;">Valida la información capturada</p>
+        {% endif %}
+        
+        {% for field in formulario %}
+            {% if field.name != 'puestos_nominas' %}
+                <div class="form-group row justify-content-md-center">
+                    <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 ">
+                    {{field}}
+                    </div>
+                    {{field.errors}}
+                </div>
+            {% else %}
+            <input type="hidden" name="{{field.name}}" value="{{puestos_nominas_id}}">
+            {% endif %}
+        {% endfor %}
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
