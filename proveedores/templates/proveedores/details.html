@@ -48,10 +48,10 @@
                 </button>
               {% endif %}
               
-              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'Edit' proveedor.id %}', 'myModal')" >
+              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditProveedores' proveedor.id %}', 'myModal')" >
                 <i class="fas fa-edit"></i> Editar
               </button>
-              <a href="{% url 'Delete' proveedor.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Proveedor"><i class="fas fa-trash-alt"></i> Eliminar</a>
+              <a href="{% url 'DeleteProveedores' proveedor.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Proveedor"><i class="fas fa-trash-alt"></i> Eliminar</a>
             </div>
             <!-- /.col -->
           </div>

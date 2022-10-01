@@ -19,3 +19,18 @@ def createEntidades(request):
     formulario = entidadesCreate()
        
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
+
+
+def editEntidades(request, id):
+
+    titles = {"title_page":'Entidades',"sub_title_page":'Editar información de la entidad.'}
+    entidades = Entidades.objects.get(id=id)
+    if request.method == "POST":
+        formulario = entidadesCreate(request.POST or None, instance=entidades)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('Entidades')
+    else:
+        formulario = entidadesCreate(instance=entidades)
+
+    return render(request,"configuraciones/edit.html",{"titles":titles, "formulario":formulario, "id":id})
