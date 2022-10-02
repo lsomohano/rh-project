@@ -9,7 +9,7 @@
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
-  <form action="create/" method="POST" class="form-horizontal">{% csrf_token %}
+  <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
     <div class="modal-body">
       {% if form.errors %}
         <p style="color: red;">Valida la información capturada</p>

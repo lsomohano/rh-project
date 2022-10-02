@@ -16,8 +16,8 @@ def createView(request):
     if request.method == "POST":
         formulario = ProveedoresCreation(request.POST or None)
         if formulario.is_valid():
-            formulario.save()
-            return redirect('Proveedores')
+            proveedor= formulario.save()
+            return redirect('Details',id=proveedor.id)
     
     formulario = ProveedoresCreation()
        

@@ -22,4 +22,5 @@ urlpatterns = [
     path('',include('reclutamiento.urls')),
     path('proveedores/',include('proveedores.urls')),
     path('configuraciones/',include('configuraciones.urls')),
+    path('autenticacion/',include('autenticacion.urls')),
 ]
