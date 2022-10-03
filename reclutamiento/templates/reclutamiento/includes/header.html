@@ -36,7 +36,7 @@
           </form>
         </div>
       </li>
-
+      {% if user.is_authenticated %}
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -62,9 +62,16 @@
             <!-- Message End -->
           </a>          
           <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">Cerrar sesion</a>
+          <a href="{% url 'Log_Out' %}" class="dropdown-item dropdown-footer"><i class="fas fa-sign-out-alt"></i> Cerrar session</a>
         </div>
       </li>
+      {% else %}
+      <li class="nav-item dropdown">
+        <a class="nav-link"  href="{% url 'Log_In' %}">
+          <i class="fas fa-sign-out-alt"></i> Iniciar session
+        </a>
+      </li>
+      {% endif %}
 
       <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
