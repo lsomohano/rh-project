@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Proveedores, ContactosProveedores, LocacionesProveedores
 from .forms import ProveedoresCreation, ContactosProveedoresCreation, LocacionesProveedoresCreation
-
+from autenticacion.forms import UserCreationForm
+from django.contrib import messages
 # Create your views here.
 
 def proveedores(request):
@@ -70,12 +71,12 @@ def createContactosView(request,proveedores_id):
     titles = {"title_page":'Proveedores',"sub_title_page":'Agregar nuevo contacto.'}
     if request.method == "POST":
         formulario = ContactosProveedoresCreation(request.POST or None)
+        
         if formulario.is_valid():
             formulario.save()
             return redirect('Details',id=proveedores_id)
     
     formulario = ContactosProveedoresCreation()
-
     return render(request,"proveedores/create_contacto.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
 
 

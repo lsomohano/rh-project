@@ -1,8 +1,11 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from enum import Enum
 from configuraciones.admin import Locaciones
+from django.contrib import messages
 
 # Create your models here.
+User = get_user_model()
 
 class activo(Enum):
     Y = "Si"
@@ -36,11 +39,10 @@ class Proveedores(models.Model):
 
 
 class ContactosProveedores(models.Model):
-    contacto_nombre = models.CharField(max_length=70, verbose_name='Nombre')
     telefono = models.CharField(max_length=10, null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
     tipo_contacto = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in tipos_contactos], default='A')
     proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedores')
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -49,10 +51,10 @@ class ContactosProveedores(models.Model):
         db_table =  "contactos_proveedores"
         verbose_name = 'contacto proveedor'
         verbose_name_plural = 'contactos proveedores'
-        ordering = ["-contacto_nombre"]
+        ordering = ["-activo"]
 
     def __str__(self):
-        return self.contacto_nombre
+        return self.activo
 
 
 class LocacionesProveedores(models.Model):
