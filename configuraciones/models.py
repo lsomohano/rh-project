@@ -1,7 +1,9 @@
 from django.db import models
 from enum import Enum
+from django.contrib.auth import get_user_model
 
 # Create your models here.
+User = get_user_model()
 
 class paises(Enum):
     mx = "México"
@@ -81,13 +83,12 @@ class Locaciones(models.Model):
 
 
 class Contactos(models.Model):
-    contacto = models.CharField(max_length=100)
     telefono = models.CharField(max_length=10)
-    email = models.EmailField()
     horario_inicio = models.TimeField()
     horario_termino = models.TimeField()
     dias_atencion = models.CharField(max_length=21)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -96,10 +97,10 @@ class Contactos(models.Model):
         db_table =  "contactos"
         verbose_name='contacto'
         verbose_name_plural='contactos'  
-        ordering = ["-contacto"]
+        ordering = ["-activo"]
 
     def __str__(self):
-        return self.contacto
+        return self.activo
 
 
 class PuestosNominas(models.Model):

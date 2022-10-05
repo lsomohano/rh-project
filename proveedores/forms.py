@@ -60,11 +60,7 @@ class ContactosProveedoresCreation(forms.ModelForm):
             'readonly':'readonly',
         })
         self.fields['user'].widget.attrs.update({
-            'class':'form-control',
-            'placeholder':'User',
-        })
-        self.fields['user'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'user',
         })
         self.fields['telefono'].widget.attrs.update({
@@ -85,7 +81,7 @@ class LocacionesProveedoresCreation(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['locaciones'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'locaciones',
         })
 

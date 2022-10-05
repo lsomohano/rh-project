@@ -1,5 +1,5 @@
 from django import forms
-from .models import Ciudades, Entidades, Locaciones, PuestosNominas, PuestosOperativos
+from .models import Ciudades, Entidades, Locaciones, PuestosNominas, PuestosOperativos, Contactos, LocacionesPuestos 
 
 class entidadesCreate(forms.ModelForm):
     class Meta:
@@ -14,7 +14,7 @@ class entidadesCreate(forms.ModelForm):
             'placeholder':'Nombre de Entidad',
         })
         self.fields['pais'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Pais',
         })
 
@@ -32,7 +32,7 @@ class ciudadesCreate(forms.ModelForm):
             'placeholder':'Nombre de Ciudad',
         })
         self.fields['entidades'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Entidad',
         })
 
@@ -65,11 +65,11 @@ class puestosOperativosCreate(forms.ModelForm):
             'placeholder':'Puesto operativo',
         })
         self.fields['puestos_nominas'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Puesto nomina',
         })
         self.fields['canal_reclutamiento'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Recluatamiento',
         })
 
@@ -99,11 +99,11 @@ class LocacionesCreate(forms.ModelForm):
             'placeholder':'Codigo Postal',
         })
         self.fields['ciudades'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Ciudad',
         })
         self.fields['zona_ciudad'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Zona',
         })
         self.fields['latitud'].widget.attrs.update({
@@ -134,4 +134,69 @@ class LocacionesCreate(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Email',
         })
-        
+
+class ContactosLocacionesCreation(forms.ModelForm):
+    class Meta:
+        model = Contactos
+        fields = ['user','locaciones','telefono','horario_inicio','horario_termino','dias_atencion']
+        widgets = {
+            'locaciones': forms.HiddenInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['locaciones'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Proveedor',
+            'readonly':'readonly',
+        })
+        self.fields['user'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'User',
+        })
+        self.fields['telefono'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Telefono',
+        })
+        self.fields['horario_inicio'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'horario_inicio',
+        })
+        self.fields['horario_termino'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'horario_termino',
+        })
+        self.fields['dias_atencion'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'dias_atencion',
+        })
+
+class PuestosLocacionesCreation(forms.ModelForm):
+    class Meta:
+        model = LocacionesPuestos
+        fields = ['puestos_operativos','locaciones','staf_requerido','staf_contratado']
+        widgets = {
+            'locaciones': forms.HiddenInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['locaciones'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Proveedor',
+            'readonly':'readonly',
+        })
+        self.fields['puestos_operativos'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Puestos operativos',
+        })
+        self.fields['staf_requerido'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Staff requerido',
+        })
+        self.fields['staf_contratado'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Staff contratado',
+        })

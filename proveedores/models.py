@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from enum import Enum
 from configuraciones.admin import Locaciones
-from django.contrib import messages
 
 # Create your models here.
 User = get_user_model()

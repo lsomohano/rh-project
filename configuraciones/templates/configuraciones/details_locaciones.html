@@ -62,47 +62,119 @@
           <!-- Table row -->
           <div class="row">
             <div class="col-12 table-responsive">
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                      <tr>
-                        <th>Nombre</th>
-                        <th>Telefono</th>
-                        <th>Email</th>
-                        <th>Días Atención</th>
-                        <th>Horario</th>
-                        <th>Estatus</th>
-                        <th>Acciones</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for contacto in contactos %}
-                      <tr>
-                        <td>{{contacto.contacto}}</td>
-                        <td>{{contacto.telefono}}</td>
-                        <td>{{contacto.email}}</td>
-                        <td>{{contacto.dias_atencion}}</td>
-                        <td>{{contacto.horario_inicio}} a {{contacto.horario_cierre}}</td>
-                        <td>
-                          {% if contacto.activo == "Y" %}
-                              <button class="btn btn-success btn-xs disabled" >
-                                <i class="fas fa-thumbs-up"></i> Activo
+              <div class="card card-primary card-outline card-outline-tabs">
+              <div class="card-header p-0 border-bottom-0">
+                <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-four-home-tab" data-toggle="pill" href="#custom-tabs-four-home" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Contactos</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-four-profile-tab" data-toggle="pill" href="#custom-tabs-four-profile" role="tab" aria-controls="custom-tabs-four-profile" aria-selected="false">Puestos</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="card-body">
+                <div class="tab-content" id="custom-tabs-four-tabContent">
+                  <div class="tab-pane fade show active" id="custom-tabs-four-home" role="tabpanel" aria-labelledby="custom-tabs-four-home-tab">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContactoLoc' locacion.id %}', 'myModal')" >
+                      <i class="fas fa-edit"></i> Agregar Contacto
+                    </button> 
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Telefono</th>
+                            <th>Email</th>
+                            <th>Días Atención</th>
+                            <th>Horario</th>
+                            <th>Estatus</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for contacto in contactos %}
+                          <tr>
+                            <td>{{contacto.user.username}}</td>
+                            <td>{{contacto.user.first_name}} {{contacto.user.last_name}}</td>
+                            <td>{{contacto.telefono}}</td>
+                            <td>{{contacto.user.email}}</td>
+                            <td>{{contacto.dias_atencion}}</td>
+                            <td>{{contacto.horario_inicio}} a {{contacto.horario_termino}}</td>
+                            <td>
+                              {% if contacto.activo == "Y" %}
+                                  <button class="btn btn-success btn-xs disabled" >
+                                    <i class="fas fa-thumbs-up"></i> Activo
+                                  </button>
+                              {% else %}
+                                  <button class="btn btn-secondary btn-xs disabled" >
+                                    <i class="fas fa-thumbs-down"></i> Inactivo
+                                  </button>
+                              {% endif %}</td>
+                            </td>
+                            <td>
+                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditContactoLoc' contacto.id %}', 'myModal')" >
+                                <i class="fas fa-edit"></i> Editar
                               </button>
-                          {% else %}
-                              <button class="btn btn-secondary btn-xs disabled" >
-                                <i class="fas fa-thumbs-down"></i> Inactivo
+                              <a href="{% url 'DeleteContactoLoc' contacto.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table>  
+                    
+                  </div>
+                  <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel" aria-labelledby="custom-tabs-four-profile-tab">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreatePuestoLoc' locacion.id %}', 'myModal')" >
+                      <i class="fas fa-edit"></i> Agregar Puesto
+                    </button> 
+                    <table id="example2" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                            <th>P. Operativo</th>
+                            <th>P. Nomina</th>
+                            <th>Staff Requerido</th>
+                            <th>Staff Contratado</th>
+                            <th>Estatus</th>
+                            <th>Acciones</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for puesto in puestos %}
+                          <tr>
+                            <td>{{puesto.puestos_operativos}} </td>
+                            <td>{{puesto.puestos_operativos.puestos_nominas}}</td>
+                            <td>{{puesto.staf_requerido}}</td>
+                            <td>{{puesto.staf_contratado}}</td>
+                            
+                            <td>
+                              {% if puesto.activo == "Y" %}
+                                  <button class="btn btn-success btn-xs disabled" >
+                                    <i class="fas fa-thumbs-up"></i> Activo
+                                  </button>
+                              {% else %}
+                                  <button class="btn btn-secondary btn-xs disabled" >
+                                    <i class="fas fa-thumbs-down"></i> Inactivo
+                                  </button>
+                              {% endif %}</td>
+                            </td>
+                            <td>
+                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditPuestoLoc' puesto.id %}', 'myModal')" >
+                                <i class="fas fa-edit"></i> Editar
                               </button>
-                          {% endif %}</td>
-                        </td>
-                        <td>
-                          <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditPuestoOperativo' contacto.id %}', 'myModal')" >
-                            <i class="fas fa-edit"></i> Editar
-                          </button>
-                          <a href="{% url 'DeletePuestosOperativo' contacto.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                        </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                </table>  
+                              <a href="{% url 'DeleteContactoLoc' puesto.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                    </table> 
+                  </div>
+                  
+                </div>
+              </div>
+              <!-- /.card -->
+            </div>
+                
             </div>
             <!-- /.col -->
           </div>
@@ -158,5 +230,19 @@
           "responsive": true,
         });
     });
+
+    $(function () {
+    
+      $('#example2').DataTable({
+        "paging": true,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+      });
+  });
+
   </script>
 {% endblock content %}

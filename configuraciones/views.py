@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Ciudades, Contactos, Entidades, PuestosNominas, PuestosOperativos, Locaciones
-from .forms import ciudadesCreate, entidadesCreate, puestosNominasCreate, puestosOperativosCreate, LocacionesCreate
+from .models import Ciudades, Contactos, Entidades, PuestosNominas, PuestosOperativos, Locaciones, LocacionesPuestos
+from .forms import ContactosLocacionesCreation, PuestosLocacionesCreation, ciudadesCreate, entidadesCreate, puestosNominasCreate, puestosOperativosCreate, LocacionesCreate
 # Create your views here.
 
 def entidadesView(request):
@@ -179,8 +179,8 @@ def createLocaciones(request):
     if request.method == "POST":
         formulario = LocacionesCreate(request.POST or None)
         if formulario.is_valid():
-            formulario.save()
-            return redirect('Locaciones')
+            locacion = formulario.save()
+            return redirect('DetailsLocaciones',id=locacion.id)
     
     formulario = LocacionesCreate()
        
@@ -207,8 +207,80 @@ def detailsLocaciones(request, id):
     titles = {"title_page":'Locaciones',"sub_title_page":'Información de la locación.'}
     locacion = Locaciones.objects.get(id=id)
     contactos = Contactos.objects.filter(locaciones_id=id, activo='Y')
+    puestos = LocacionesPuestos.objects.filter(locaciones_id=id, activo='Y')
 
     return render(request,"configuraciones/details_locaciones.html",{
         "titles":titles, 
         "locacion":locacion, 
-        "contactos":contactos})
+        "contactos":contactos, 
+        "puestos":puestos})
+
+
+""" Modulo de contactos de las locaciones"""
+
+def createContacto(request, locaciones_id):
+    titles = {"title_page":'Locaciones',"sub_title_page":'Nuevo contacto.'}
+    if request.method == "POST":
+        formulario = ContactosLocacionesCreation(request.POST or None)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('DetailsLocaciones', id=locaciones_id)
+    
+    formulario = ContactosLocacionesCreation()
+       
+    return render(request,"configuraciones/create_contactos.html",{"titles":titles, "formulario":formulario,"locaciones_id":locaciones_id})
+
+
+def editContacto(request, id):
+
+    titles = {"title_page":'Locaciones',"sub_title_page":'Editar información del contacto.'}
+    contacto = Contactos.objects.get(id=id)
+    if request.method == "POST":
+        formulario = ContactosLocacionesCreation(request.POST or None, instance=contacto)
+        if formulario.is_valid():
+            locaciones_id = formulario['locaciones'].value()
+            formulario.save()
+            return redirect('DetailsLocaciones',id=locaciones_id)
+    else:
+        formulario = ContactosLocacionesCreation(instance=contacto)
+
+    return render(request,"configuraciones/edit_contactos.html",{"titles":titles, "formulario":formulario, "id":id})
+
+
+def deleteContacto(request, id):
+
+    contacto = Contactos.objects.get(id=id)
+    locaciones_id = contacto.locaciones_id
+    contacto.activo='N'
+    contacto.save()
+
+    return redirect('DetailsLocaciones',id=locaciones_id)
+
+""" Asignación de puestos a locaciones """
+
+def createLocacinesPuestos(request, locaciones_id):
+    titles = {"title_page":'Locaciones',"sub_title_page":'Agregar puestos.'}
+    if request.method == "POST":
+        formulario = PuestosLocacionesCreation(request.POST or None)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('DetailsLocaciones', id=locaciones_id)
+    
+    formulario = PuestosLocacionesCreation()
+    return render(request,"configuraciones/create_contactos.html",{"titles":titles, "formulario":formulario,"locaciones_id":locaciones_id})
+
+
+def editLocacinesPuestos(request, id):
+
+    titles = {"title_page":'Locaciones',"sub_title_page":'Editar información del puesto.'}
+    puesto = LocacionesPuestos.objects.get(id=id)
+    if request.method == "POST":
+        formulario = PuestosLocacionesCreation(request.POST or None, instance=puesto)
+        if formulario.is_valid():
+            locaciones_id = formulario['locaciones'].value()
+            formulario.save()
+            return redirect('DetailsLocaciones',id=locaciones_id)
+    else:
+        formulario = PuestosLocacionesCreation(instance=puesto)
+
+    return render(request,"configuraciones/edit_contactos.html",{"titles":titles, "formulario":formulario, "id":id})
