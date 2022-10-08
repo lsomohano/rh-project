@@ -83,8 +83,8 @@ def createPuestoNomina(request):
     if request.method == "POST":
         formulario = puestosNominasCreate(request.POST or None)
         if formulario.is_valid():
-            formulario.save()
-            return redirect('Puestos')
+            puesto = formulario.save()
+            return redirect('DetailsPuestos',id=puesto.id)
     
     formulario = puestosNominasCreate()
        

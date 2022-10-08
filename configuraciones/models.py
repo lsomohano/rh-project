@@ -56,7 +56,7 @@ class zonas_ciudades(Enum):
 
 class Locaciones(models.Model):
     locacion = models.CharField(max_length=6)
-    locacion_name = models.CharField(max_length=20)
+    locacion_name = models.CharField(max_length=100)
     direccion = models.TextField()
     codigo_postal = models.CharField(max_length=5)
     telefono = models.CharField(max_length=10)
