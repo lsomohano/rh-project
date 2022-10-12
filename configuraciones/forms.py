@@ -138,7 +138,7 @@ class LocacionesCreate(forms.ModelForm):
 class ContactosLocacionesCreation(forms.ModelForm):
     class Meta:
         model = Contactos
-        fields = ['user','locaciones','telefono','horario_inicio','horario_termino','dias_atencion']
+        fields = ['user','locaciones','horario_inicio','horario_termino','dias_atencion']
         widgets = {
             'locaciones': forms.HiddenInput(),
         }
@@ -154,10 +154,6 @@ class ContactosLocacionesCreation(forms.ModelForm):
         self.fields['user'].widget.attrs.update({
             'class':'form-control select2bs4',
             'placeholder':'User',
-        })
-        self.fields['telefono'].widget.attrs.update({
-            'class':'form-control',
-            'placeholder':'Telefono',
         })
         self.fields['horario_inicio'].widget.attrs.update({
             'class':'form-control',
