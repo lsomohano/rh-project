@@ -10,16 +10,21 @@ from enum import Enum
 User = get_user_model()
 
 #Opcciones de estatus activo.
-class activo(Enum):
+class Activo(Enum):
     Y = "Si"
     N = "No"
 
 #Opciones de tipos de estatus.
-class tipos_estatus(Enum):
+class TiposEstatus(Enum):
     solicitud = "Solicitud"
     candidato = "Candidato"
 
-
+#Opciones de tipos de estatus.
+class Periodos(Enum):
+    semanal = "Semanal"
+    quincenal = "Quincenal"
+    catorcenal = "Catorcenal"
+    mensual = "Mensual"
 
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
@@ -27,8 +32,8 @@ class Estatus(models.Model):
 
     estatus = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=250)
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
-    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in tipos_estatus], default='Y')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -46,14 +51,17 @@ class Estatus(models.Model):
 class SolicitudesVacantes(models.Model):
     """El sistema gestionara las solicitudes de vacantes, cada gerente podra solicitar sus vancantes 
     y el proveedor podra dar seguimiento a estas solicitudes """
+
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE, verbose_name='Locaciones')
     locaciones_puestos = models.ForeignKey(LocacionesPuestos, on_delete=models.CASCADE, verbose_name='Puestos')
-    suledos = models.DecimalField(max_digits=20, decimal_places=2)
-    comiciones = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
-    bono = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
-    garantia = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    sueldos = models.DecimalField(max_digits=20, decimal_places=2)
+    comiciones = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    bono = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    garantia = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    cantidad = models.IntegerField(default=1)
+    periodo_pago = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in Periodos], default='quincenal')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -74,7 +82,7 @@ class SolicitudesEstatus(models.Model):
 
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitud')
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -100,7 +108,7 @@ class Personas(models.Model):
     email = models.EmailField(null=True, blank=True)
     telefono = models.CharField(max_length=15)
     cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True)
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -120,7 +128,7 @@ class Documentos(models.Model):
     en sus entrevistas"""
     documento = models.CharField(max_length=70, null=True, blank=True)
     descripcion = models.TextField(max_length=300, null=True, blank=True)
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -143,7 +151,7 @@ class Candidatos(models.Model):
     personas = models.ForeignKey(Personas, on_delete=models.CASCADE, verbose_name='Personas')
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     evalucion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
-    aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -163,7 +171,7 @@ class CandidatosEstatus(models.Model):
 
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -184,8 +192,8 @@ class CandidatosDocumentos(models.Model):
 
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     documentos = models.ForeignKey(Documentos, on_delete=models.CASCADE, verbose_name='Documentos')
-    check_proveedor = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='N')
-    check_locacion = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='N')
+    check_proveedor = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
+    check_locacion = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
     
     class Meta:
         db_table =  "candidatos_documentos"

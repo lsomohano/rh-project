@@ -16,6 +16,7 @@ def solicitudesView(request):
 
 def createSolicitudes(request):
     """Vista que permite agregar nuevas solicitudes"""
+
     titles = {"title_page":'Entidades',"sub_title_page":'Nueva entidad.'}
     if request.method == "POST":
         formulario = SolicitudesCreation(request.POST or None)
@@ -25,4 +26,16 @@ def createSolicitudes(request):
     
     formulario = SolicitudesCreation()
        
-    return render(request,"solicitudes/create.html",{"titles":titles, "formulario":formulario})
+    return render(request,"solicitudes/create_solicitud.html",{"titles":titles, "formulario":formulario})
+
+
+def detailsSolicitudes(request, id):
+    """Vista del datalle de la vacante, tambien se gestiona la información de los candidatos"""    
+    titles = {"title_page":'Solicitudes',"sub_title_page":'Información de la vacante.'}
+    solicitud = SolicitudesVacantes.objects.get(id=id)
+    #puestos_operativos = PuestosOperativos.objects.filter(puestos_nominas_id=id, activo='Y')
+
+    return render(request,"solicitudes/details_solicitud.html",{
+        "titles":titles, 
+        "solicitud":solicitud, 
+    })
