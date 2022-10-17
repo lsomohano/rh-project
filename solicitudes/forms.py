@@ -5,18 +5,22 @@ from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locacio
 
 
 
-class SolicitudesCreation(forms.ModelForm):
-    locaciones =forms.ModelChoiceField(queryset=Locaciones.objects.filter(contactos__user_id=3).select_related(), to_field_name="id",)
-    locaciones_puestos =forms.ModelChoiceField(queryset=LocacionesPuestos.objects.filter(locaciones_id=2), empty_label="-- Hola --", to_field_name="id",)
+class SolicitudesForm(forms.ModelForm):
+
+    locaciones = forms.ModelChoiceField(queryset=Locaciones.objects.all(), empty_label="-- Locaciones --", to_field_name="id",)
+    locaciones_puestos = forms.ModelChoiceField(queryset=LocacionesPuestos.objects.filter(locaciones_id=1), empty_label="-- Puestos --", to_field_name="id",)
 
     
     class Meta:
         model = SolicitudesVacantes
         fields = ['locaciones','locaciones_puestos','cantidad','sueldos','periodo_pago','comiciones','bono','garantia','user']
-        
-
+    
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('users')
         super().__init__(*args, **kwargs)
+
+        qs = Locaciones.objects.filter(contactos__user_id=self.user).select_related()
+        self.fields['locaciones'].queryset = qs
 
         self.fields['locaciones'].widget.attrs.update({
             'class':'form-control',
@@ -53,4 +57,27 @@ class SolicitudesCreation(forms.ModelForm):
         self.fields['user'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'user_id',
+            
+        })
+
+class EstatusForm(forms.ModelForm):    
+    class Meta:
+        model = Estatus
+        fields = ['estatus','descripcion','tipos',]
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['estatus'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'estatus',
+        })
+        self.fields['descripcion'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'descripcion',
+        })
+        self.fields['tipos'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'tipos',
         })

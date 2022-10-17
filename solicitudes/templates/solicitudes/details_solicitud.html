@@ -19,25 +19,39 @@
           </div>
           <!-- info row -->
           <div class="row invoice-info">
-            <div class="col-sm-2 invoice-col">
+            <div class="col-sm-3 invoice-col">
               Datos de la vancante
               <address>
-                <strong>Suledo $: {{solicitud.sueldos}}</strong><br>
+                <strong>Vacantes : {{solicitud.cantidad}}</strong><br>
+                Suledo : $ {{solicitud.sueldos}}<br>
+                Pago: {{solicitud.periodo_pago}}<br>
                 Comiciones: {{solicitud.comiciones}}<br>
                 Bonos: {{solicitud.bono}}<br>
                 Bonos: {{solicitud.garantia}}<br>                
             </div>
             <!-- /.col -->
-            <div class="col-sm-8 invoice-col">
+            <div class="col-sm-3 invoice-col">
               Lolicitante:
               <address>
                 <strong>Contacto: {{solicitud.user.first_name}} {{solicitud.user.last_name}}</strong><br>
-                {{proveedor.direccion}}<br>
+                {{solicitud.locaciones}}<br>
+                {{solicitud.locaciones.direccion}}<br>
+                {{solicitud.user.email}} <br>
+                {{estatus}} {{estatus.created}}
               </address>
             </div>
             <!-- /.col -->
-            <div class="col-sm-2 invoice-col">
-              {% if solicitud.activo == "Y" %}
+            <div class="col-sm-3 invoice-col">
+              Otra info:
+              <address>
+              <strong></strong><br>
+              </address>
+            </div>
+            <div class="col-sm-3 invoice-col">
+              <button class="btn btn-success btn-sm btn-block disabled" >
+                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} {{estatus.created}}
+              </button>
+              <!--{% if solicitud.activo == "Y" %}
                 <button class="btn btn-success btn-sm btn-block disabled" >
                   <i class="fas fa-thumbs-up"></i> Estatus: Activo
                 </button>
@@ -45,14 +59,15 @@
                 <button class="btn btn-secondary btn-sm btn-block disabled" >
                   <i class="fas fa-thumbs-down"></i> Estatus: Inactivo
                 </button>
-              {% endif %}
-              <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreatePuestoOperativo' solicitud.id %}', 'myModal')" >
-                <i class="fas fa-edit"></i> Agregar Puesto Operativo
-              </button>
-              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditPuestosNomina' solicitud.id %}', 'myModal')" >
+              {% endif %}-->
+              
+              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
                 <i class="fas fa-edit"></i> Editar
               </button>
               <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
+              <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreatePuestoOperativo' solicitud.id %}', 'myModal')" >
+                <i class="fas fa-plus-circle"></i> Agregar Puesto Operativo
+              </button>
             </div>
             <!-- /.col -->
           </div>
