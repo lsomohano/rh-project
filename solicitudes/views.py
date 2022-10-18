@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 
 import solicitudes
 from .models import SolicitudesVacantes, SolicitudesEstatus, Estatus
-from .forms import SolicitudesForm, EstatusForm
+from configuraciones.models import Locaciones, PuestosOperativos
+from .forms import CandidatosForm, PersonasForm, SolicitudesForm, EstatusForm
 
 # Create your views here.
 """Gestion de las Solicitudes de Vacantes"""
@@ -23,7 +24,9 @@ def createSolicitudes(request):
     if request.method == "POST":
         formulario = SolicitudesForm(request.POST or None)
         if formulario.is_valid():
+            
             solicitud = formulario.save()
+
             estatus = Estatus.objects.get(tipos='solicitud',estatus='Abierta')
 
             solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
@@ -31,8 +34,14 @@ def createSolicitudes(request):
             return redirect('DetailsSolicitudes', id=solicitud.id)
     
     formulario = SolicitudesForm()
-       
+
+    if request.user.id != 1:
+        qs = Locaciones.objects.filter(contactos__user_id=request.user.id).select_related()
+        formulario.fields['locaciones'].queryset = qs
+        formulario.fields['puestos_operativos'].queryset = PuestosOperativos.objects.filter(locacionespuestos__locaciones__contactos__user_id=2)
+
     return render(request,"solicitudes/create_solicitud.html",{"titles":titles, "formulario":formulario})
+
 
 
 def editSolicitudes(request, id):
@@ -64,6 +73,33 @@ def detailsSolicitudes(request, id):
         "estatus":estatus,
     })
 
+
+"""Vistas del manjo de los candidatos y personas"""
+
+def createCandidatos(request, solicitudes_id):
+    """Vista que permite agregar nuevos estados, para solicitudes y para los candidatos"""
+
+    titles = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
+    if request.method == "POST":
+        form_personas = PersonasForm(request.POST or None)
+        form_candidatos = CandidatosForm(request.POST or None)
+
+        if form_personas.is_valid():
+            form_personas.save()
+            return redirect('DetailsSolicitudes',id=solicitudes_id)
+    
+    form_personas = PersonasForm()
+    form_candidatos = CandidatosForm()
+       
+    return render(
+        request,
+        "solicitudes/create_candidatos.html",
+        {
+            "titles":titles, 
+            "form_personas":form_personas, 
+            "form_candidatos":form_candidatos, 
+            "solicitudes_id":solicitudes_id
+        })
 
 
 """Catalogo de los estatus"""

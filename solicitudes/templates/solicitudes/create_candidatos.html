@@ -1,0 +1,85 @@
+<div class="modal-content">
+    <!--<div class="overlay">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>-->
+    <div class="modal-header">
+      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
+      <div class="modal-body">
+        {% if form.errors %}
+          <p style="color: red;">Valida la información capturada</p>
+        {% endif %}
+        <div class="bs-stepper">
+          <div class="bs-stepper-header" role="tablist">
+            <!-- your steps here -->
+            <div class="step" data-target="#datos_personales">
+              <button type="button" class="step-trigger" role="tab" aria-controls="datos_personales" id="datos_personales-trigger">
+                <span class="bs-stepper-circle">1</span>
+                <span class="bs-stepper-label">Datos Personales</span>
+              </button>
+            </div>
+            <div class="line"></div>
+            <div class="step" data-target="#evaluaciones-part">
+              <button type="button" class="step-trigger" role="tab" aria-controls="evaluaciones-part" id="evaluaciones-part-trigger">
+                <span class="bs-stepper-circle">2</span>
+                <span class="bs-stepper-label">Evaluaciones</span>
+              </button>
+            </div>
+          </div>
+          <div class="bs-stepper-content">
+            <!-- your steps content here -->
+            <div id="datos_personales" class="content" role="tabpanel" aria-labelledby="datos_personales-trigger">
+              {% for field in form_personas %}
+                {% if field.name != 'user' %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                    {{field}}
+                  </div>
+                  {{field.errors}}
+                </div>
+                {% else %}
+                  {% if field.value is not null  %}
+                    <input type="hidden" name="{{field.name}}" value="{{field.value}}">
+                  {% else %}
+                    <input type="hidden" name="{{field.name}}" value="{{user.id}}">
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              <button class="btn btn-primary" onclick="stepper.next()">Next</button>
+            </div>
+            <div id="evaluaciones-part" class="content" role="tabpanel" aria-labelledby="evaluaciones-part-trigger">
+              {% for field in form_candidatos %}
+                {% if field.name != 'user' %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                    {{field}}
+                  </div>
+                  {{field.errors}}
+                </div>
+                {% else %}
+                  {% if field.value is not null  %}
+                    <input type="hidden" name="{{field.name}}" value="{{field.value}}">
+                  {% else %}
+                    <input type="hidden" name="{{field.name}}" value="{{user.id}}">
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+              <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>

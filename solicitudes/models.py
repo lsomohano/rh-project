@@ -54,7 +54,7 @@ class SolicitudesVacantes(models.Model):
 
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE, verbose_name='Locaciones')
-    locaciones_puestos = models.ForeignKey(LocacionesPuestos, on_delete=models.CASCADE, verbose_name='Puestos')
+    puestos_operativos = models.ForeignKey(PuestosOperativos, on_delete=models.CASCADE, verbose_name='Puestos', null=True, blank=True)
     sueldos = models.DecimalField(max_digits=20, decimal_places=2)
     comiciones = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     bono = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
@@ -150,7 +150,7 @@ class Candidatos(models.Model):
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitudes')
     personas = models.ForeignKey(Personas, on_delete=models.CASCADE, verbose_name='Personas')
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
-    evalucion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
+    evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
 

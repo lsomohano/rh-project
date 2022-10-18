@@ -1,6 +1,6 @@
 from curses.ascii import SO
 from django import forms
-from .models import Estatus, SolicitudesVacantes
+from .models import Candidatos, Estatus, Personas, SolicitudesVacantes
 from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locaciones
 
 
@@ -8,27 +8,24 @@ from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locacio
 class SolicitudesForm(forms.ModelForm):
 
     locaciones = forms.ModelChoiceField(queryset=Locaciones.objects.all(), empty_label="-- Locaciones --", to_field_name="id",)
-    locaciones_puestos = forms.ModelChoiceField(queryset=LocacionesPuestos.objects.filter(locaciones_id=1), empty_label="-- Puestos --", to_field_name="id",)
-
+    puestos_operativos = forms.ModelChoiceField(queryset=PuestosOperativos.objects.all(), empty_label="-- Puestos --", to_field_name="id",)
     
     class Meta:
         model = SolicitudesVacantes
-        fields = ['locaciones','locaciones_puestos','cantidad','sueldos','periodo_pago','comiciones','bono','garantia','user']
-    
+        fields = ['locaciones','puestos_operativos','cantidad','sueldos','periodo_pago','comiciones','bono','garantia','user']
+        widgets = {
+            'user': forms.HiddenInput(),
+        }
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop('users')
         super().__init__(*args, **kwargs)
-
-        qs = Locaciones.objects.filter(contactos__user_id=self.user).select_related()
-        self.fields['locaciones'].queryset = qs
 
         self.fields['locaciones'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Locación',
         })
-        self.fields['locaciones_puestos'].widget.attrs.update({
+        self.fields['puestos_operativos'].widget.attrs.update({
             'class':'form-control',
-            'placeholder':'Locación',
+            'placeholder':'Puesto',
         })
         self.fields['cantidad'].widget.attrs.update({
             'class':'form-control',
@@ -54,11 +51,7 @@ class SolicitudesForm(forms.ModelForm):
             'class':'form-control',
             'placeholder':'garantia',
         })
-        self.fields['user'].widget.attrs.update({
-            'class':'form-control',
-            'placeholder':'user_id',
-            
-        })
+        
 
 class EstatusForm(forms.ModelForm):    
     class Meta:
@@ -81,3 +74,66 @@ class EstatusForm(forms.ModelForm):
             'class':'form-control',
             'placeholder':'tipos',
         })
+
+
+class PersonasForm(forms.ModelForm):    
+    class Meta:
+        model = Personas
+        fields = ['rfc','nombre','apellido_paterno','apellido_materno','fecha_nacimiento','email','telefono','cv_solicitud']
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['nombre'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Nombre',
+        })
+        self.fields['apellido_paterno'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Apellido Paterno',
+        })
+        self.fields['apellido_materno'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Apellido Materno',
+        })
+        self.fields['rfc'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'R.F.C.',
+        })
+        self.fields['fecha_nacimiento'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Fecha Nacimiento',
+        })
+        self.fields['email'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Email',
+        })
+        self.fields['telefono'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Telefono',
+        })
+        self.fields['cv_solicitud'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'CV o Solicitud de empleo',
+        })
+        
+
+class CandidatosForm(forms.ModelForm):  
+
+    class Meta:
+        model = Candidatos
+        fields = ['reporte_entrevista','evaluacion_psicometrica','personas','solicitudes_vacantes','user']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['reporte_entrevista'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'reporte_entrevista',
+        })
+        self.fields['evaluacion_psicometrica'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'evaluacion_psicometrica',
+        })
+        
