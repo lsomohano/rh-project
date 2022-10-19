@@ -102,7 +102,8 @@ class PersonasForm(forms.ModelForm):
             'placeholder':'R.F.C.',
         })
         self.fields['fecha_nacimiento'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control datetimepicker-input',
+            'data-target':"#fecha_nacimiento",
             'placeholder':'Fecha Nacimiento',
         })
         self.fields['email'].widget.attrs.update({

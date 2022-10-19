@@ -4,6 +4,7 @@ import solicitudes
 from .models import SolicitudesVacantes, SolicitudesEstatus, Estatus
 from configuraciones.models import Locaciones, PuestosOperativos
 from .forms import CandidatosForm, PersonasForm, SolicitudesForm, EstatusForm
+from solicitudes import forms
 
 # Create your views here.
 """Gestion de las Solicitudes de Vacantes"""
@@ -81,12 +82,25 @@ def createCandidatos(request, solicitudes_id):
 
     titles = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
     if request.method == "POST":
-        form_personas = PersonasForm(request.POST or None)
-        form_candidatos = CandidatosForm(request.POST or None)
+        #recuperamos los datos de los formularios
+        form_personas = PersonasForm(request.POST or None, request.FILES)
+        form_candidatos = CandidatosForm(request.POST or None, request.FILES)
 
-        if form_personas.is_valid():
-            form_personas.save()
-            return redirect('DetailsSolicitudes',id=solicitudes_id)
+        #Se recuperan los archivos
+        cv_solicitud = request.FILES["cv_solicitud"]
+        reporte_entrevista = request.FILES["reporte_entrevista"]
+        evaluacion_psicometrica = request.FILES["evaluacion_psicometrica"]
+
+        form_personas["cv_solicitud"] = cv_solicitud
+        form_candidatos["reporte_entrevista"] = reporte_entrevista
+        form_candidatos["evaluacion_psicometrica"] = evaluacion_psicometrica
+
+        if form_candidatos.is_valid() and form_personas.is_valid():
+            candidato = form_personas.save(commit=False)
+            candidato.persona = form_personas.save()
+            candidato.save()       
+
+        return redirect('DetailsSolicitudes',id=solicitudes_id)
     
     form_personas = PersonasForm()
     form_candidatos = CandidatosForm()
