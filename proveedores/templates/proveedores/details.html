@@ -100,7 +100,7 @@
                               {% for contacto in contactos %}
                               <tr>
                                 <td>{{contacto.user.first_name}} {{contacto.user.last_name}}</td>
-                                <td>{{contacto.telefono}}</td>
+                                <td>{{contacto.user.phone}}</td>
                                 <td>{{contacto.user.email}}</td>
                                 <td>{{contacto.tipo_contacto}}</td>
                                 <td>

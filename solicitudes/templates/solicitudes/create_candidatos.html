@@ -1,0 +1,134 @@
+{% load static %}
+<!-- BS Stepper -->
+<link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css' %}">
+
+<div class="modal-content">
+    <!--<div class="overlay">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>-->
+    <div class="modal-header">
+      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form action="{{request.path}}" method="POST" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+      <div class="modal-body">
+        {% if form.errors %}
+          <p style="color: red;">Valida la información capturada</p>
+        {% endif %}
+        <div class="bs-stepper" id="stepper">
+          <div class="bs-stepper-header" role="tablist">
+           
+            <div class="step active" data-target="#datos-personales">
+              <button type="button" class="step-trigger" role="tab" aria-controls="datos-personales" id="datos-personales-trigger">
+                <span class="bs-stepper-circle">1</span>
+                <span class="bs-stepper-label">Datos Personales</span>
+              </button>
+            </div>
+            <div class="line"></div>
+            <div class="step" data-target="#evaluaciones-part">
+              <button type="button" class="step-trigger" role="tab" aria-controls="evaluaciones-part" id="evaluaciones-part-trigger">
+                <span class="bs-stepper-circle">2</span>
+                <span class="bs-stepper-label">Evaluaciones</span>
+              </button>
+            </div>
+          </div>
+          <div class="bs-stepper-content">
+            
+            <div id="datos-personales" class="content active dstepper-block" role="tabpanel" aria-labelledby="datos-personales-trigger">
+
+              {% for field in form_personas %}
+                {% if field.name != 'fecha_nacimiento' %}
+                  <div class="form-group row justify-content-md-center">
+                    <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 ">
+                      {{field}}
+                    </div>
+                    {{field.errors}}
+                  </div>
+                {% elif  field.name == 'fecha_nacimiento' %}
+                  <div class="form-group row justify-content-md-center">
+                    <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 ">
+                      <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
+                        {{field}}
+                        <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endif %}
+              {% endfor %}
+              <a href="#" class="btn btn-primary" onclick="stepper.next()">Next</a>
+              
+            </div>
+
+            <div id="evaluaciones-part" class="content" role="tabpanel" aria-labelledby="evaluaciones-part-trigger">
+
+              {% for field in form_candidatos %}
+                {% if field.name != 'user' and field.name != 'personas' and field.name != 'solicitudes_vacantes' %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                    {{field}}
+                  </div>
+                  {{field.errors}}
+                </div>
+                {% else %}
+
+                  {% if field.value is not null  %}
+                    <input type="hidden" name="{{field.name}}" value="{{field.value}}">
+
+                  {% elif field.name == 'user' %}
+                    <input type="hidden" name="{{field.name}}" value="{{user.id}}">
+
+                  {% elif field.name == 'solicitudes_vacantes' %}
+                    <input type="hidden" name="{{field.name}}" value="{{solicitudes_id}}">
+
+                  {% elif field.name == 'personas' %}
+                    <input type="hidden" name="{{field.name}}" value="">
+
+                  {% endif %}
+
+                {% endif %}
+              {% endfor %}
+              <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </form>
+  </div>
+<!-- BS-Stepper -->
+<script src="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
+
+<script>
+  $(function () {
+    //Date picker
+    $('#fecha_nacimiento').datetimepicker({
+        format: 'L'
+    });
+  })
+
+  var stepperElement = document.getElementById('stepper');
+  var stepper = new Stepper(stepperElement);
+  // get current index from stepper
+  var currentIndex = stepper._currentIndex;
+
+  stepperElement.addEventListener('shown.bs-stepper', function (event) {
+    console.log('Moved to step ' + event.detail.indexStep)
+  })
+
+  // BS-Stepper Init
+  /*document.addEventListener('DOMContentLoaded', function () {
+    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+  })*/
+</script>

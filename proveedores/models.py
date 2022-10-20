@@ -18,7 +18,7 @@ class tipos_contactos(Enum):
 class Proveedores(models.Model):
     proveedor = models.CharField(max_length=70)
     rfc = models.CharField(max_length=13)
-    razon_social = models.CharField(max_length=100, null=True, blank=True)
+    razon_social = models.CharField(max_length=200, null=True, blank=True)
     direccion = models.TextField(null=True, blank=True)
     codigo_postal = models.CharField(max_length=5, null=True, blank=True)
     telefono = models.CharField(max_length=10, null=True, blank=True)
@@ -38,10 +38,9 @@ class Proveedores(models.Model):
 
 
 class ContactosProveedores(models.Model):
-    telefono = models.CharField(max_length=10, null=True, blank=True)
     tipo_contacto = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in tipos_contactos], default='A')
     proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedores')
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    user=models.OneToOneField(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)

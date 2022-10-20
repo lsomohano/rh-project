@@ -4,11 +4,13 @@ from .forms import ContactosLocacionesCreation, PuestosLocacionesCreation, ciuda
 # Create your views here.
 
 def entidadesView(request):
+    """Vista que gestiona la información de las entidades"""
     titles = {"title_page":'Entidades',"sub_title_page":'Gestión de info de Entidades.'}
     entidades = Entidades.objects.filter(activo='Y')
     return render(request,"configuraciones/entidades.html",{"titles":titles, "entidades":entidades})
 
 def createEntidades(request):
+    """Vista que permite agregar nuevas entidades"""
     titles = {"title_page":'Entidades',"sub_title_page":'Nueva entidad.'}
     if request.method == "POST":
         formulario = entidadesCreate(request.POST or None)
@@ -22,7 +24,7 @@ def createEntidades(request):
 
 
 def editEntidades(request, id):
-
+    """Vista que permite editar la información una entidad"""
     titles = {"title_page":'Entidades',"sub_title_page":'Editar información de la entidad.'}
     entidades = Entidades.objects.get(id=id)
     if request.method == "POST":

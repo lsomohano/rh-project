@@ -46,7 +46,7 @@ class ProveedoresCreation(forms.ModelForm):
 class ContactosProveedoresCreation(forms.ModelForm):
     class Meta:
         model = ContactosProveedores
-        fields = ['user','proveedores','telefono','tipo_contacto']
+        fields = ['user','proveedores','tipo_contacto']
         widgets = {
             'proveedores': forms.HiddenInput(),
         }
@@ -62,10 +62,6 @@ class ContactosProveedoresCreation(forms.ModelForm):
         self.fields['user'].widget.attrs.update({
             'class':'form-control select2bs4',
             'placeholder':'user',
-        })
-        self.fields['telefono'].widget.attrs.update({
-            'class':'form-control',
-            'placeholder':'Telefono',
         })
         self.fields['tipo_contacto'].widget.attrs.update({
             'class':'form-control',

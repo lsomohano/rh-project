@@ -65,7 +65,7 @@ class Locaciones(models.Model):
     longitud = models.CharField(max_length=15)
     horario_apertura = models.TimeField()
     horario_cierre = models.TimeField()
-    dias_operativos = models.CharField(max_length=21)
+    dias_operativos = models.CharField(max_length=50)
     ciudades = models.ForeignKey(Ciudades, on_delete=models.CASCADE, verbose_name='Ciudad')
     zona_ciudad = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in zonas_ciudades], verbose_name='Zona',default='aeropuerto')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
@@ -83,12 +83,11 @@ class Locaciones(models.Model):
 
 
 class Contactos(models.Model):
-    telefono = models.CharField(max_length=10)
     horario_inicio = models.TimeField()
     horario_termino = models.TimeField()
-    dias_atencion = models.CharField(max_length=21)
+    dias_atencion = models.CharField(max_length=50)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    user=models.OneToOneField(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -100,7 +99,7 @@ class Contactos(models.Model):
         ordering = ["-activo"]
 
     def __str__(self):
-        return self.activo
+        return self.user.first_name
 
 
 class PuestosNominas(models.Model):
@@ -161,4 +160,4 @@ class LocacionesPuestos(models.Model):
         ordering = ["-locaciones"]
 
     def __str__(self):
-        return self.activo
+        return self.puestos_operativos.puesto_operativo

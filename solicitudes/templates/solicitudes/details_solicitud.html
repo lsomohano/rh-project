@@ -1,0 +1,171 @@
+{% extends "reclutamiento/base_adminlte.html" %}
+{% load static %}
+{% block content %} 
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <!-- Main content -->
+        <div class="invoice p-3 mb-3">
+          <!-- title row -->
+          <div class="row">
+            <div class="col-12">
+              <h4>
+                <i class="fas fa-user"></i> {{solicitud.puestos_operativos}} - {{solicitud.puestos_operativos.puestos_nominas}}
+                <small class="float-right">Alta: {{solicitud.created}}</small>
+              </h4>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- info row -->
+          <div class="row invoice-info">
+            <div class="col-sm-3 invoice-col">
+              Datos de la vancante
+              <address>
+                <strong>Vacantes : {{solicitud.cantidad}}</strong><br>
+                Suledo : $ {{solicitud.sueldos}}<br>
+                Pago: {{solicitud.periodo_pago}}<br>
+                Comiciones: {{solicitud.comiciones}}<br>
+                Bonos: {{solicitud.bono}}<br>
+                Bonos: {{solicitud.garantia}}<br>                
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+              Lolicitante:
+              <address>
+                <strong>Contacto: {{solicitud.user.first_name}} {{solicitud.user.last_name}}</strong><br>
+                {{solicitud.locaciones}}<br>
+                {{solicitud.locaciones.direccion}}<br>
+                {{solicitud.user.email}} <br>
+                {{estatus}} {{estatus.created}}
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+              Otra info:
+              <address>
+              <strong></strong><br>
+              </address>
+            </div>
+            <div class="col-sm-3 invoice-col">
+              <button class="btn btn-success btn-sm btn-block disabled" >
+                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} {{estatus.created}}
+              </button>
+              <!--{% if solicitud.activo == "Y" %}
+                <button class="btn btn-success btn-sm btn-block disabled" >
+                  <i class="fas fa-thumbs-up"></i> Estatus: Activo
+                </button>
+              {% else %}
+                <button class="btn btn-secondary btn-sm btn-block disabled" >
+                  <i class="fas fa-thumbs-down"></i> Estatus: Inactivo
+                </button>
+              {% endif %}-->
+              
+              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
+                <i class="fas fa-edit"></i> Editar
+              </button>
+              <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
+              <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateCandidatos' solicitud.id %}', 'myModal')" >
+                <i class="fas fa-plus-circle"></i> Agregar Puesto Operativo
+              </button>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <br>
+          <!-- Table row -->
+          <div class="row">
+            <div class="col-12 table-responsive">
+                <!--<table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Puesto Operativo</th>
+                        <th>Reclutamiento</th>
+                        <th>Estatus</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for puesto_operativo in puestos_operativos %}
+                      <tr>
+                        <td>{{puesto_operativo.puesto_operativo}}</td>
+                        <td>{{puesto_operativo.canal_reclutamiento}}</td>
+                        
+                        <td>
+                          {% if puesto_operativo.activo == "Y" %}
+                              <button class="btn btn-success btn-xs disabled" >
+                                <i class="fas fa-thumbs-up"></i> Activo
+                              </button>
+                          {% else %}
+                              <button class="btn btn-secondary btn-xs disabled" >
+                                <i class="fas fa-thumbs-down"></i> Inactivo
+                              </button>
+                          {% endif %}</td>
+                        </td>
+                        <td>
+                          <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditPuestoOperativo' puesto_operativo.id %}', 'myModal')" >
+                            <i class="fas fa-edit"></i> Editar
+                          </button>
+                          <a href="{% url 'DeletePuestosOperativo' puesto_operativo.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>  -->
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+
+          <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg" id="myModal">
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+
+        </div>
+        <!-- /.invoice -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+  <script>
+    /*
+    * 
+    *Carga una pagina en un div
+    *
+    */
+    function cargaModal(metodo, div){
+      $.ajax({
+          type: "GET",
+          url: metodo,
+          success: function(html){
+              $("#"+div).html(html);
+          }
+      });
+    };
+
+    $(function () {
+      $('a.elimina').confirm({
+        content: "¿Estas seguro de querer eliminar este registro?",
+        icon: 'fas fa-exclamation-triangle',
+        closeIcon: true,
+        closeIconClass: 'fas fa-times',
+      });
+    });
+
+    $(function () {
+    
+        $('#example1').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });
+    });
+  </script>
+{% endblock content %}
