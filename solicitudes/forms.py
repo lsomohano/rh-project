@@ -124,7 +124,7 @@ class CandidatosForm(forms.ModelForm):
 
     class Meta:
         model = Candidatos
-        fields = ['reporte_entrevista','evaluacion_psicometrica','personas','solicitudes_vacantes','user']
+        fields = ['reporte_entrevista','evaluacion_psicometrica','solicitudes_vacantes','user']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
