@@ -107,7 +107,6 @@ class Personas(models.Model):
     fecha_nacimiento = models.DateField()
     email = models.EmailField(null=True, blank=True)
     telefono = models.CharField(max_length=15)
-    cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -149,6 +148,7 @@ class Candidatos(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitudes')
     personas = models.ForeignKey(Personas, on_delete=models.CASCADE, verbose_name='Personas')
+    cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True)
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
@@ -182,7 +182,7 @@ class CandidatosEstatus(models.Model):
         ordering = ["-created"]
 
     def __str__(self):
-        return self.activo
+        return self.estatus.estatus
 
 
 

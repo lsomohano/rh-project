@@ -2,8 +2,8 @@ from socket import create_server
 from turtle import title
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.views.generic import CreateView
-from .models import Candidatos, SolicitudesVacantes, SolicitudesEstatus, Estatus
+from django.views.generic import CreateView, UpdateView
+from .models import Candidatos, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus
 from configuraciones.models import Locaciones, PuestosOperativos
 from .forms import CandidatosForm, PersonasForm, SolicitudesForm, EstatusForm
 
@@ -70,59 +70,15 @@ def detailsSolicitudes(request, id):
     titles = {"title_page":'Solicitudes',"sub_title_page":'Información de la vacante.'}
     solicitud = SolicitudesVacantes.objects.get(id=id)
     estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=id, activo='Y')
+
+    candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=id).prefetch_related('id__candidatos_estatus')
     return render(request,"solicitudes/details_solicitud.html",{
         "titles":titles, 
         "solicitud":solicitud, 
         "estatus":estatus,
+        "candidatos":candidatos,
     })
 
-
-"""Vistas del manjo de los candidatos y personas"""
-
-"""def createCandidatos(request, solicitudes_id):
-
-    titles = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
-    if request.method == "POST":
-        #recuperamos los datos de los formularios
-        form_candidatos = CandidatosForm(request.POST or None, request.FILES)
-        form_personas = PersonasForm(request.POST or None, request.FILES)
-        
-
-        #Se recuperan los archivos
-        if form_candidatos.is_valid() and form_personas.is_valid():
-            candidato = form_candidatos.save(commit=False)
-            persona = form_personas.save()
-           
-            candidato.personas = persona
-            candidato.save()       
-
-            return redirect('DetailsSolicitudes',id=solicitudes_id)
-        else:
-
-            form_personas = PersonasForm(request.POST or None, request.FILES)
-            form_candidatos = CandidatosForm(request.POST or None, request.FILES)
-            return render(
-                request,
-                "solicitudes/create_candidatos.html",
-                {
-                    "titles":titles, 
-                    "form_personas":form_personas, 
-                    "form_candidatos":form_candidatos, 
-                    "solicitudes_id":solicitudes_id
-                })
-
-    form_personas = PersonasForm()
-    form_candidatos = CandidatosForm()
-       
-    return render(
-        request,
-        "solicitudes/create_candidatos.html",
-        {
-            "titles":titles, 
-            "form_personas":form_personas, 
-            "form_candidatos":form_candidatos, 
-            "solicitudes_id":solicitudes_id
-        })"""
 
 
 """Catalogo de los estatus"""
@@ -167,7 +123,7 @@ def editEstatus(request, id):
     return render(request,"solicitudes/create_estatus.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
-# Gestion de las vacantes #
+##### Gestion de las vacantes #####
 class CandidatosCreate(CreateView):
     """Vista que permite agregar infomación de lo"""
     model = Candidatos
@@ -192,10 +148,57 @@ class CandidatosCreate(CreateView):
         form2 = self.second_form_class(request.POST, request.FILES)
 
         if form.is_valid() and form2.is_valid():
-
             candidato = form.save(commit=False)
             candidato.personas = form2.save()
             candidato.save()
-            redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+
+            #Se asigna un estatus al candidato
+            estatus = Estatus.objects.get(tipos='candidato', estatus='En proceso')
+            candidatos_estatus = CandidatosEstatus.objects.create(candidatos=candidato, estatus=estatus)
+            candidatos_estatus.save()
+
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+        else:
+            return self.render_to_response(self.get_context_data(form=form, form2=form2))
+
+
+class CandidatosUpdate(UpdateView):
+    model = Candidatos
+    second_model = Personas
+    template_name = "solicitudes/create_candidatos.html"
+    form_class = CandidatosForm
+    second_form_class = PersonasForm
+
+    def get_context_data(self, **kwargs) :
+        context = super(CandidatosUpdate, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        candidato = self.model.objects.get(id=pk)
+        persona = self.second_model.objects.get(id=candidato.personas_id)
+
+        context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Editar Candidato.'}
+        context['solicitudes_id'] = self.kwargs.get('solicitudes_id')
+        
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=candidato)
+        if 'form2' not in context:
+            context['form2'] =self.second_form_class(instance=persona)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        candidato_id = kwargs['pk']
+        candidato = self.model.objects.get(id=candidato_id)
+        persona = self.second_model.objects.get(id=candidato.personas_id)
+
+        form = self.form_class(request.POST, request.FILES, instance=candidato)
+        form2 = self.second_form_class(request.POST, request.FILES, instance=persona)
+
+        if form.is_valid() and form2.is_valid():
+
+            candidato = form.save()
+            form2.save()
+            
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2))

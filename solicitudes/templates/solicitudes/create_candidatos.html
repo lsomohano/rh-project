@@ -11,7 +11,7 @@
       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
-    </div>{{solicitudes_id}}
+    </div>
     <form action="{{request.path}}" method="POST" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
       <div class="modal-body">
         {% if form.errors %}
@@ -94,8 +94,9 @@
 
                 {% endif %}
               {% endfor %}
-              <button class="btn btn-primary" onclick="stepper.previous()">Previous</button>
-              <button type="submit" class="btn btn-primary">Submit</button>
+
+              <a href="#" class="btn btn-primary" onclick="stepper.previous()">Previous</a>
+              <!--<button type="submit" class="btn btn-primary">Submit</button>-->
             </div>
           </div>
         </div>

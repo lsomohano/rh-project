@@ -79,7 +79,7 @@ class EstatusForm(forms.ModelForm):
 class PersonasForm(forms.ModelForm):    
     class Meta:
         model = Personas
-        fields = ['rfc','nombre','apellido_paterno','apellido_materno','fecha_nacimiento','email','telefono','cv_solicitud']
+        fields = ['rfc','nombre','apellido_paterno','apellido_materno','fecha_nacimiento','email','telefono']
         
 
     def __init__(self, *args, **kwargs):
@@ -114,21 +114,22 @@ class PersonasForm(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Telefono',
         })
-        self.fields['cv_solicitud'].widget.attrs.update({
-            'class':'form-control',
-            'placeholder':'CV o Solicitud de empleo',
-        })
+        
         
 
 class CandidatosForm(forms.ModelForm):  
 
     class Meta:
         model = Candidatos
-        fields = ['reporte_entrevista','evaluacion_psicometrica','solicitudes_vacantes','user']
+        fields = ['cv_solicitud','reporte_entrevista','evaluacion_psicometrica','solicitudes_vacantes','user']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['cv_solicitud'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'CV o Solicitud de empleo',
+        })
         self.fields['reporte_entrevista'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'reporte_entrevista',

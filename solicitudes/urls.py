@@ -11,5 +11,6 @@ urlpatterns = [
     path('create_estatus/',views.createEstatus, name="CreateEstatus"),
     path('edit_estatus/<int:id>',views.editEstatus, name="EditEstatus"),
 
-    path('create_candidatos/<int:solicitudes_id>',views.CandidatosCreate.as_view(), name="CreateCandidatos")
+    path('create_candidatos/<int:solicitudes_id>',views.CandidatosCreate.as_view(), name="CreateCandidatos"),
+    path('edit_candidatos/<int:pk>',views.CandidatosUpdate.as_view(), name="EditCandidatos"),
 ]
