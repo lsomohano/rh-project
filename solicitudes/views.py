@@ -3,7 +3,7 @@ from turtle import title
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
-from .models import Candidatos, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus
+from .models import Candidatos, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
 from configuraciones.models import Locaciones, PuestosOperativos
 from .forms import CandidatosForm, PersonasForm, SolicitudesForm, EstatusForm
 
@@ -72,6 +72,7 @@ def detailsSolicitudes(request, id):
     estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=id, activo='Y')
 
     candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=id).prefetch_related('id__candidatos_estatus')
+    
     return render(request,"solicitudes/details_solicitud.html",{
         "titles":titles, 
         "solicitud":solicitud, 
@@ -123,7 +124,7 @@ def editEstatus(request, id):
     return render(request,"solicitudes/create_estatus.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
-##### Gestion de las vacantes #####
+##### Gestion de los candidatos #####
 class CandidatosCreate(CreateView):
     """Vista que permite agregar infomación de lo"""
     model = Candidatos
@@ -135,11 +136,13 @@ class CandidatosCreate(CreateView):
         context = super(CandidatosCreate, self).get_context_data(**kwargs)
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
         context['solicitudes_id'] = self.kwargs.get('solicitudes_id')
-        
+        context['documentos'] = Documentos.objects.filter(activo='Y')
+
         if 'form' not in context:
             context['form'] = self.form_class(self.request.GET)
         if 'form2' not in context:
             context['form2'] =self.second_form_class(self.request.GET)
+
         return context
         
     def post(self, request, *args, **kwargs):
@@ -156,6 +159,15 @@ class CandidatosCreate(CreateView):
             estatus = Estatus.objects.get(tipos='candidato', estatus='En proceso')
             candidatos_estatus = CandidatosEstatus.objects.create(candidatos=candidato, estatus=estatus)
             candidatos_estatus.save()
+
+            if request.POST.getlist('documentos[]'):
+                for documento in request.POST.getlist('documentos[]'):
+                    doc = CandidatosDocumentos.objects.create(check_proveedor='Y', candidatos=candidato, documentos_id=documento)
+                    doc.save()
+
+            #estatus = Estatus.objects.get(tipos='solicitud',estatus='Abierta')
+            #solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
+            #solicitud_estatus.save()
 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
@@ -176,8 +188,12 @@ class CandidatosUpdate(UpdateView):
         persona = self.second_model.objects.get(id=candidato.personas_id)
 
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Editar Candidato.'}
-        context['solicitudes_id'] = self.kwargs.get('solicitudes_id')
-        
+        context['solicitudes_id'] = candidato.solicitudes_vacantes_id
+        context['documentos'] = Documentos.objects.raw("""SELECT d.*, cd.check_proveedor FROM documentos d
+LEFT JOIN candidatos_documentos cd ON cd.documentos_id=d.id AND cd.candidatos_id=%s
+WHERE d.activo='Y' """,(pk,))
+        #context['candidatosdocumentos'] = CandidatosDocumentos.objects.filter(candidatos_id=pk)
+
         if 'form' not in context:
             context['form'] = self.form_class(instance=candidato)
         if 'form2' not in context:
@@ -199,6 +215,16 @@ class CandidatosUpdate(UpdateView):
             candidato = form.save()
             form2.save()
             
+            if request.POST.getlist('documentos[]'):
+                CandidatosDocumentos.objects.filter(candidatos=candidato).update(check_proveedor='N')
+                for documento in request.POST.getlist('documentos[]'):
+                    
+                    if CandidatosDocumentos.objects.filter(candidatos=candidato, documentos_id=documento).exists():
+                        CandidatosDocumentos.objects.filter(candidatos=candidato, documentos_id=documento).update(check_proveedor='Y')
+                    else:
+                        doc = CandidatosDocumentos.objects.create(check_proveedor='Y', candidatos=candidato, documentos_id=documento)
+                        doc.save()
+
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2))

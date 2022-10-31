@@ -26,6 +26,13 @@ class Periodos(Enum):
     catorcenal = "Catorcenal"
     mensual = "Mensual"
 
+#Opciones documentos.
+class opciones_documentos(Enum):
+    requerido = "Requerido"
+    opcional = "Opcional"
+    gerencial = "Gerencial"
+
+
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
     para los candidatos"""
@@ -33,7 +40,7 @@ class Estatus(models.Model):
     estatus = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=250)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
-    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='Y')
+    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='solicitud')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -127,6 +134,7 @@ class Documentos(models.Model):
     en sus entrevistas"""
     documento = models.CharField(max_length=70, null=True, blank=True)
     descripcion = models.TextField(max_length=300, null=True, blank=True)
+    consideraciones = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in opciones_documentos], default='requerido')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -135,7 +143,7 @@ class Documentos(models.Model):
         db_table =  "documentos"
         verbose_name = 'documento'
         verbose_name_plural = 'documentos'
-        ordering = ["-documento"]
+        ordering = ["created"]
 
     def __str__(self):
         return self.documento
@@ -192,8 +200,8 @@ class CandidatosDocumentos(models.Model):
 
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     documentos = models.ForeignKey(Documentos, on_delete=models.CASCADE, verbose_name='Documentos')
-    check_proveedor = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
-    check_locacion = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
+    check_proveedor = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True, default='N')
+    check_locacion = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True, default='N')
     
     class Meta:
         db_table =  "candidatos_documentos"
@@ -201,4 +209,4 @@ class CandidatosDocumentos(models.Model):
         verbose_name_plural = 'Candidatos Documentos'
 
     def __str__(self):
-        return self.candidatos
+        return self.documentos.documento

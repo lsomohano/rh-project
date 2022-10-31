@@ -1,74 +1,60 @@
+{% extends "reclutamiento/base_adminlte.html" %}
 {% load static %}
+{% block content %} 
 <!-- BS Stepper -->
 <link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css' %}">
+<!-- iCheck -->
+<link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css' %}">
 
-<div class="modal-content">
-    <!--<div class="overlay">
-        <i class="fas fa-2x fa-sync fa-spin"></i>
-    </div>-->
-    <div class="modal-header">
-      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Información del Candidato</h3>
+
+    <div class="card-tools">
+      <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+        <i class="fas fa-times"></i>
       </button>
     </div>
-    <form action="{{request.path}}" method="POST" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
-      <div class="modal-body">
-        {% if form.errors %}
-          <p style="color: red;">Valida la información capturada</p>
-        {% endif %}
-        <div class="bs-stepper" id="stepper">
-          <div class="bs-stepper-header" role="tablist">
-           
-            <div class="step active" data-target="#datos-personales">
-              <button type="button" class="step-trigger" role="tab" aria-controls="datos-personales" id="datos-personales-trigger">
-                <span class="bs-stepper-circle">1</span>
-                <span class="bs-stepper-label">Datos Personales</span>
-              </button>
-            </div>
-            <div class="line"></div>
-            <div class="step" data-target="#evaluaciones-part">
-              <button type="button" class="step-trigger" role="tab" aria-controls="evaluaciones-part" id="evaluaciones-part-trigger">
-                <span class="bs-stepper-circle">2</span>
-                <span class="bs-stepper-label">Evaluaciones</span>
-              </button>
-            </div>
+  </div>
+  <div class="card-body">
+    <form action="{{request.path}}" method="POST" class="form-horizontal" enctype="multipart/form-data" id="post_form">{% csrf_token %}
+      {% if form.errors %}
+        <p style="color: red;">Valida la información capturada</p>
+      {% endif %}
+      <div class="bs-stepper" id="stepper">
+        <div class="bs-stepper-header" role="tablist">
+         
+          <div class="step active" data-target="#datos-personales">
+            <button type="button" class="step-trigger" role="tab" aria-controls="datos-personales" id="datos-personales-trigger">
+              <span class="bs-stepper-circle">1</span>
+              <span class="bs-stepper-label">Datos Personales</span>
+            </button>
           </div>
-          <div class="bs-stepper-content">
-            
-            <div id="datos-personales" class="content active dstepper-block" role="tabpanel" aria-labelledby="datos-personales-trigger">
+          <div class="line"></div>
+          <div class="step" data-target="#evaluaciones-part">
+            <button type="button" class="step-trigger" role="tab" aria-controls="evaluaciones-part" id="evaluaciones-part-trigger">
+              <span class="bs-stepper-circle">2</span>
+              <span class="bs-stepper-label">Evaluaciones</span>
+            </button>
+          </div>
+          <div class="line"></div>
+          <div class="step" data-target="#documnetacion-part">
+            <button type="button" class="step-trigger" role="tab" aria-controls="documnetacion-part" id="documnetacion-part-trigger">
+              <span class="bs-stepper-circle">3</span>
+              <span class="bs-stepper-label">Documentación</span>
+            </button>
+          </div>
 
-              {% for field in form2 %}
-                {% if field.name != 'fecha_nacimiento' %}
-                  <div class="form-group row justify-content-md-center">
-                    <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
-                    <div class="col-md-6 col-sm-6 ">
-                      {{field}}
-                    </div>
-                    {{field.errors}}
-                  </div>
-                {% elif  field.name == 'fecha_nacimiento' %}
-                  <div class="form-group row justify-content-md-center">
-                    <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
-                    <div class="col-md-6 col-sm-6 ">
-                      <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
-                        {{field}}
-                        <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endif %}
-              {% endfor %}
-              <a href="#" class="btn btn-primary" onclick="stepper.next()">Next</a>
-              
-            </div>
-
-            <div id="evaluaciones-part" class="content" role="tabpanel" aria-labelledby="evaluaciones-part-trigger">
-
-              {% for field in form %}
-                {% if field.name != 'user' and field.name != 'personas' and field.name != 'solicitudes_vacantes' %}
+        </div>
+        <div class="bs-stepper-content">
+          
+          <div id="datos-personales" class="content active dstepper-block" role="tabpanel" aria-labelledby="datos-personales-trigger">
+            <br>
+            {% for field in form2 %}
+              {% if field.name != 'fecha_nacimiento' %}
                 <div class="form-group row justify-content-md-center">
                   <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
                   <div class="col-md-6 col-sm-6 ">
@@ -76,41 +62,123 @@
                   </div>
                   {{field.errors}}
                 </div>
-                {% else %}
+              {% elif  field.name == 'fecha_nacimiento' %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                    <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
+                      {{field}}
+                      <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
 
-                  {% if field.value is not null  %}
-                    <input type="hidden" name="{{field.name}}" value="{{field.value}}">
+            <a href="{% url 'DetailsSolicitudes' solicitudes_id %}" class="btn btn-default btn-sm cancela" data-title="Cancelar Registro" >
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+            <a href="#" class="btn btn-info btn-sm" onclick="stepper.next()"><i class="fas fa-step-forward"></i> Next</a>
+            
+          </div>
 
-                  {% elif field.name == 'user' %}
-                    <input type="hidden" name="{{field.name}}" value="{{user.id}}">
+          <div id="evaluaciones-part" class="content" role="tabpanel" aria-labelledby="evaluaciones-part-trigger">
+            <br>
+            {% for field in form %}
+              {% if field.name != 'user' and field.name != 'personas' and field.name != 'solicitudes_vacantes' %}
+              <div class="form-group row justify-content-md-center">
+                <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                <div class="col-md-6 col-sm-6 ">
+                  {{field}}
+                </div>
+                {{field.errors}}
+              </div>
+              {% else %}
 
-                  {% elif field.name == 'solicitudes_vacantes' %}
-                    <input type="hidden" name="{{field.name}}" value="{{solicitudes_id}}">
+                {% if field.value is not null  %}
+                  <input type="hidden" name="{{field.name}}" value="{{field.value}}">
 
-                  {% elif field.name == 'personas' %}
-                    <input type="hidden" name="{{field.name}}" value="">
+                {% elif field.name == 'user' %}
+                  <input type="hidden" name="{{field.name}}" value="{{user.id}}">
 
-                  {% endif %}
+                {% elif field.name == 'solicitudes_vacantes' %}
+                  <input type="hidden" name="{{field.name}}" value="{{solicitudes_id}}">
+
+                {% elif field.name == 'personas' %}
+                  <input type="hidden" name="{{field.name}}" value="">
 
                 {% endif %}
-              {% endfor %}
 
-              <a href="#" class="btn btn-primary" onclick="stepper.previous()">Previous</a>
-              <!--<button type="submit" class="btn btn-primary">Submit</button>-->
-            </div>
+              {% endif %}
+            {% endfor %}
+            
+            <a href="{% url 'DetailsSolicitudes' solicitudes_id %}" class="btn btn-default btn-sm cancela" data-title="Cancelar Registro" >
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+            <a href="#" class="btn btn-info btn-sm" onclick="stepper.previous()"><i class="fas fa-step-backward"></i> Previous</a>
+            <a href="#" class="btn btn-info btn-sm" onclick="stepper.next()"><i class="fas fa-step-forward"></i> Next</a>
+            
           </div>
-        </div>
-        
-      </div>
-      <div class="modal-footer justify-content-between">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
-      </div>
-    </form>
-  </div>
-<!-- BS-Stepper -->
-<script src="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
 
+          <div id="documnetacion-part" class="content " role="tabpanel" aria-labelledby="evaluaciones-part-trigger">
+            <br>
+            <div class="row justify-content-md-center">
+              <div class="col-lg-8 col-8 ">
+                <div class="card-body">
+                  <ul class="todo-list" data-widget="todo-list">
+                    {% for documento in documentos %}
+
+                    <li>
+                        <!-- drag handle -->
+                        <span class="handle">
+                          <i class="fas fa-ellipsis-v"></i>
+                          <i class="fas fa-ellipsis-v"></i>
+                        </span>
+                        <!-- checkbox -->
+                        <div  class="icheck-primary d-inline ml-2">
+                          <input type="checkbox" value="{{documento.id}}" 
+                                 name="documentos[]" 
+                                 id="{{documento.id}}" 
+                                 {% if documento.check_proveedor == 'Y' %} checked {% endif %}
+                                 {% if documento.consideraciones == 'requerido' %} required {% endif %} >
+                          <label for="{{documento.id}}"></label>
+                        </div>
+                        <!-- todo text -->
+                        <span class="text">{{documento}} </span>
+                        <!-- Emphasis label -->
+                        <small class="badge {% if documento.consideraciones == 'requerido' %}badge-warning {% elif documento.consideraciones == 'requerido' %} badge-success {% else %} badge-info {% endif %} "><i class="fas fa-question-circle"></i> {{documento.consideraciones}}</small>
+                        <!-- General tools such as edit or delete-->
+                        <div class="tools">
+                          <a href="#" class="documentos" data-title="{{documento}}" data-content="{{documento.descripcion}}"><i class="fas fa-info-circle"></i></a>
+                          
+                          <!--<i class="fas fa-trash-o"></i>-->
+                        </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          
+            <a href="{% url 'DetailsSolicitudes' solicitudes_id %}" class="btn btn-default btn-sm cancela" data-title="Cancelar Registro" >
+              <i class="fas fa-times"></i> Cancelar
+            </a>
+            <a href="#" class="btn btn-info btn-sm" onclick="stepper.previous()"><i class="fas fa-step-backward"></i> Previous</a>
+            <button type="submit" class="btn btn-primary btn-sm pull-right"><i class="fas fa-save"></i> Guardar</button>
+
+          </div>
+
+        </div>
+      </div>
+    </form>  
+  </div>
+  <!-- /.card-body -->
+ 
+  <!-- /.card-footer-->
+</div>
+<script src="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
 <script>
   $(function () {
     //Date picker
@@ -118,6 +186,24 @@
         format: 'L'
     });
   })
+
+  $(function () {
+    $('a.cancela').confirm({
+      //content: "¿Estas seguro que desea cancelar este registro?",
+      icon: 'fas fa-exclamation-triangle',
+      closeIcon: true,
+      closeIconClass: 'fas fa-times',
+    });
+  });
+
+  $(function () {
+    $('a.documentos').confirm({
+      content: "¿Estas seguro que desea cancelar este registro?",
+      icon: 'fas fa-exclamation-triangle',
+      closeIcon: true,
+      closeIconClass: 'fas fa-times',
+    });
+  });
 
   var stepperElement = document.getElementById('stepper');
   var stepper = new Stepper(stepperElement);
@@ -133,3 +219,4 @@
     window.stepper = new Stepper(document.querySelector('.bs-stepper'))
   })*/
 </script>
+{% endblock content %}
