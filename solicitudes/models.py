@@ -32,6 +32,11 @@ class opciones_documentos(Enum):
     opcional = "Opcional"
     gerencial = "Gerencial"
 
+#Opciones generos.
+class generos(Enum):
+    M = "Masculino"
+    F = "Femenino"
+    I = "Indistinto"
 
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
@@ -48,7 +53,7 @@ class Estatus(models.Model):
         db_table =  "calogos_estatus"
         verbose_name = 'catalogo estatus'
         verbose_name_plural = 'catalogos estatus'
-        ordering = ["-estatus"]
+        ordering = ["created"]
 
     def __str__(self):
         return self.estatus
@@ -112,6 +117,7 @@ class Personas(models.Model):
     apellido_materno = models.CharField(max_length=100, null=True, blank=True)
     rfc = models.CharField(max_length=20, unique=True)
     fecha_nacimiento = models.DateField()
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     telefono = models.CharField(max_length=15)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
@@ -159,6 +165,7 @@ class Candidatos(models.Model):
     cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True)
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
+    referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True)
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
 
@@ -169,7 +176,7 @@ class Candidatos(models.Model):
         ordering = ["-created"]
 
     def __str__(self):
-        return self.personas.nombre
+        return self.personas.nombre + ' ' + self.personas.apellido_paterno + ' ' + self.personas.apellido_materno
 
 
 
@@ -210,3 +217,23 @@ class CandidatosDocumentos(models.Model):
 
     def __str__(self):
         return self.documentos.documento
+
+class Entrevistas(models.Model):
+    """Modelo que permite gestionar las entrevistas de los candidatos"""
+
+    candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
+    indicaciones = models.TextField(null=True,blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    fecha_programada = models.DateField()
+    hora_programada = models.TimeField()
+    fecha_entrevista = models.DateField(null=True,blank=True)
+    asistio = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True)
+
+    class Meta:
+        db_table =  "entrevistas"
+        verbose_name = 'entrevista'
+        verbose_name_plural = 'entrevistas'
+        ordering = ["-created"]
+
+    def __str__(self):
+        return self.estatus.estatus

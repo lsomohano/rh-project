@@ -49,7 +49,7 @@
             </div>
             <div class="col-sm-3 invoice-col">
               <button class="btn btn-success btn-sm btn-block disabled" >
-                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} {{estatus.created}}
+                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} <br> {{estatus.created}}
               </button>              
               <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
                 <i class="fas fa-edit"></i> Editar
@@ -99,9 +99,9 @@
                           {% endfor %}
                         </td>
                         <td>
-                          <!--<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditCandidatos' candidato.id %}', 'myModal')" >
-                            <i class="fas fa-edit"></i> Editar
-                          </button>-->
+                          <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
+                            <i class="far fa-calendar-alt"></i> Agendar
+                          </button>
                           <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs "><i class="fas fa-edit"></i> Editar</a> 
                           <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
                         </td>

@@ -3,10 +3,10 @@ from turtle import title
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
-from .models import Candidatos, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
-from configuraciones.models import Locaciones, PuestosOperativos
-from .forms import CandidatosForm, PersonasForm, SolicitudesForm, EstatusForm
-
+from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
+from configuraciones.models import Locaciones, PuestosOperativos, activo
+from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm
+from django.db.models import Q
 
 # Create your views here.
 """Gestion de las Solicitudes de Vacantes"""
@@ -126,7 +126,7 @@ def editEstatus(request, id):
 
 ##### Gestion de los candidatos #####
 class CandidatosCreate(CreateView):
-    """Vista que permite agregar infomación de lo"""
+    """ Vista que permite agregar infomación de los candidatos """
     model = Candidatos
     template_name = "solicitudes/create_candidatos.html"
     form_class = CandidatosForm
@@ -165,9 +165,13 @@ class CandidatosCreate(CreateView):
                     doc = CandidatosDocumentos.objects.create(check_proveedor='Y', candidatos=candidato, documentos_id=documento)
                     doc.save()
 
-            #estatus = Estatus.objects.get(tipos='solicitud',estatus='Abierta')
-            #solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
-            #solicitud_estatus.save()
+            if Candidatos.objects.filter(solicitudes_vacantes_id=candidato.solicitudes_vacantes_id).count()==1:
+                SolicitudesEstatus.objects.filter(solicitudes_vacantes_id=candidato.solicitudes_vacantes_id).update(activo='N')
+                estatus = Estatus.objects.get(tipos='solicitud', estatus='En proceso')
+                solicitud_estatus = SolicitudesEstatus.objects.create(
+                    solicitudes_vacantes_id=candidato.solicitudes_vacantes_id,
+                    estatus=estatus)
+                solicitud_estatus.save()
 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
@@ -175,6 +179,7 @@ class CandidatosCreate(CreateView):
 
 
 class CandidatosUpdate(UpdateView):
+    """ Vista que permite actualizar los datos del candidatos """
     model = Candidatos
     second_model = Personas
     template_name = "solicitudes/create_candidatos.html"
@@ -228,3 +233,36 @@ WHERE d.activo='Y' """,(pk,))
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
+
+
+""" Gestion de entrevistas """
+def entrevistasView(request):
+    """Vista que muestra las entrevistas pendientes"""
+    
+    titles = {"title_page":'Entrevistas',"sub_title_page":'Gestión de entrevistas.'}
+    entrevistas = Entrevistas.objects.filter(asistio__isnull='True')
+    for entrevista in Entrevistas.objects.filter(Q(asistio__isnull='True')|Q(asistio=' ')):
+        pass
+
+    return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas})
+
+
+
+def createEntrevistas(request, candidatos_id):
+    """Vista que permite agendar entrevistas de los candidatos"""
+
+    titles = {"title_page":'Reclutamiento',"sub_title_page":'Agendar nueva entrevista.'}
+    if request.method == "POST":
+        formulario = EntrevistasForm(request.POST or None)
+        if formulario.is_valid():
+            entrevista = formulario.save(commit=False)
+            entrevista.candidatos = Candidatos.objects.get(id=candidatos_id)
+            entrevista.save()
+            return redirect('Estatus')
+        else:
+            return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
+    
+    candidato = Candidatos.objects.get(id=candidatos_id)
+    formulario = EntrevistasForm()
+       
+    return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidato":candidato})

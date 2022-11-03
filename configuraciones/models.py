@@ -68,6 +68,7 @@ class Locaciones(models.Model):
     dias_operativos = models.CharField(max_length=50)
     ciudades = models.ForeignKey(Ciudades, on_delete=models.CASCADE, verbose_name='Ciudad')
     zona_ciudad = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in zonas_ciudades], verbose_name='Zona',default='aeropuerto')
+    indicaciones_entrevista = models.FileField(upload_to='locaciones/indicaciones/',null=True,blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)

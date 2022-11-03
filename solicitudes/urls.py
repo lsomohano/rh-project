@@ -13,4 +13,8 @@ urlpatterns = [
 
     path('create_candidatos/<int:solicitudes_id>',views.CandidatosCreate.as_view(), name="CreateCandidatos"),
     path('edit_candidatos/<int:pk>',views.CandidatosUpdate.as_view(), name="EditCandidatos"),
+
+    path('entrevistas',views.entrevistasView, name="Entrevistas"),
+    path('create_entrevistas/<int:candidatos_id>',views.createEntrevistas, name="CreateEntrevistas"),
+    #path('edit_estatus/<int:id>',views.editEstatus, name="EditEstatus"),
 ]

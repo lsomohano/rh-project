@@ -1,0 +1,87 @@
+<div class="modal-content">
+    <!--<div class="overlay">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>-->
+    <div class="modal-header">
+      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
+    <div class="modal-body">
+        {% if form.errors %}
+          <p style="color: red;">Valida la información capturada</p>
+        {% endif %}
+        <div class="form-group row justify-content-md-center">
+            <label class="col-form-label col-md-3 col-sm-3" for="">Candidato </span></label>
+            <div class="col-md-6 col-sm-6 ">
+                {{candidato}}
+            </div>
+        </div>
+        {% for field in formulario %}
+            
+            {% if  field.name == 'fecha_programada' %}
+                <div class="form-group row justify-content-md-center">
+                    <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
+                        {{field}}
+                        {{field.errors}}
+                        <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            {% elif  field.name == 'hora_programada' %}
+                <div class="form-group row justify-content-md-center">
+                    <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 ">
+                        <div class="input-group date" id="hora_programada" data-target-input="nearest">
+                            {{field}}
+                            <!--<input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>-->
+                            <div class="input-group-append" data-target="#hora_programada" data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="far fa-clock"></i></div>
+                            </div>
+                          <!-- /.input group -->
+                        </div>
+                        {{field.errors}}
+                    </div>
+                </div>
+            {% elif  field.name == 'candidatos' %}
+                <input type="hidden" name="{{field.name}}" value="{{candidato.id}}">
+            {%  else  %}
+                <div class="form-group row justify-content-md-center">
+                    <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                    <div class="col-md-6 col-sm-6 ">
+                        {{field}}
+                        {{field.errors}}
+                    </div>
+                </div>
+            {% endif %}
+
+
+        {% endfor %}
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+  <script>
+    $(function () {
+        //Date picker
+        $('#fecha_nacimiento').datetimepicker({
+            format: 'YYYY-MM-DD'
+        });
+
+        //Timepicker
+        $('#hora_programada').datetimepicker({
+            format: 'HH:mm'
+        })
+    })
+  </script>

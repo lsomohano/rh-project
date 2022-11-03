@@ -59,19 +59,20 @@
                   <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
                   <div class="col-md-6 col-sm-6 ">
                     {{field}}
+                    {{field.errors}}
                   </div>
-                  {{field.errors}}
                 </div>
               {% elif  field.name == 'fecha_nacimiento' %}
                 <div class="form-group row justify-content-md-center">
                   <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
                   <div class="col-md-6 col-sm-6 ">
                     <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
-                      {{field}}
+                      {{field}}                  
                       <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                       </div>
                     </div>
+                    {{field.errors}}
                   </div>
                 </div>
               {% endif %}

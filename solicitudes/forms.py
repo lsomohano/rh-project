@@ -1,6 +1,6 @@
 from curses.ascii import SO
 from django import forms
-from .models import Candidatos, Estatus, Personas, SolicitudesVacantes
+from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes
 from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locaciones
 
 
@@ -137,5 +137,33 @@ class CandidatosForm(forms.ModelForm):
         self.fields['evaluacion_psicometrica'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'evaluacion_psicometrica',
+        })
+
+class EntrevistasForm(forms.ModelForm):  
+
+    class Meta:
+        model = Entrevistas
+        fields = ['fecha_programada','hora_programada','indicaciones','candidatos']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['fecha_programada'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Fecha programada',
+             'data-target':"#fecha_programada",
+        })
+        self.fields['hora_programada'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Hora Programada',
+            'data-target':'#hora_programada'
+        })
+        self.fields['indicaciones'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Indicaciones para la entrevista',
+        })
+        self.fields['candidatos'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Candidato',
         })
         
