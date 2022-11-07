@@ -11,7 +11,7 @@
           <div class="row">
             <div class="col-12">
               <h4>
-                <i class="fas fa-user"></i> {{solicitud.puestos_operativos}} - {{solicitud.puestos_operativos.puestos_nominas}}
+                <i class="fas fa-user"></i> (Id:{{solicitud.id}}) {{solicitud.puestos_operativos}} - {{solicitud.puestos_operativos.puestos_nominas}} 
                 <small class="float-right">Alta: {{solicitud.created}}</small>
               </h4>
             </div>
@@ -21,7 +21,7 @@
           <div class="row invoice-info">
             <div class="col-sm-3 invoice-col">
               Datos de la vancante
-              <address>{{solicitud.id}}
+              <address>
                 <strong>Vacantes : {{solicitud.cantidad}}</strong><br>
                 Suledo : $ {{solicitud.sueldos}}<br>
                 Pago: {{solicitud.periodo_pago}}<br>
@@ -37,7 +37,6 @@
                 {{solicitud.locaciones}}<br>
                 {{solicitud.locaciones.direccion}}<br>
                 {{solicitud.user.email}} <br>
-                {{estatus}} {{estatus.created}}
               </address>
             </div>
             <!-- /.col -->
@@ -82,30 +81,44 @@
                     </thead>
                     <tbody>
                       {% for candidato in candidatos %}
-                      <tr>
-                        <td>{{candidato.id}}</td>
-                        <td>{{candidato.personas.rfc}}</td>
-                        <td>{{candidato.personas.nombre}}</td>
-                        <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
-                        <td>{{candidato.personas.email}}</td>
-                        <td>{{candidato.personas.telefono}}</td>
-                        <td>
-                          {% for estatus in candidato.candidatosestatus_set.all %}
-                            {% if estatus.activo == 'Y' %}
-                              <button class="btn btn-success btn-xs disabled" >
-                                <i class="fas fa-thumbs-up"></i> {{estatus}}
+                        <tr>
+                          <td>{{candidato.id}}</td>
+                          <td>{{candidato.personas.rfc}}</td>
+                          <td>{{candidato.personas.nombre}}</td>
+                          <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
+                          <td>{{candidato.personas.email}}</td>
+                          <td>{{candidato.personas.telefono}}</td>
+                          <td>
+                            <button class="btn btn-success btn-xs disabled" >
+                              <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
+                            </button>
+                            <!--{% for estatus in candidato.candidatosestatus_set.all %}
+                              {% if estatus.activo == 'Y' %}
+                                <button class="btn btn-success btn-xs disabled" >
+                                  <i class="fas fa-thumbs-up"></i> {{estatus}}
+                                </button>
+                              {% endif %}
+                            {% endfor %}-->
+                          </td>
+                          <td>
+                            {% if candidato.estatus == "Postulado" %}
+                              <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
+                                <i class="far fa-calendar-alt"></i> Agendar
+                              </button>
+                            {% elif candidato.estatus == "Programado" %}
+                              <!--<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditEntrevistas' candidato.id %}', 'myModal')" >
+                                <i class="far fa-calendar-alt"></i> Ver Cita
+                              </button>-->
+                              <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Cita</a>
+                            {% elif candidato.estatus == "Entrevistado" %}
+                              <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
+                                <i class="far fa-calendar-alt"></i> Ver Entrevista
                               </button>
                             {% endif %}
-                          {% endfor %}
-                        </td>
-                        <td>
-                          <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
-                            <i class="far fa-calendar-alt"></i> Agendar
-                          </button>
-                          <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs "><i class="fas fa-edit"></i> Editar</a> 
-                          <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                        </td>
-                      </tr>
+                            <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if candidato.estatus != "Postulado" %}disabled{% endif %} "><i class="fas fa-edit"></i> Editar</a> 
+                            <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                          </td>
+                        </tr>
                       {% endfor %}
                     </tbody>
                 </table>  

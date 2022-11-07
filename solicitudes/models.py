@@ -1,10 +1,11 @@
+from tabnanny import verbose
 from unittest.util import _MAX_LENGTH
 from xml.parsers.expat import model
 from django.db import models
 from django.contrib.auth import get_user_model
 from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos
 from enum import Enum
-
+import datetime
 # Create your models here.
 
 User = get_user_model()
@@ -33,7 +34,7 @@ class opciones_documentos(Enum):
     gerencial = "Gerencial"
 
 #Opciones generos.
-class generos(Enum):
+class Generos(Enum):
     M = "Masculino"
     F = "Femenino"
     I = "Indistinto"
@@ -115,8 +116,9 @@ class Personas(models.Model):
     nombre = models.CharField(max_length=100, null=True, blank=True)
     apellido_paterno = models.CharField(max_length=100, null=True, blank=True)
     apellido_materno = models.CharField(max_length=100, null=True, blank=True)
-    rfc = models.CharField(max_length=20, unique=True)
+    rfc = models.CharField(max_length=20, unique=True, verbose_name='RFC')
     fecha_nacimiento = models.DateField()
+    genero = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Generos], null=True, blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     telefono = models.CharField(max_length=15)
@@ -162,10 +164,10 @@ class Candidatos(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitudes')
     personas = models.ForeignKey(Personas, on_delete=models.CASCADE, verbose_name='Personas')
-    cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True)
+    cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True, verbose_name='CV o Solcitud')
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
-    referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True)
+    referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True, verbose_name='Referencias Laborales')
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
 

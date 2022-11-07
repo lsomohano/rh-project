@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/plugins/fullcalendar/main.css' %}">
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Hola</h3>
+    <h3 class="card-title">{{hoy}}}</h3>
 
     <div class="card-tools">
       <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -144,9 +144,18 @@
                     title          : '{{field.candidatos}}',
                     start          : new Date({{field.fecha_programada.year}}, {{field.fecha_programada.month}}-1, {{field.fecha_programada.day}},{{field.hora_programada.hour}},{{field.hora_programada.minute}}),
                     end            : new Date({{field.fecha_programada.year}}, {{field.fecha_programada.month}}-1, {{field.fecha_programada.day}},{{field.hora_programada.hour}},{{field.hora_programada.minute}}),
-                    url            : 'https://www.google.com/',
-                    backgroundColor: '#3c8dbc', //Primary (light-blue)
-                    borderColor    : '#3c8dbc' //Primary (light-blue),
+                    url            : '{% url 'EditEntrevistas' field.candidatos_id %}',
+                    
+                    {% if field.fecha_programada == hoy  %}
+                        backgroundColor: '#00c0ef', //Info (aqua)
+                        borderColor    : '#00c0ef' //Info (aqua)
+                    {% elif field.fecha_programada > hoy %}
+                        backgroundColor: '#00a65a', //Success (green)
+                        borderColor    : '#00a65a' //Success (green)
+                    {% else %}
+                        backgroundColor: '#f39c12', //yellow
+                        borderColor    : '#f39c12' //yellow
+                    {% endif %}
                 },
             {% endfor %}
           ],

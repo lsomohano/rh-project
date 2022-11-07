@@ -20,6 +20,7 @@
     <table id="example1" class="table table-bordered table-striped">
       <thead>
         <tr>
+          <th>Id</th>
           <th>Usuario</th>
           <th>Locación</th>
           <th>Puesto</th>
@@ -31,6 +32,7 @@
       <tbody>
         {% for solicitud in solicitudes %}
         <tr>
+          <td>{{solicitud.id}}</td>
           <td>{{solicitud.user}}</td>
           <td>{{solicitud.locaciones}}</td>
           <td>{{solicitud.puestos_operativos}}</td>

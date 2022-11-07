@@ -16,5 +16,5 @@ urlpatterns = [
 
     path('entrevistas',views.entrevistasView, name="Entrevistas"),
     path('create_entrevistas/<int:candidatos_id>',views.createEntrevistas, name="CreateEntrevistas"),
-    #path('edit_estatus/<int:id>',views.editEstatus, name="EditEstatus"),
+    path('edit_entrevistas/<int:pk>',views.EntrevistasUpdate.as_view(), name="EditEntrevistas"),
 ]

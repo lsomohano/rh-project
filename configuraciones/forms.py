@@ -77,7 +77,7 @@ class puestosOperativosCreate(forms.ModelForm):
 class LocacionesCreate(forms.ModelForm):
     class Meta:
         model = Locaciones
-        fields = ['locacion','locacion_name','direccion','codigo_postal','ciudades','zona_ciudad','latitud','longitud','horario_apertura','horario_cierre','dias_operativos','telefono','email']
+        fields = ['locacion','locacion_name','direccion','codigo_postal','ciudades','zona_ciudad','latitud','longitud','horario_apertura','horario_cierre','dias_operativos','telefono','email','indicaciones_entrevista']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -133,6 +133,10 @@ class LocacionesCreate(forms.ModelForm):
         self.fields['email'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Email',
+        })
+        self.fields['indicaciones_entrevista'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Indicaciones para la entrevista',
         })
 
 class ContactosLocacionesCreation(forms.ModelForm):
