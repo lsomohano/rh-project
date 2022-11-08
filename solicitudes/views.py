@@ -282,7 +282,7 @@ class EntrevistasUpdate(UpdateView):
     model = Candidatos
     second_model = Personas
     third_model = Entrevistas
-    template_name = "solicitudes/create_candidatos.html"
+    template_name = "solicitudes/edit_entrevista.html"
     
     form_class = CandidatosForm
     second_form_class = PersonasForm
@@ -294,11 +294,11 @@ class EntrevistasUpdate(UpdateView):
         
         candidato = self.model.objects.get(id=pk)
         persona = self.second_model.objects.get(id=candidato.personas_id)
-        entrevista = self.third_model.objects.get(candidatos_id=candidato.id, asistio__isnull='True')
+        entrevista = self.third_model.objects.get(Q(candidatos_id=candidato.id), (Q(asistio__isnull='True') | Q(asistio='Y')))
 
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Editar Candidato.'}
         context['solicitudes_id'] = candidato.solicitudes_vacantes_id
-        context['documentos'] = Documentos.objects.raw("""SELECT d.*, cd.check_proveedor FROM documentos d
+        context['documentos'] = Documentos.objects.raw("""SELECT d.*, cd.check_proveedor, cd.check_locacion FROM documentos d
 LEFT JOIN candidatos_documentos cd ON cd.documentos_id=d.id AND cd.candidatos_id=%s
 WHERE d.activo='Y' """,(pk,))
         #context['candidatosdocumentos'] = CandidatosDocumentos.objects.filter(candidatos_id=pk)
@@ -318,7 +318,7 @@ WHERE d.activo='Y' """,(pk,))
 
         candidato = self.model.objects.get(id=candidato_id)
         persona = self.second_model.objects.get(id=candidato.personas_id)
-        entrevista = self.third_model.objects.get(candidatos_id=candidato.id, asistio__isnull='True')
+        entrevista = self.third_model.objects.get(Q(candidatos_id=candidato.id), (Q(asistio__isnull='True') | Q(asistio='Y')))
 
         form = self.form_class(request.POST, request.FILES, instance=candidato)
         form2 = self.second_form_class(request.POST, request.FILES, instance=persona)
@@ -328,7 +328,7 @@ WHERE d.activo='Y' """,(pk,))
 
             candidato = form.save()
             form2.save()
-            form3.save()
+            entrevista = form3.save()
 
             #Se procesan los documentos del candidato    
             if request.POST.getlist('documentos[]'):
@@ -342,15 +342,15 @@ WHERE d.activo='Y' """,(pk,))
                         doc.save()
                         
             #Se procesa el estus
-            if form3.asistio == 'Y':
-                CandidatosEstatus.objects.filter(candidato_id=candidato.id).update(activo='N')
+            if entrevista.asistio == 'Y':
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Entrevistado')
-                ce = CandidatosEstatus.objects.create(candidato_id=candidato.id, estatus_id=estatus.id)
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
             else:
-                CandidatosEstatus.objects.filter(candidato_id=candidato.id).update(activo='N')
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
-                ce = CandidatosEstatus.objects.create(candidato_id=candidato.id, estatus_id=estatus.id)
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
 
             #return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 

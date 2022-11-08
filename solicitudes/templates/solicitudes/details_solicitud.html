@@ -111,9 +111,10 @@
                               </button>-->
                               <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Cita</a>
                             {% elif candidato.estatus == "Entrevistado" %}
-                              <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
+                              <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Entrevista</a>
+                              <!--<button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
                                 <i class="far fa-calendar-alt"></i> Ver Entrevista
-                              </button>
+                              </button>-->
                             {% endif %}
                             <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if candidato.estatus != "Postulado" %}disabled{% endif %} "><i class="fas fa-edit"></i> Editar</a> 
                             <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>

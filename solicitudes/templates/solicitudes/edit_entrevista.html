@@ -47,7 +47,15 @@
               <span class="bs-stepper-label">Documentación</span>
             </button>
           </div>
-          
+          {% if form3 %}
+            <div class="line"></div>
+            <div class="step" data-target="#entrevista-part">
+              <button type="button" class="step-trigger" role="tab" aria-controls="entrevista-part" id="entrevista-part-trigger">
+                <span class="bs-stepper-circle">4</span>
+                <span class="bs-stepper-label">Entrevista</span>
+              </button>
+            </div>
+          {% endif %}
         </div>
         <div class="bs-stepper-content">
           
@@ -140,15 +148,21 @@
                         </span>
                         <!-- checkbox -->
                         <div  class="icheck-primary d-inline ml-2">
-                        
-                          <input type="checkbox" value="{{documento.id}}" 
-                                 name="documentos[]" 
-                                 id="{{documento.id}}" 
-                                 {% if documento.check_proveedor == 'Y' %} checked {% endif %}
-                                 {% if documento.consideraciones == 'requerido' %} required {% endif %} >
-
-                         
-                          <label for="{{documento.id}}"></label>
+                            <input type="checkbox" value="{{documento.id}}" 
+                                name="documentos[]" 
+                                id="{{documento.id}}" 
+                                {% if documento.check_locacion == 'Y' %} checked {% endif %}
+                                {% if documento.consideraciones == 'requerido' %} required {% endif %} >
+                            <label for="{{documento.id}}"></label>
+                          </div>
+                        <!-- checkbox -->
+                        <div  class="icheck-primary d-inline ml-2">
+                            <input type="checkbox" value="{{documento.id}}" 
+                                name="documentos_p[]" 
+                                id="{{documento.id}}" 
+                                {% if documento.check_proveedor == 'Y' %} checked {% endif %}
+                                {% if documento.consideraciones == 'requerido' %} required {% endif %} >
+                            <label for="{{documento.id}}"></label>
                         </div>
                         <!-- todo text -->
                         <span class="text">{{documento}} </span>
@@ -170,11 +184,66 @@
               <i class="fas fa-times"></i> Cancelar
             </a>
             <a href="#" class="btn btn-info btn-sm" onclick="stepper.previous()"><i class="fas fa-step-backward"></i> Previous</a>
-            <button type="submit" class="btn btn-primary btn-sm pull-right">
-              <i class="fas fa-save"></i> Guardar</button>
-            </div>
+            <a href="#" class="btn btn-info btn-sm" onclick="stepper.next()"><i class="fas fa-step-forward"></i> Next</a>
+            
+
           </div>
-          
+          {% if form3 %}
+            <div id="entrevista-part" class="content" role="tabpanel" aria-labelledby="entrevista-part-trigger">
+              <br>
+              {% for field in form3 %}
+            
+                  {% if  field.name == 'fecha_programada' %}
+                      <div class="form-group row justify-content-md-center">
+                          <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                          <div class="col-md-6 col-sm-6 ">
+                              <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
+                              {{field}}
+                              {{field.errors}}
+                              <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
+                                  <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                              </div>
+                              </div>
+                          </div>
+                      </div>
+                  {% elif  field.name == 'hora_programada' %}
+                      <div class="form-group row justify-content-md-center">
+                          <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                          <div class="col-md-6 col-sm-6 ">
+                              <div class="input-group date" id="hora_programada" data-target-input="nearest">
+                                  {{field}}
+                                  <!--<input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>-->
+                                  <div class="input-group-append" data-target="#hora_programada" data-toggle="datetimepicker">
+                                      <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                  </div>
+                                <!-- /.input group -->
+                              </div>
+                              {{field.errors}}
+                          </div>
+                      </div>
+                  {% elif  field.name == 'candidatos' %}
+                      <input type="hidden" name="{{field.name}}" value="{{field.value}}">
+                  {%  else  %}
+                      <div class="form-group row justify-content-md-center">
+                          <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                          <div class="col-md-6 col-sm-6 ">
+                              {{field}}
+                              {{field.errors}}
+                          </div>
+                      </div>
+                  {% endif %}
+
+
+              {% endfor %}
+
+              <a href="{% url 'DetailsSolicitudes' solicitudes_id %}" class="btn btn-default btn-sm cancela" data-title="Cancelar Registro" >
+                <i class="fas fa-times"></i> Cancelar
+              </a>
+              <a href="#" class="btn btn-info btn-sm" onclick="stepper.previous()"><i class="fas fa-step-backward"></i> Previous</a>
+              <button type="submit" class="btn btn-primary btn-sm pull-right"><i class="fas fa-save"></i> Guardar</button>
+            </div>
+          {% endif %}
+        </div>
       </div>
     </form>  
   </div>
