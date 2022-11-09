@@ -8,6 +8,7 @@ from configuraciones.models import Locaciones, PuestosOperativos, activo
 from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form
 from django.db.models import Q
 
+from django.utils import timezone
 import datetime
 
 # Create your views here.
@@ -164,7 +165,7 @@ class CandidatosCreate(CreateView):
             candidato.save()
 
             #Se asigna un estatus al candidato
-            estatus = Estatus.objects.get(tipos='candidato', estatus='En proceso')
+            estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
             candidatos_estatus = CandidatosEstatus.objects.create(candidatos=candidato, estatus=estatus)
             candidatos_estatus.save()
 
@@ -328,7 +329,11 @@ WHERE d.activo='Y' """,(pk,))
 
             candidato = form.save()
             form2.save()
-            entrevista = form3.save()
+            
+            entrevista = form3.save(commit=False)
+            if entrevista.fecha_entrevista is None:
+                entrevista.fecha_entrevista = timezone.now()
+            entrevista.save()
 
             #Se procesan los documentos del candidato    
             if request.POST.getlist('documentos[]'):
