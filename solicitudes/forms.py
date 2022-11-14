@@ -179,7 +179,7 @@ class Entrevistas2Form(forms.ModelForm):
 
     class Meta:
         model = Entrevistas
-        fields = ['fecha_programada','hora_programada','indicaciones','fecha_entrevista','asistio','candidatos']
+        fields = ['asistio','fecha_entrevista','fecha_programada','hora_programada','indicaciones','candidatos']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -205,7 +205,8 @@ class Entrevistas2Form(forms.ModelForm):
         self.fields['fecha_entrevista'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
             'placeholder':'Fecha entrevista',
-             'data-target':"#fecha_entrevista",
+            'data-target':"#fecha_entrevista",
+            'readonly':"readonly"
         })
         self.fields['asistio'].widget.attrs.update({
             'class':'form-control',

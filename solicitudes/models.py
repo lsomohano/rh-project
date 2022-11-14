@@ -228,7 +228,7 @@ class Entrevistas(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     fecha_programada = models.DateField()
     hora_programada = models.TimeField()
-    fecha_entrevista = models.DateField(null=True,blank=True)
+    fecha_entrevista = models.DateTimeField(null=True,blank=True)
     asistio = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True)
 
     class Meta:

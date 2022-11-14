@@ -263,11 +263,19 @@ def createEntrevistas(request, candidatos_id):
     titles = {"title_page":'Reclutamiento',"sub_title_page":'Agendar nueva entrevista.'}
     if request.method == "POST":
         formulario = EntrevistasForm(request.POST or None)
+        candidato = Candidatos.objects.get(id=candidatos_id)
         if formulario.is_valid():
             entrevista = formulario.save(commit=False)
-            entrevista.candidatos = Candidatos.objects.get(id=candidatos_id)
+            entrevista.candidatos = candidato
             entrevista.save()
-            return redirect('Estatus')
+            
+            CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+            estatus = Estatus.objects.get(tipos='candidato', estatus='Programado')
+            ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+            ce.save()
+
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+            #return redirect('Estatus')
         else:
             return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
     
