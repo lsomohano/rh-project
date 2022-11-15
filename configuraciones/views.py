@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Ciudades, Contactos, Entidades, PuestosNominas, PuestosOperativos, Locaciones, LocacionesPuestos
 from .forms import ContactosLocacionesCreation, PuestosLocacionesCreation, ciudadesCreate, entidadesCreate, puestosNominasCreate, puestosOperativosCreate, LocacionesCreate
+
 # Create your views here.
 
 def entidadesView(request):
@@ -179,7 +180,7 @@ def locacionesView(request):
 def createLocaciones(request):
     titles = {"title_page":'Locaciones',"sub_title_page":'Nuevo puesto nomina.'}
     if request.method == "POST":
-        formulario = LocacionesCreate(request.POST or None)
+        formulario = LocacionesCreate(request.POST or None, request.FILES)
         if formulario.is_valid():
             locacion = formulario.save()
             return redirect('DetailsLocaciones',id=locacion.id)
@@ -194,7 +195,7 @@ def editLocaciones(request, id):
     titles = {"title_page":'Locaciones',"sub_title_page":'Editar información de la locación.'}
     locacion = Locaciones.objects.get(id=id)
     if request.method == "POST":
-        formulario = LocacionesCreate(request.POST or None, instance=locacion)
+        formulario = LocacionesCreate(request.POST or None, request.FILES, instance=locacion)
         if formulario.is_valid():
             formulario.save()
             return redirect('DetailsLocaciones',id=id)

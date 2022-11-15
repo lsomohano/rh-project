@@ -19,17 +19,22 @@
           </div>
           <!-- info row -->
           <div class="row invoice-info">
-            <div class="col-sm-2 invoice-col">
-                Información
+            <div class="col-sm-3 invoice-col">
+                Información:
                 <address>
                   <strong>Locación: {{locacion.locacion}}</strong><br>
                   {{locacion.ciudades}}, {{locacion.ciudades.entidades}}<br>
                   Zona: {{locacion.zona_ciudad}}<br>
+                  {% if  locacion.indicaciones_entrevista %}
+                    <a href="{{locacion.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
+                      <i class="far fa-file-pdf"></i> Instrucciones Entrevistas
+                    </a>
+                  {% endif %}
                 </address>
             </div>
             <!-- /.col -->
-            <div class="col-sm-8 invoice-col">
-              Dirección
+            <div class="col-sm-7 invoice-col">
+              Dirección:
               <address>
                 <strong>C.P.: {{locacion.codigo_postal}}</strong><br>
                 {{locacion.latitud}}, {{locacion.longitud}} <br>

@@ -6,8 +6,15 @@ urlpatterns = [
     path('create_solicitudes/',views.createSolicitudes, name="CreateSolicitudes"),
     path('edit_solicitudes/<int:id>',views.editSolicitudes, name="EditSolicitudes"),
     path('details_solicitudes/<int:id>',views.detailsSolicitudes, name="DetailsSolicitudes"),
-    path('create_candidatos/<int:solicitudes_id>',views.createCandidatos, name="CreateCandidatos"),
+    #path('create_candidatos/<int:solicitudes_id>',views.createCandidatos, name="CreateCandidatos"),
     path('estatus',views.estatusView, name="Estatus"),
     path('create_estatus/',views.createEstatus, name="CreateEstatus"),
     path('edit_estatus/<int:id>',views.editEstatus, name="EditEstatus"),
+
+    path('create_candidatos/<int:solicitudes_id>',views.CandidatosCreate.as_view(), name="CreateCandidatos"),
+    path('edit_candidatos/<int:pk>',views.CandidatosUpdate.as_view(), name="EditCandidatos"),
+
+    path('entrevistas',views.entrevistasView, name="Entrevistas"),
+    path('create_entrevistas/<int:candidatos_id>',views.createEntrevistas, name="CreateEntrevistas"),
+    path('edit_entrevistas/<int:pk>',views.EntrevistasUpdate.as_view(), name="EditEntrevistas"),
 ]

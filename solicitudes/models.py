@@ -1,10 +1,11 @@
+from tabnanny import verbose
 from unittest.util import _MAX_LENGTH
 from xml.parsers.expat import model
 from django.db import models
 from django.contrib.auth import get_user_model
 from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos
 from enum import Enum
-
+import datetime
 # Create your models here.
 
 User = get_user_model()
@@ -26,6 +27,18 @@ class Periodos(Enum):
     catorcenal = "Catorcenal"
     mensual = "Mensual"
 
+#Opciones documentos.
+class opciones_documentos(Enum):
+    requerido = "Requerido"
+    opcional = "Opcional"
+    gerencial = "Gerencial"
+
+#Opciones generos.
+class Generos(Enum):
+    M = "Masculino"
+    F = "Femenino"
+    I = "Indistinto"
+
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
     para los candidatos"""
@@ -33,7 +46,7 @@ class Estatus(models.Model):
     estatus = models.CharField(max_length=50)
     descripcion = models.TextField(max_length=250)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
-    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='Y')
+    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='solicitud')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -41,7 +54,7 @@ class Estatus(models.Model):
         db_table =  "calogos_estatus"
         verbose_name = 'catalogo estatus'
         verbose_name_plural = 'catalogos estatus'
-        ordering = ["-estatus"]
+        ordering = ["created"]
 
     def __str__(self):
         return self.estatus
@@ -103,11 +116,12 @@ class Personas(models.Model):
     nombre = models.CharField(max_length=100, null=True, blank=True)
     apellido_paterno = models.CharField(max_length=100, null=True, blank=True)
     apellido_materno = models.CharField(max_length=100, null=True, blank=True)
-    rfc = models.CharField(max_length=20, unique=True)
+    rfc = models.CharField(max_length=20, unique=True, verbose_name='RFC')
     fecha_nacimiento = models.DateField()
+    genero = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Generos], null=True, blank=True)
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     telefono = models.CharField(max_length=15)
-    cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -128,6 +142,7 @@ class Documentos(models.Model):
     en sus entrevistas"""
     documento = models.CharField(max_length=70, null=True, blank=True)
     descripcion = models.TextField(max_length=300, null=True, blank=True)
+    consideraciones = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in opciones_documentos], default='requerido')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -136,7 +151,7 @@ class Documentos(models.Model):
         db_table =  "documentos"
         verbose_name = 'documento'
         verbose_name_plural = 'documentos'
-        ordering = ["-documento"]
+        ordering = ["created"]
 
     def __str__(self):
         return self.documento
@@ -149,8 +164,10 @@ class Candidatos(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitudes')
     personas = models.ForeignKey(Personas, on_delete=models.CASCADE, verbose_name='Personas')
+    cv_solicitud = models.FileField(upload_to='candidatos/personas/cv',null=True,blank=True, verbose_name='CV o Solcitud')
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
+    referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True, verbose_name='Referencias Laborales')
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
 
@@ -161,7 +178,7 @@ class Candidatos(models.Model):
         ordering = ["-created"]
 
     def __str__(self):
-        return self.personas.nombre
+        return self.personas.nombre + ' ' + self.personas.apellido_paterno + ' ' + self.personas.apellido_materno
 
 
 
@@ -182,7 +199,7 @@ class CandidatosEstatus(models.Model):
         ordering = ["-created"]
 
     def __str__(self):
-        return self.activo
+        return self.estatus.estatus
 
 
 
@@ -192,8 +209,8 @@ class CandidatosDocumentos(models.Model):
 
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     documentos = models.ForeignKey(Documentos, on_delete=models.CASCADE, verbose_name='Documentos')
-    check_proveedor = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
-    check_locacion = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
+    check_proveedor = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True, default='N')
+    check_locacion = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True, default='N')
     
     class Meta:
         db_table =  "candidatos_documentos"
@@ -201,4 +218,24 @@ class CandidatosDocumentos(models.Model):
         verbose_name_plural = 'Candidatos Documentos'
 
     def __str__(self):
-        return self.candidatos
+        return self.documentos.documento
+
+class Entrevistas(models.Model):
+    """Modelo que permite gestionar las entrevistas de los candidatos"""
+
+    candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
+    indicaciones = models.TextField(null=True,blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    fecha_programada = models.DateField()
+    hora_programada = models.TimeField()
+    fecha_entrevista = models.DateTimeField(null=True,blank=True)
+    asistio = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True)
+
+    class Meta:
+        db_table =  "entrevistas"
+        verbose_name = 'entrevista'
+        verbose_name_plural = 'entrevistas'
+        ordering = ["-created"]
+
+    def __str__(self):
+        return self.estatus.estatus

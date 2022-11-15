@@ -11,7 +11,7 @@
           <div class="row">
             <div class="col-12">
               <h4>
-                <i class="fas fa-user"></i> {{solicitud.puestos_operativos}} - {{solicitud.puestos_operativos.puestos_nominas}}
+                <i class="fas fa-user"></i> (Id:{{solicitud.id}}) {{solicitud.puestos_operativos}} - {{solicitud.puestos_operativos.puestos_nominas}} 
                 <small class="float-right">Alta: {{solicitud.created}}</small>
               </h4>
             </div>
@@ -37,7 +37,6 @@
                 {{solicitud.locaciones}}<br>
                 {{solicitud.locaciones.direccion}}<br>
                 {{solicitud.user.email}} <br>
-                {{estatus}} {{estatus.created}}
               </address>
             </div>
             <!-- /.col -->
@@ -49,25 +48,16 @@
             </div>
             <div class="col-sm-3 invoice-col">
               <button class="btn btn-success btn-sm btn-block disabled" >
-                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} {{estatus.created}}
-              </button>
-              <!--{% if solicitud.activo == "Y" %}
-                <button class="btn btn-success btn-sm btn-block disabled" >
-                  <i class="fas fa-thumbs-up"></i> Estatus: Activo
-                </button>
-              {% else %}
-                <button class="btn btn-secondary btn-sm btn-block disabled" >
-                  <i class="fas fa-thumbs-down"></i> Estatus: Inactivo
-                </button>
-              {% endif %}-->
-              
+                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} <br> {{estatus.created}}
+              </button>              
               <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
                 <i class="fas fa-edit"></i> Editar
               </button>
               <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
-              <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateCandidatos' solicitud.id %}', 'myModal')" >
-                <i class="fas fa-plus-circle"></i> Agregar Puesto Operativo
-              </button>
+           
+              <a href="{% url 'CreateCandidatos' solicitud.id %}" class="btn btn-primary btn-sm btn-block" >
+                <i class="fas fa-plus-circle"></i> Agregar Candidatos
+              </a>
             </div>
             <!-- /.col -->
           </div>
@@ -76,42 +66,66 @@
           <!-- Table row -->
           <div class="row">
             <div class="col-12 table-responsive">
-                <!--<table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
-                        <th>Puesto Operativo</th>
-                        <th>Reclutamiento</th>
+                        <th>Id</th>
+                        <th>R.F.C.</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {% for puesto_operativo in puestos_operativos %}
-                      <tr>
-                        <td>{{puesto_operativo.puesto_operativo}}</td>
-                        <td>{{puesto_operativo.canal_reclutamiento}}</td>
-                        
-                        <td>
-                          {% if puesto_operativo.activo == "Y" %}
-                              <button class="btn btn-success btn-xs disabled" >
-                                <i class="fas fa-thumbs-up"></i> Activo
+                      {% for candidato in candidatos %}
+                        <tr>
+                          <td>{{candidato.id}}</td>
+                          <td>{{candidato.personas.rfc}}</td>
+                          <td>{{candidato.personas.nombre}}</td>
+                          <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
+                          <td>{{candidato.personas.email}}</td>
+                          <td>{{candidato.personas.telefono}}</td>
+                          <td>
+                            <button class="btn btn-success btn-xs disabled" >
+                              <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
+                            </button>
+                            <!--{% for estatus in candidato.candidatosestatus_set.all %}
+                              {% if estatus.activo == 'Y' %}
+                                <button class="btn btn-success btn-xs disabled" >
+                                  <i class="fas fa-thumbs-up"></i> {{estatus}}
+                                </button>
+                              {% endif %}
+                            {% endfor %}-->
+                          </td>
+                          <td>
+                            {% if candidato.estatus == "Postulado" %}
+                              <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
+                                <i class="far fa-calendar-alt"></i> Agendar Entrevista
                               </button>
-                          {% else %}
-                              <button class="btn btn-secondary btn-xs disabled" >
-                                <i class="fas fa-thumbs-down"></i> Inactivo
+                              <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs"><i class="fas fa-edit"></i> Editar</a> 
+                            {% elif candidato.estatus == "Programado" %}
+                              
+                              <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Cita</a>
+                              <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if candidato.estatus != "Postulado" %}disabled{% endif %} "><i class="fas fa-edit"></i> Editar</a> 
+                            
+                            {% elif candidato.estatus == "Entrevistado" %}
+                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
+                                <i class="far fa-calendar-alt"></i> Agendar Contratación
                               </button>
-                          {% endif %}</td>
-                        </td>
-                        <td>
-                          <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditPuestoOperativo' puesto_operativo.id %}', 'myModal')" >
-                            <i class="fas fa-edit"></i> Editar
-                          </button>
-                          <a href="{% url 'DeletePuestosOperativo' puesto_operativo.id %}" class="btn btn-danger btn-xs elimina" data-title="Eliminar Puesto"><i class="fas fa-trash-alt"></i> Eliminar</a>
-                        </td>
-                      </tr>
+                              <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Entrevista</a>
+                              
+                            {% endif %}
+                            <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " >
+                              <i class="fas fa-trash-alt"></i> Rechazar
+                            </a>
+                          </td>
+                        </tr>
                       {% endfor %}
                     </tbody>
-                </table>  -->
+                </table>  
             </div>
             <!-- /.col -->
           </div>
@@ -148,7 +162,7 @@
 
     $(function () {
       $('a.elimina').confirm({
-        content: "¿Estas seguro de querer eliminar este registro?",
+        //content: "¿Estas seguro de querer eliminar este registro?",
         icon: 'fas fa-exclamation-triangle',
         closeIcon: true,
         closeIconClass: 'fas fa-times',
