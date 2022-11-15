@@ -1,9 +1,6 @@
-from tabnanny import verbose
-from unittest.util import _MAX_LENGTH
-from xml.parsers.expat import model
 from django.db import models
 from django.contrib.auth import get_user_model
-from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos
+from configuraciones.models import Locaciones, PuestosOperativos
 from enum import Enum
 import datetime
 # Create your models here.
@@ -38,6 +35,11 @@ class Generos(Enum):
     M = "Masculino"
     F = "Femenino"
     I = "Indistinto"
+
+#Tipos de entrevistas eventos.
+class Eventos(Enum):
+    entrevista = "Entrevista"
+    contratacion = "Contratacion"
 
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
@@ -230,12 +232,12 @@ class Entrevistas(models.Model):
     hora_programada = models.TimeField()
     fecha_entrevista = models.DateTimeField(null=True,blank=True)
     asistio = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo],null=True,blank=True)
+    tipo_evento = models.CharField(max_length=12, choices=[(tag.name, tag.value) for tag in Eventos], default='entrevista')
 
     class Meta:
         db_table =  "entrevistas"
         verbose_name = 'entrevista'
         verbose_name_plural = 'entrevistas'
-        ordering = ["-created"]
 
     def __str__(self):
-        return self.estatus.estatus
+        return self.tipo_evento

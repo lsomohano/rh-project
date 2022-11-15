@@ -1,11 +1,9 @@
-from socket import create_server
-from turtle import title
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
-from configuraciones.models import Locaciones, PuestosOperativos, activo
-from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form
+from configuraciones.models import Locaciones, PuestosOperativos
+from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form
 from django.db.models import Q
 
 from django.utils import timezone
@@ -250,7 +248,7 @@ def entrevistasView(request):
     """Vista que muestra las entrevistas pendientes"""
     
     titles = {"title_page":'Entrevistas',"sub_title_page":'Gestión de entrevistas.'}
-    entrevistas = Entrevistas.objects.filter(asistio__isnull='True')
+    entrevistas = Entrevistas.objects.filter(asistio__isnull='True', tipo_evento='entrevista')
     hoy = datetime.datetime.now().date()
 
     return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas, "hoy":hoy})
@@ -365,6 +363,136 @@ WHERE d.activo='Y' """,(pk,))
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
+
+            #return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+            return redirect('Entrevistas')
+        else:
+            return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
+
+
+#Gestion de entrevistas para contratación
+def createContratacion(request, candidatos_id):
+    """Vista que permite agendar entrevistas de los candidatos"""
+
+    titles = {"title_page":'Reclutamiento',"sub_title_page":'Agendar nueva contratación.'}
+    if request.method == "POST":
+        formulario = EntrevistasForm(request.POST or None)
+        candidato = Candidatos.objects.get(id=candidatos_id)
+        if formulario.is_valid():
+            entrevista = formulario.save(commit=False)
+            entrevista.candidatos = candidato
+            entrevista.tipo_evento = 'contratacion'
+            entrevista.save()
+            
+            CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+            estatus = Estatus.objects.get(tipos='candidato', estatus='Contratación')
+            ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+            ce.save()
+
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+            #return redirect('Estatus')
+        else:
+            return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
+    
+    candidato = Candidatos.objects.get(id=candidatos_id)
+    formulario = EntrevistasForm()
+       
+    return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidato":candidato})
+
+
+
+class ContratacionUpdate(UpdateView):
+    """ Vista que permite actualizar los datos del candidatos """
+    
+    model = Candidatos
+    second_model = Personas
+    third_model = Entrevistas
+    template_name = "solicitudes/edit_entrevista.html"
+    
+    form_class = CandidatosForm
+    second_form_class = PersonasForm
+    third_form_class = Entrevistas2Form
+    fourth_form_class = Entrevistas3Form
+
+    def get_context_data(self, **kwargs) :
+        context = super(ContratacionUpdate, self).get_context_data(**kwargs)
+        pk = self.kwargs.get('pk')
+        
+        candidato = self.model.objects.get(id=pk)
+        persona = self.second_model.objects.get(id=candidato.personas_id)
+        entrevista = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='entrevista'), (Q(asistio__isnull='True') | Q(asistio='Y')))
+        contratacion = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='contratacion'), (Q(asistio__isnull='True') | Q(asistio='Y')))
+
+        context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Editar Candidato.'}
+        context['solicitudes_id'] = candidato.solicitudes_vacantes_id
+        context['documentos'] = Documentos.objects.raw("""SELECT d.*, cd.check_proveedor, cd.check_locacion FROM documentos d
+LEFT JOIN candidatos_documentos cd ON cd.documentos_id=d.id AND cd.candidatos_id=%s
+WHERE d.activo='Y' """,(pk,))
+        #context['candidatosdocumentos'] = CandidatosDocumentos.objects.filter(candidatos_id=pk)
+
+        if 'form' not in context:
+            context['form'] = self.form_class(instance=candidato)
+        if 'form2' not in context:
+            context['form2'] =self.second_form_class(instance=persona)
+        if 'form3' not in context:
+            context['form3'] =self.third_form_class(instance=entrevista)
+        if 'form4' not in context:
+            context['form4'] =self.fourth_form_class(instance=contratacion)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        candidato_id = kwargs['pk']
+
+        candidato = self.model.objects.get(id=candidato_id)
+        persona = self.second_model.objects.get(id=candidato.personas_id)
+        entrevista = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='entrevista'), (Q(asistio__isnull='True') | Q(asistio='Y')))
+        contratacion = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='contratacion'), (Q(asistio__isnull='True') | Q(asistio='Y')))
+
+        form = self.form_class(request.POST, request.FILES, instance=candidato)
+        form2 = self.second_form_class(request.POST, request.FILES, instance=persona)
+        form3 = self.third_form_class(request.POST, request.FILES, instance=entrevista)
+        form4 = self.third_form_class(request.POST, request.FILES, instance=contratacion)
+        
+        if form.is_valid() and form2.is_valid() and form3.is_valid() and form3.is_valid():
+
+            """candidato = form.save()
+            form2.save()"""
+            
+            """entrevista = form3.save(commit=False)
+            if entrevista.fecha_entrevista is None:
+                entrevista.fecha_entrevista = timezone.now()
+            entrevista.save()"""
+
+            contratacion = form4.save(commit=False)
+            if contratacion.fecha_entrevista is None:
+                contratacion.fecha_entrevista = timezone.now()
+            contratacion.save()
+
+            #Se procesan los documentos del candidato    
+            """  if request.POST.getlist('documentos[]'):
+                CandidatosDocumentos.objects.filter(candidatos=candidato).update(check_locacion='N')
+                for documento in request.POST.getlist('documentos[]'):
+                    
+                    if CandidatosDocumentos.objects.filter(candidatos=candidato, documentos_id=documento).exists():
+                        CandidatosDocumentos.objects.filter(candidatos=candidato, documentos_id=documento).update(check_locacion='Y')
+                    else:
+                        doc = CandidatosDocumentos.objects.create(check_locacion='Y', candidatos=candidato, documentos_id=documento)
+                        doc.save()"""
+                        
+            #Se procesa el estus
+            if contratacion.asistio == 'Y':
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+                estatus = Estatus.objects.get(tipos='candidato', estatus='Contratado')
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+                ce.save()
+            else:
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id, estatus='Entrevistado').update(activo='Y')
+                """estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+                ce.save()"""
 
             #return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
             return redirect('Entrevistas')
