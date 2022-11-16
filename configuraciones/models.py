@@ -20,7 +20,7 @@ class Entidades(models.Model):
     pais = models.CharField(max_length=2, choices=[(tag.name, tag.value) for tag in paises], default='mx')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "entidades"
@@ -37,7 +37,7 @@ class Ciudades(models.Model):
     entidades = models.ForeignKey(Entidades, on_delete=models.CASCADE, verbose_name='Entidad')
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "ciudades"
@@ -71,7 +71,7 @@ class Locaciones(models.Model):
     indicaciones_entrevista = models.FileField(upload_to='locaciones/indicaciones/',null=True,blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table =  "locaciones"
@@ -91,7 +91,7 @@ class Contactos(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table =  "contactos"
@@ -107,7 +107,7 @@ class PuestosNominas(models.Model):
     puesto_nomina = models.CharField(max_length=60)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         db_table =  "puestos_nominas"
@@ -133,7 +133,7 @@ class PuestosOperativos(models.Model):
         verbose_name='Reclutamiento')
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         db_table =  "puestos_operativos"
@@ -152,7 +152,7 @@ class LocacionesPuestos(models.Model):
     staf_contratado = models.IntegerField(null=True, blank=True, default=0)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         db_table =  "locaciones_puestos"

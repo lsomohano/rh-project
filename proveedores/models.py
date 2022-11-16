@@ -25,7 +25,7 @@ class Proveedores(models.Model):
     email = models.EmailField(null=True, blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "proveedores"
@@ -43,7 +43,7 @@ class ContactosProveedores(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "contactos_proveedores"
@@ -60,7 +60,7 @@ class LocacionesProveedores(models.Model):
     proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedores')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "locaciones_proveedores"

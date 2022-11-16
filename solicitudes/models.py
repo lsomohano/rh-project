@@ -50,7 +50,7 @@ class Estatus(models.Model):
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='solicitud')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "calogos_estatus"
@@ -78,7 +78,7 @@ class SolicitudesVacantes(models.Model):
     periodo_pago = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in Periodos], default='quincenal')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "solicitudes_vacantes"
@@ -99,7 +99,7 @@ class SolicitudesEstatus(models.Model):
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "solicitudes_estatus"
@@ -126,7 +126,7 @@ class Personas(models.Model):
     telefono = models.CharField(max_length=15)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "personas"
@@ -147,7 +147,7 @@ class Documentos(models.Model):
     consideraciones = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in opciones_documentos], default='requerido')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "documentos"
@@ -171,7 +171,7 @@ class Candidatos(models.Model):
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True, verbose_name='Referencias Laborales')
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "candidatos"
@@ -192,7 +192,7 @@ class CandidatosEstatus(models.Model):
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "candidatos_estatus"
