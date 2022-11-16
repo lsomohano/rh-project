@@ -17,4 +17,7 @@ urlpatterns = [
     path('entrevistas',views.entrevistasView, name="Entrevistas"),
     path('create_entrevistas/<int:candidatos_id>',views.createEntrevistas, name="CreateEntrevistas"),
     path('edit_entrevistas/<int:pk>',views.EntrevistasUpdate.as_view(), name="EditEntrevistas"),
+
+    path('create_contratacion/<int:candidatos_id>',views.createContratacion, name="CreateContratacion"),
+    path('edit_contratacion/<int:pk>',views.ContratacionUpdate.as_view(), name="EditContratacion"),
 ]

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'sitetree',
     'solicitudes',
+    'facturacion',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
