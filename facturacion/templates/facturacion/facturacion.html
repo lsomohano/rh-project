@@ -21,24 +21,24 @@
       <thead>
         <tr>
           <th>Id</th>
-          <th>Usuario</th>
-          <th>Locación</th>
-          <th>Puesto</th>
+          <th>Proveedor</th>
+          <th>RFC</th>
+          <th>Periodo</th>
           <th>Fecha Solicitud</th>
           <th>Estatus</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        {% for solicitud in solicitudes %}
+        {% for factura in facturas %}
         <tr>
-          <td>{{solicitud.id}}</td>
-          <td>{{solicitud.user}}</td>
-          <td>{{solicitud.locaciones}}</td>
-          <td>{{solicitud.puestos_operativos}}</td>
-          <td>{{solicitud.created}}</td>
+          <td>{{factura.id}}</td>
+          <td>{{factura.proveedores}}</td>
+          <td>{{factura.proveedores.rfc}}</td>
+          <td>{{factura.fecha_ini|date:'Y-m-d'}} a {{factura.fecha_fin|date:'Y-m-d'}}</td>
+          <td>{{factura.created|date:'Y-m-d H:m'}}</td>
           <td>
-            {% if solicitud.activo == "Y" %}
+            {% if factura.activo == "Y" %}
                 <button class="btn btn-success btn-xs disabled" >
                   <i class="fas fa-thumbs-up"></i> Activo
                 </button>
@@ -48,7 +48,7 @@
                 </button>
             {% endif %}
           <td>
-            <a href="{% url 'DetailsSolicitudes' solicitud.id %}" class="btn btn-info btn-xs"><i class="fas fa-info-circle"></i> Detalles</a>
+            <a href="{% url 'DetailsFacturacion' factura.id %}" class="btn btn-info btn-xs"><i class="fas fa-info-circle"></i> Detalles</a>
           </td>
         </tr>
         {% endfor %}

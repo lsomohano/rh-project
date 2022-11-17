@@ -22,9 +22,9 @@
             <div class="col-sm-4 invoice-col">
               Reporte de facturación
               <address>
-                <strong>Proveedor : {{facturacion.proveedores.razon_social}}</strong><br>
-                Suledo : $ {{facturacion.rfc}}<br>
-                Periodo de facturación : {{solicitud.fecha_ini}} a {{solicitud.fecha_fin}}<br>
+                <strong>R.F.C.: {{facturacion.proveedores.rfc}}</strong><br>
+                Proveedor : {{facturacion.proveedores.razon_social}}<br>
+                Periodo de facturación : {{facturacion.fecha_ini|date:'Y-m-d'}} a {{facturacion.fecha_fin|date:'Y-m-d'}}<br>
                 <!--Comiciones: {{solicitud.comiciones}}<br>
                 Bonos: {{solicitud.bono}}<br>
                 Bonos: {{solicitud.garantia}}<br>-->                
@@ -44,11 +44,11 @@
             <div class="col-sm-4 invoice-col">
               <!--<button class="btn btn-success btn-sm btn-block disabled" >
                 <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} <br> {{estatus.created}}
-              </button>              
-              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditSolicitudes' facturacion.id %}', 'myModal')" >
+              </button> -->             
+              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddCandidatos' facturacion.fecha_ini facturacion.fecha_fin %}', 'myModal')" >
                 <i class="fas fa-edit"></i> Editar
               </button>
-              <a href="{% url 'DeletePuestosNominas' facturacion.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
+              <!--<a href="{% url 'DeletePuestosNominas' facturacion.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
            
               <a href="{% url 'CreateCandidatos' facturacion.id %}" class="btn btn-primary btn-sm btn-block" >
                 <i class="fas fa-plus-circle"></i> Agregar Candidatos
@@ -61,15 +61,15 @@
           <!-- Table row -->
           <div class="row">
             <div class="col-12 table-responsive">
-                <!--<table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped">
                     <thead>
                       <tr>
                         <th>Id</th>
                         <th>R.F.C.</th>
                         <th>Nombre</th>
                         <th>Apellidos</th>
-                        <th>Email</th>
-                        <th>Telefono</th>
+                        <th>Locación</th>
+                        <th>Puesto</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
                       </tr>
@@ -78,40 +78,17 @@
                       {% for candidato in candidatos %}
                         <tr>
                           <td>{{candidato.id}}</td>
-                          <td>{{candidato.personas.rfc}}</td>
-                          <td>{{candidato.personas.nombre}}</td>
-                          <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
-                          <td>{{candidato.personas.email}}</td>
-                          <td>{{candidato.personas.telefono}}</td>
+                          <td>{{candidato.rfc}}</td>
+                          <td>{{candidato.nombre}}</td>
+                          <td>{{candidato.apellido_paterno}} {{candidato.apellido_materno }}</td>
+                          <td>{{candidato.locacion}}</td>
+                          <td>{{candidato.puesto_operativo}}</td>
                           <td>
                             <button class="btn btn-success btn-xs disabled" >
                               <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
                             </button>
-                            
                           </td>
                           <td>
-                            {% if candidato.estatus == "Postulado" %}
-                              <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
-                                <i class="far fa-calendar-alt"></i> Agendar Entrevista
-                              </button>
-                              <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs"><i class="fas fa-edit"></i> Editar</a> 
-                            {% elif candidato.estatus == "Programado" %}
-                              
-                              <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Cita</a>
-                              <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if candidato.estatus != "Postulado" %}disabled{% endif %} "><i class="fas fa-edit"></i> Editar</a> 
-                            
-                            {% elif candidato.estatus == "Entrevistado" %}
-                              <button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContratacion' candidato.id %}', 'myModal')" >
-                                <i class="far fa-calendar-alt"></i> Agendar Contratación
-                              </button>
-                              <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Info Candidato</a>
-                            
-                            {% elif candidato.estatus == "Contratación" %}
-                             
-                              <a href="{% url 'EditContratacion' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Info Candidato</a>
-                              
-
-                            {% endif %}
                             <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " >
                               <i class="fas fa-trash-alt"></i> Rechazar
                             </a>
@@ -119,7 +96,7 @@
                         </tr>
                       {% endfor %}
                     </tbody>
-                </table>  -->
+                </table> 
             </div>
             <!-- /.col -->
           </div>
@@ -173,6 +150,10 @@
           "info": true,
           "autoWidth": false,
           "responsive": true,
+          "columnDefs": [{ 
+            "orderable": false, 
+            "targets": [6,7] 
+        }],
         });
     });
   </script>
