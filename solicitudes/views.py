@@ -5,6 +5,7 @@ from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, Soli
 from configuraciones.models import Locaciones, PuestosOperativos
 from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from django.utils import timezone
 import datetime
@@ -12,6 +13,7 @@ import datetime
 # Create your views here.
 """Gestion de las Solicitudes de Vacantes"""
 
+@login_required(login_url="Log_In")
 def solicitudesView(request):
     """Vista que gestiona la información de las entidades"""
     
@@ -20,7 +22,7 @@ def solicitudesView(request):
     return render(request,"solicitudes/solicitudes.html",{"titles":titles, "solicitudes":solicitudes})
 
 
-
+@login_required(login_url="Log_In")
 def createSolicitudes(request):
     """Vista que permite agregar nuevas solicitudes"""
 
@@ -47,7 +49,7 @@ def createSolicitudes(request):
     return render(request,"solicitudes/create_solicitud.html",{"titles":titles, "formulario":formulario})
 
 
-
+@login_required(login_url="Log_In")
 def editSolicitudes(request, id):
     """Vista que permite editar la infiormación de las solicitudes"""
 
@@ -64,7 +66,7 @@ def editSolicitudes(request, id):
     return render(request,"solicitudes/create_solicitud.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
-
+@login_required(login_url="Log_In")
 def detailsSolicitudes(request, id):
     """Vista del datalle de la vacante y gestiona la información de los candidatos"""    
 
@@ -91,6 +93,7 @@ def detailsSolicitudes(request, id):
 
 """Catalogo de los estatus"""
 
+@login_required(login_url="Log_In")
 def estatusView(request):
     """Vista que gestiona la información de los estutus para las solicitudes y los candidatos"""
     
@@ -99,7 +102,7 @@ def estatusView(request):
     return render(request,"solicitudes/estatus.html",{"titles":titles, "estatus":estatus})
 
 
-
+@login_required(login_url="Log_In")
 def createEstatus(request):
     """Vista que permite agregar nuevos estados, para solicitudes y para los candidatos"""
 
@@ -115,7 +118,7 @@ def createEstatus(request):
     return render(request,"solicitudes/create_estatus.html",{"titles":titles, "formulario":formulario})
 
 
-
+@login_required(login_url="Log_In")
 def editEstatus(request, id):
     """Esta vista permite editar la informacion de un estatus"""
     titles = {"title_page":'Solicitudes',"sub_title_page":'Editar información del puesto.'}
@@ -132,6 +135,8 @@ def editEstatus(request, id):
 
 
 ##### Gestion de los candidatos #####
+
+
 class CandidatosCreate(CreateView):
     """ Vista que permite agregar infomación de los candidatos """
     model = Candidatos
@@ -139,6 +144,8 @@ class CandidatosCreate(CreateView):
     form_class = CandidatosForm
     second_form_class = PersonasForm
 
+
+    @login_required(login_url="Log_In")
     def get_context_data(self, **kwargs):
         context = super(CandidatosCreate, self).get_context_data(**kwargs)
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
@@ -151,7 +158,8 @@ class CandidatosCreate(CreateView):
             context['form2'] =self.second_form_class(self.request.GET)
 
         return context
-        
+
+    @login_required(login_url="Log_In")    
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         form = self.form_class(request.POST, request.FILES)
@@ -193,6 +201,8 @@ class CandidatosUpdate(UpdateView):
     form_class = CandidatosForm
     second_form_class = PersonasForm
 
+
+    @login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(CandidatosUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -213,6 +223,7 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
+    @login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
@@ -244,6 +255,7 @@ WHERE d.activo='Y' """,(pk,))
 
 """ Gestion de entrevistas """
 
+@login_required(login_url="Log_In")
 def entrevistasView(request):
     """Vista que muestra las entrevistas pendientes"""
     
@@ -254,7 +266,7 @@ def entrevistasView(request):
     return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas, "hoy":hoy})
 
 
-
+@login_required(login_url="Log_In")
 def createEntrevistas(request, candidatos_id):
     """Vista que permite agendar entrevistas de los candidatos"""
 
@@ -273,7 +285,6 @@ def createEntrevistas(request, candidatos_id):
             ce.save()
 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
-            #return redirect('Estatus')
         else:
             return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
     
@@ -295,6 +306,8 @@ class EntrevistasUpdate(UpdateView):
     second_form_class = PersonasForm
     third_form_class = Entrevistas2Form
 
+
+    @login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(EntrevistasUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -319,6 +332,7 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
+    @login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
@@ -371,6 +385,8 @@ WHERE d.activo='Y' """,(pk,))
 
 
 #Gestion de entrevistas para contratación
+
+@login_required(login_url="Log_In")
 def createContratacion(request, candidatos_id):
     """Vista que permite agendar entrevistas de los candidatos"""
 
@@ -414,6 +430,7 @@ class ContratacionUpdate(UpdateView):
     third_form_class = Entrevistas2Form
     fourth_form_class = Entrevistas3Form
 
+    @login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(ContratacionUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -441,6 +458,7 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
+    @login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
@@ -469,17 +487,6 @@ WHERE d.activo='Y' """,(pk,))
             if contratacion.fecha_entrevista is None:
                 contratacion.fecha_entrevista = timezone.now()
             contratacion.save()
-
-            #Se procesan los documentos del candidato    
-            """  if request.POST.getlist('documentos[]'):
-                CandidatosDocumentos.objects.filter(candidatos=candidato).update(check_locacion='N')
-                for documento in request.POST.getlist('documentos[]'):
-                    
-                    if CandidatosDocumentos.objects.filter(candidatos=candidato, documentos_id=documento).exists():
-                        CandidatosDocumentos.objects.filter(candidatos=candidato, documentos_id=documento).update(check_locacion='Y')
-                    else:
-                        doc = CandidatosDocumentos.objects.create(check_locacion='Y', candidatos=candidato, documentos_id=documento)
-                        doc.save()"""
                         
             #Se procesa el estus
             if contratacion.asistio == 'Y':

@@ -25,34 +25,61 @@
                 <strong>R.F.C.: {{facturacion.proveedores.rfc}}</strong><br>
                 Proveedor : {{facturacion.proveedores.razon_social}}<br>
                 Periodo de facturación : {{facturacion.fecha_ini|date:'Y-m-d'}} a {{facturacion.fecha_fin|date:'Y-m-d'}}<br>
-                <!--Comiciones: {{solicitud.comiciones}}<br>
-                Bonos: {{solicitud.bono}}<br>
-                Bonos: {{solicitud.garantia}}<br>-->                
-            </div>
-            <!-- /.col -->
-            <div class="col-sm-4 invoice-col">
-              Lolicitante:
-              <address>
-                <strong>Contacto: {{solicitud.user.first_name}} {{solicitud.user.last_name}}</strong><br>
-                <!--{{solicitud.locaciones}}<br>
-                {{solicitud.locaciones.direccion}}<br>
-                {{solicitud.user.email}} <br>-->
+                Total Facturado: {{facturacion.total_facturado|floatformat:2 }}<br>
               </address>
             </div>
             <!-- /.col -->
-            
-            <div class="col-sm-4 invoice-col">
-              <!--<button class="btn btn-success btn-sm btn-block disabled" >
-                <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} <br> {{estatus.created}}
-              </button> -->             
-              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddCandidatos' facturacion.fecha_ini facturacion.fecha_fin %}', 'myModal')" >
-                <i class="fas fa-edit"></i> Editar
-              </button>
-              <!--<a href="{% url 'DeletePuestosNominas' facturacion.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
-           
-              <a href="{% url 'CreateCandidatos' facturacion.id %}" class="btn btn-primary btn-sm btn-block" >
-                <i class="fas fa-plus-circle"></i> Agregar Candidatos
-              </a>-->
+            <div class="col-sm-3 invoice-col">
+              <strong>Pre Factura: </strong>
+              <address>
+                {% if facturacion.pre_factura_pdf %}
+                  <a href="{{facturacion.pre_factura_pdf.url}}" class="btn btn-danger btn-sm" target="_blank">
+                    <i class="fas fa-file-pdf"></i> PDF
+                  </a>
+                  <a href="{{facturacion.pre_factura_xml.url}}" class="btn btn-info btn-sm" target="_blank">
+                    <i class="fas fa-file-code"></i> XML
+                  </a>
+                {% endif %}
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+              <strong>Factura: </strong>
+              <address>
+                {% if facturacion.factura_pdf %}
+                <a href="{{facturacion.factura_pdf.url}}" class="btn btn-danger btn-sm" target="_blank">
+                  <i class="fas fa-file-pdf"></i> PDF
+                </a>
+                <a href="{{facturacion.factura_xml.url}}" class="btn btn-info btn-sm" target="_blank">
+                  <i class="fas fa-file-code"></i> XML
+                </a>
+                {% endif %}
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-2 invoice-col">
+              {% if fc <= 0 %}          
+                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddCandidatos' facturacion.proveedores.id facturacion.id facturacion.fecha_ini facturacion.fecha_fin %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Agregar Candidatos
+                </button>
+
+              {% elif not facturacion.pre_factura_pdf  %}
+                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddPrefactura' facturacion.id %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Agregar Pre Factura
+                </button>
+              {% elif not facturacion.factura_pdf  %}
+                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddFactura' facturacion.id %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Agregar Factura
+                </button>
+              {% elif facturacion.pagado == 'N' %}
+                <a href="{% url 'PaymentFactura' facturacion.id %}" class="btn btn-danger btn-xs confirmar_pago" data-title="Confirmación del pago" data-content="Esta por confirmar el pago de una factura, ¿Desea continuar? " >
+                  <i class="fas fa-check"></i> Confirmar Pago
+                </a>
+              {% else %}
+                <button class="btn btn-success btn-sm btn-block"  >
+                  <i class="fas fa-check-double"></i> Pagado
+                </button>
+              {% endif %} 
             </div>
             <!-- /.col -->
           </div>
@@ -77,7 +104,7 @@
                     <tbody>
                       {% for candidato in candidatos %}
                         <tr>
-                          <td>{{candidato.id}}</td>
+                          <td>{{candidato.solicitudes_id}}</td>
                           <td>{{candidato.rfc}}</td>
                           <td>{{candidato.nombre}}</td>
                           <td>{{candidato.apellido_paterno}} {{candidato.apellido_materno }}</td>
@@ -89,8 +116,8 @@
                             </button>
                           </td>
                           <td>
-                            <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " >
-                              <i class="fas fa-trash-alt"></i> Rechazar
+                            <a href="#" class="btn btn-danger btn-xs " data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " >
+                              <i class="fas fa-thumbs-up"></i> Pagado
                             </a>
                           </td>
                         </tr>
@@ -132,7 +159,7 @@
     };
 
     $(function () {
-      $('a.elimina').confirm({
+      $('a.confirmar_pago').confirm({
         //content: "¿Estas seguro de querer eliminar este registro?",
         icon: 'fas fa-exclamation-triangle',
         closeIcon: true,

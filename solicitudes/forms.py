@@ -159,7 +159,7 @@ class EntrevistasForm(forms.ModelForm):
         self.fields['fecha_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
             'placeholder':'Fecha programada',
-             'data-target':"#fecha_programada",
+            'data-target':"#fecha_programada",
         })
         self.fields['hora_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
@@ -189,7 +189,7 @@ class Entrevistas2Form(forms.ModelForm):
         self.fields['fecha_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
             'placeholder':'Fecha programada',
-             'data-target':"#fecha_programada",
+            'data-target':"#fecha_programada",
         })
         self.fields['hora_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',

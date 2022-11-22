@@ -39,9 +39,16 @@
           <td>{{factura.created|date:'Y-m-d H:m'}}</td>
           <td>
             {% if factura.activo == "Y" %}
+              {% if factura.pagado == "Y" %}
                 <button class="btn btn-success btn-xs disabled" >
+                  <i class="fas fa-check-double"></i> Pagado
+                </button>
+              {% else %}
+                <button class="btn btn-warning btn-xs disabled" >
                   <i class="fas fa-thumbs-up"></i> Activo
                 </button>
+              {% endif %}
+                
             {% else %}
                 <button class="btn btn-secondary btn-xs disabled" >
                   <i class="fas fa-thumbs-down"></i> Inactivo

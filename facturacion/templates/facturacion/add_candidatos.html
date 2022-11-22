@@ -1,5 +1,7 @@
 {% load static %}
-<!-- fullCalendar -->
+<!-- iCheck -->
+<link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/iCheck/skins/flat/green.css' %}">
+
 <link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/select_all/css/all.css' %}">
 <div class="modal-content">
     <!--<div class="overlay">
@@ -11,26 +13,27 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
+    <form action="{{request.path}}" method="POST" class="form-horizontal" id="candidatos-form">{% csrf_token %}
     <div class="modal-body">
         {% if form.errors %}
           <p style="color: red;">Valida la información capturada</p>
         {% endif %}
         
         <div class="col-12 table-responsive">
-            <table id="example1" class="table table-bordered table-striped">
+            <table id="example1" class="table table-striped jambo_table bulk_action">
                 <thead>
                   <tr class="headings">
                     <th>
-                        <input type="checkbox" id="check-all" class="flat">
+                      <input type="checkbox" id="check-all" class="flat">
+                      
                     </th>
-                    <th>Id Solicitud</th>
-                    <th>R.F.C.</th>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Locación</th>
-                    <th>Puesto</th>
-                    <th>Estatus</th>
+                    <th class="column-title">Solicitud</th>
+                    <th class="column-title">R.F.C.</th>
+                    <th class="column-title">Nombre</th>
+                    <th class="column-title">Apellidos</th>
+                    <th class="column-title">Locación</th>
+                    <th class="column-title">Puesto</th>
+                    <th class="column-title">Estatus</th>
                     <th class="bulk-actions" colspan="7">
                         <a class="antoo" style="color:#fff; font-weight:500;">Acción masiva ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                     </th>
@@ -40,9 +43,9 @@
                   {% for candidato in candidatos %}
                     <tr>
                       <td class="a-center ">
-                        <input type="checkbox" class="flat" name="partidas[]">
+                        <input type="checkbox" name="partidas[]" id="{{candidato.id}}" value="{{candidato.id}}" class="flat" >
                       </td>
-                      <td>{{candidato.id}}</td>
+                      <td>{{candidato.solicitudes_id}}</td>
                       <td>{{candidato.rfc}}</td>
                       <td>{{candidato.nombre}}</td>
                       <td>{{candidato.apellido_paterno}} {{candidato.apellido_materno }}</td>
@@ -50,7 +53,7 @@
                       <td>{{candidato.puesto_operativo}}</td>
                       <td>
                         <button class="btn btn-success btn-xs disabled" >
-                          <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
+                          {{candidato.estatus}}
                         </button>
                       </td>
                     </tr>
@@ -60,6 +63,7 @@
         </div>
       </div>
       <div class="modal-footer justify-content-between">
+        <input type="hidden" name="facturas_id" value="{{facturas_id}}">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
         <button type="submit" class="btn btn-primary">Guardar</button>
       </div>
@@ -67,35 +71,52 @@
     </form>
   </div>
 
-<script src="{% static 'reclutamiento/AdminLTE/select_all/js/all.js' %}"></script>
-<script>
-    $(document).ready(function() {
-        if ($("input.flat")[0]) {
-            $(document).ready(function () {
-                $('input.flat').iCheck({
-                    checkboxClass: 'icheckbox_flat-green',
-//                    radioClass: 'iradio_flat-green'
-                });
+<script src="{% static 'reclutamiento/AdminLTE/iCheck/icheck.min.js' %}"></script>-->
+<script>    
+  $(document).ready(function() {    
+    $('.bulk-actions').hide();   
+    if ($("input.flat")[0]) {
+        $(document).ready(function () {
+            $('input.flat').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+  //                    radioClass: 'iradio_flat-green'
             });
-        }
-          
-        $.listen('parsley:field:validate', function() {
-          validateFront();
         });
-        $('#bancos-form .enviar').on('click', function() {
-          $('#bancos-form').parsley().validate();
-          validateFront();
-        });
-        var validateFront = function() {
-          if (true === $('#bancos-form').parsley().isValid()) {
-            $('.bs-callout-info').removeClass('hidden');
-            $('.bs-callout-warning').addClass('hidden');
-          } else {
-            $('.bs-callout-info').addClass('hidden');
-            $('.bs-callout-warning').removeClass('hidden');
-          }
-        };
-        
-        $('.bulk-actions').hide();       
-    });
+    }
+   
+    
+  });
+
+  var checkState = '';
+
+  $('.bulk_action input#check-all').on('ifChecked', function () {
+      //alert("HOLA")
+      checkState = 'all';
+      countCheckedd();
+  });
+  $('.bulk_action input#check-all').on('ifUnchecked', function () {
+      //alert("HOLA2")
+      checkState = 'none';
+      countCheckedd();
+  });
+  
+  function countCheckedd() {
+      if (checkState === 'all') {
+          $(".bulk_action input[name='partidas[]']").iCheck('check');
+      }
+      if (checkState === 'none') {
+          $(".bulk_action input[name='partidas[]']").iCheck('uncheck');
+      }
+
+      var checkCount = $(".bulk_action input[name='partidas[]']:checked").length;
+
+      if (checkCount) {
+          $('.column-title').hide();
+          $('.bulk-actions').show();
+          $('.action-cnt').html(checkCount + ' Records Selected');
+      } else {
+          $('.column-title').show();
+          $('.bulk-actions').hide();
+      }
+  }  
 </script>
