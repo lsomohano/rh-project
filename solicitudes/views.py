@@ -145,7 +145,7 @@ class CandidatosCreate(CreateView):
     second_form_class = PersonasForm
 
 
-    @login_required(login_url="Log_In")
+    
     def get_context_data(self, **kwargs):
         context = super(CandidatosCreate, self).get_context_data(**kwargs)
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
@@ -159,7 +159,7 @@ class CandidatosCreate(CreateView):
 
         return context
 
-    @login_required(login_url="Log_In")    
+       
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         form = self.form_class(request.POST, request.FILES)
@@ -202,7 +202,7 @@ class CandidatosUpdate(UpdateView):
     second_form_class = PersonasForm
 
 
-    @login_required(login_url="Log_In")
+    #@login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(CandidatosUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -223,7 +223,7 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
-    @login_required(login_url="Log_In")
+    #@login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
@@ -307,7 +307,7 @@ class EntrevistasUpdate(UpdateView):
     third_form_class = Entrevistas2Form
 
 
-    @login_required(login_url="Log_In")
+    #@login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(EntrevistasUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -332,7 +332,7 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
-    @login_required(login_url="Log_In")
+    #@login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
@@ -430,7 +430,7 @@ class ContratacionUpdate(UpdateView):
     third_form_class = Entrevistas2Form
     fourth_form_class = Entrevistas3Form
 
-    @login_required(login_url="Log_In")
+    #@login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(ContratacionUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -458,7 +458,7 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
-    @login_required(login_url="Log_In")
+    #@login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
