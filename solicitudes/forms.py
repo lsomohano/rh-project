@@ -20,11 +20,11 @@ class SolicitudesForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['locaciones'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Locación',
         })
         self.fields['puestos_operativos'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Puesto',
         })
         self.fields['cantidad'].widget.attrs.update({
@@ -36,19 +36,19 @@ class SolicitudesForm(forms.ModelForm):
             'placeholder':'sueldo',
         })
         self.fields['periodo_pago'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'periodo_pago',
         })
         self.fields['comiciones'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'comiciones',
         })
         self.fields['bono'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'bono',
         })
         self.fields['garantia'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'garantia',
         })
         
@@ -107,7 +107,7 @@ class PersonasForm(forms.ModelForm):
             'placeholder':'Fecha Nacimiento',
         })
         self.fields['genero'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Genero',
         })
         self.fields['email'].widget.attrs.update({

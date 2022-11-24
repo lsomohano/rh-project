@@ -183,12 +183,11 @@
   <!-- /.card-footer-->
 </div>
 <script src="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
   $(function () {
     //Date picker
-    $('#fecha_nacimiento').datetimepicker({
-      format: 'YYYY-MM-DD'
-    });
+    calendar("fecha_nacimiento")
   })
 
   $(function () {
@@ -217,10 +216,5 @@
   stepperElement.addEventListener('shown.bs-stepper', function (event) {
     console.log('Moved to step ' + event.detail.indexStep)
   })
-
-  // BS-Stepper Init
-  /*document.addEventListener('DOMContentLoaded', function () {
-    window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-  })*/
 </script>
 {% endblock content %}

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Ciudades, Contactos, Entidades, PuestosNominas, PuestosOperativos, Locaciones, LocacionesPuestos
 from .forms import ContactosLocacionesCreation, PuestosLocacionesCreation, ciudadesCreate, entidadesCreate, puestosNominasCreate, puestosOperativosCreate, LocacionesCreate
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, F, Q
 
 # Create your views here.
 @login_required(login_url="Log_In")
@@ -25,6 +26,7 @@ def createEntidades(request):
     formulario = entidadesCreate()
        
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
+
 
 @login_required(login_url="Log_In")
 def editEntidades(request, id):
@@ -230,7 +232,7 @@ def detailsLocaciones(request, id):
     titles = {"title_page":'Locaciones',"sub_title_page":'Información de la locación.'}
     locacion = Locaciones.objects.get(id=id)
     contactos = Contactos.objects.filter(locaciones_id=id, activo='Y')
-    puestos = LocacionesPuestos.objects.filter(locaciones_id=id, activo='Y')
+    puestos = LocacionesPuestos.objects.filter(locaciones_id=id,activo='Y').annotate(staff_faltante=F("staf_requerido")-F("staf_contratado"))
 
     return render(request,"configuraciones/details_locaciones.html",{
         "titles":titles, 

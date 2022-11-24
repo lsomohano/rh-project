@@ -142,7 +142,7 @@
                       <br>
                       <div class="row">
                         <div class="col-12">
-                          <table id="example1" class="table table-bordered table-striped">
+                          <table id="example2" class="table table-bordered table-striped">
                             <thead>
                               <tr>
                                 <th>Locación</th>
@@ -203,22 +203,13 @@
         <!-- /.invoice -->
       </div><!-- /.col -->
     </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-  <script>
-    /*
-    * 
-    *Carga una pagina en un div
-    *
-    */
-    function cargaModal(metodo, div){
-      $.ajax({
-          type: "GET",
-          url: metodo,
-          success: function(html){
-              $("#"+div).html(html);
-          }
-      });
-    };
+</div><!-- /.container-fluid -->
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
+    $(document).ready(function() {
+      cargaDataTablet("example1")
+      cargaDataTablet("example2")
+    });  
 
     $(function () {
       $('a.elimina').confirm({
@@ -228,6 +219,6 @@
         closeIconClass: 'fas fa-times',
       });
     });
-    
-  </script>
+</script>
+
 {% endblock content %}

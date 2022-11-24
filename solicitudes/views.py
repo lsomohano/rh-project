@@ -406,7 +406,6 @@ def createContratacion(request, candidatos_id):
             ce.save()
 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
-            #return redirect('Estatus')
         else:
             return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
     
@@ -430,7 +429,6 @@ class ContratacionUpdate(UpdateView):
     third_form_class = Entrevistas2Form
     fourth_form_class = Entrevistas3Form
 
-    #@login_required(login_url="Log_In")
     def get_context_data(self, **kwargs) :
         context = super(ContratacionUpdate, self).get_context_data(**kwargs)
         pk = self.kwargs.get('pk')
@@ -445,7 +443,6 @@ class ContratacionUpdate(UpdateView):
         context['documentos'] = Documentos.objects.raw("""SELECT d.*, cd.check_proveedor, cd.check_locacion FROM documentos d
 LEFT JOIN candidatos_documentos cd ON cd.documentos_id=d.id AND cd.candidatos_id=%s
 WHERE d.activo='Y' """,(pk,))
-        #context['candidatosdocumentos'] = CandidatosDocumentos.objects.filter(candidatos_id=pk)
 
         if 'form' not in context:
             context['form'] = self.form_class(instance=candidato)
@@ -458,7 +455,6 @@ WHERE d.activo='Y' """,(pk,))
 
         return context
 
-    #@login_required(login_url="Log_In")
     def post(self, request, *args, **kwargs):
         self.object = self.get_object
         candidato_id = kwargs['pk']
@@ -501,7 +497,6 @@ WHERE d.activo='Y' """,(pk,))
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()"""
 
-            #return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
             return redirect('Entrevistas')
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))

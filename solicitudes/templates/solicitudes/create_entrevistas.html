@@ -71,17 +71,10 @@
     </div>
     </form>
   </div>
-
+  <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
   <script>
     $(function () {
-        //Date picker
-        $('#fecha_nacimiento').datetimepicker({
-            format: 'YYYY-MM-DD'
-        });
-
-        //Timepicker
-        $('#hora_programada').datetimepicker({
-            format: 'HH:mm'
-        })
+        calendar("fecha_programada")
+        timepicker("hora_programada")
     })
   </script>

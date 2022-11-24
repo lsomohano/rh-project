@@ -1,7 +1,6 @@
 {% load static %}
 <!-- iCheck -->
 <link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/iCheck/skins/flat/green.css' %}">
-
 <link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/select_all/css/all.css' %}">
 <div class="modal-content">
     <!--<div class="overlay">
@@ -82,20 +81,16 @@
   //                    radioClass: 'iradio_flat-green'
             });
         });
-    }
-   
-    
+    }    
   });
 
   var checkState = '';
 
   $('.bulk_action input#check-all').on('ifChecked', function () {
-      //alert("HOLA")
       checkState = 'all';
       countCheckedd();
   });
   $('.bulk_action input#check-all').on('ifUnchecked', function () {
-      //alert("HOLA2")
       checkState = 'none';
       countCheckedd();
   });

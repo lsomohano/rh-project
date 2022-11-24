@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="card-body">
-    <table id="example1" class="table table-bordered table-striped">
+    <table id="example1" class="table table-bordered table-striped nowrap" style="width:100%">
       <thead>
         <tr>
           <th>Locación</th>
@@ -70,33 +70,10 @@
   <!-- /.card-footer-->
 </div>
 
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
-  /*
-  * 
-  *Carga una pagina en un div
-  *
-  */
-  function cargaModal(metodo, div){
-    $.ajax({
-        type: "GET",
-        url: metodo,
-        success: function(html){
-            $("#"+div).html(html);
-        }
-    });
-  };
-
-  $(function () {
-    
-    $('#example1').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+  $(document).ready(function() {
+    cargaDataTablet("example1")
   });
 </script>
 {% endblock content %}

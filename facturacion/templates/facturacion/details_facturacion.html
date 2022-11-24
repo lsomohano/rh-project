@@ -141,47 +141,28 @@
         <!-- /.invoice -->
       </div><!-- /.col -->
     </div><!-- /.row -->
-  </div><!-- /.container-fluid -->
-  <script>
-    /*
-    * 
-    *Carga una pagina en un div
-    *
-    */
-    function cargaModal(metodo, div){
-      $.ajax({
-          type: "GET",
-          url: metodo,
-          success: function(html){
-              $("#"+div).html(html);
-          }
-      });
-    };
+</div><!-- /.container-fluid -->
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
+  $(document).ready(function() {
+    cargaDataTablet("example1")
+  });
 
-    $(function () {
-      $('a.confirmar_pago').confirm({
-        //content: "¿Estas seguro de querer eliminar este registro?",
+  $(function () {
+      $('a.elimina').confirm({
+        content: "¿Estas seguro de querer eliminar este registro?",
         icon: 'fas fa-exclamation-triangle',
         closeIcon: true,
         closeIconClass: 'fas fa-times',
       });
+  });
+  $(function () {
+    $('a.confirmar_pago').confirm({
+      //content: "¿Estas seguro de querer eliminar este registro?",
+      icon: 'fas fa-exclamation-triangle',
+      closeIcon: true,
+      closeIconClass: 'fas fa-times',
     });
-
-    $(function () {
-    
-        $('#example1').DataTable({
-          "paging": true,
-          "lengthChange": false,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "autoWidth": false,
-          "responsive": true,
-          "columnDefs": [{ 
-            "orderable": false, 
-            "targets": [6,7] 
-        }],
-        });
-    });
-  </script>
+  });
+</script>
 {% endblock content %}

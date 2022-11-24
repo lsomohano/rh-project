@@ -175,7 +175,7 @@ class ContactosLocacionesCreation(forms.ModelForm):
 class PuestosLocacionesCreation(forms.ModelForm):
     class Meta:
         model = LocacionesPuestos
-        fields = ['puestos_operativos','locaciones','staf_requerido','staf_contratado']
+        fields = ['puestos_operativos','locaciones','staf_requerido','staf_contratado','staf_autorizado']
         widgets = {
             'locaciones': forms.HiddenInput(),
         }
@@ -199,4 +199,8 @@ class PuestosLocacionesCreation(forms.ModelForm):
         self.fields['staf_contratado'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Staff contratado',
+        })
+        self.fields['staf_autorizado'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Autorizado Contratar',
         })
