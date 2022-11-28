@@ -1,11 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
-from configuraciones.models import Locaciones, PuestosOperativos
+from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos
 from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.core.serializers import serialize
 
 from django.utils import timezone
 import datetime
@@ -41,11 +43,16 @@ def createSolicitudes(request):
     
     formulario = SolicitudesForm()
 
-    if request.user.id != 1:
-        qs = Locaciones.objects.filter(contactos__user_id=request.user.id).select_related()
-        formulario.fields['locaciones'].queryset = qs
-        formulario.fields['puestos_operativos'].queryset = PuestosOperativos.objects.filter(locacionespuestos__locaciones__contactos__user_id=2)
+    #Se comprueba si el ususario no pertenece al grupo RH Gerentes
+    for group in request.user.groups.all():
 
+        #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
+        if group.name == 'RH Gerentes':
+            qs = Locaciones.objects.filter(contactos__user_id=request.user.id).select_related()
+            formulario.fields['locaciones'].queryset = qs
+            formulario.fields['puestos_operativos'].queryset = PuestosOperativos.objects.filter(locacionespuestos__locaciones__contactos__user_id=request.user.id)
+    
+        
     return render(request,"solicitudes/create_solicitud.html",{"titles":titles, "formulario":formulario})
 
 
@@ -500,3 +507,11 @@ WHERE d.activo='Y' """,(pk,))
             return redirect('Entrevistas')
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
+
+
+
+
+def staffAutorizado(request, locaciones_id, puestos_operativos_id):
+    #if request.method == 'POST':
+    puesto = serialize('json',LocacionesPuestos.objects.filter(locaciones_id=locaciones_id,puestos_operativos_id=puestos_operativos_id,activo='Y'))
+    return HttpResponse(puesto, 'application/json')

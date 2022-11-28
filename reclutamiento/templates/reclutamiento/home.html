@@ -15,7 +15,9 @@
     </div>
   </div>
   <div class="card-body">
-    Home
+    Home <br>
+    {{ request.user.groups.all }}
+    {{perms.solicitudes.change_solicitudesvacantes}}
   </div>
   <!-- /.card-body -->
   <div class="card-footer">

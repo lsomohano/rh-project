@@ -20,4 +20,6 @@ urlpatterns = [
 
     path('create_contratacion/<int:candidatos_id>',views.createContratacion, name="CreateContratacion"),
     path('edit_contratacion/<int:pk>',views.ContratacionUpdate.as_view(), name="EditContratacion"),
+
+    path('staff_autorizado/<int:locaciones_id>/<int:puestos_operativos_id>',views.staffAutorizado, name="StaffAutorizado"),
 ]

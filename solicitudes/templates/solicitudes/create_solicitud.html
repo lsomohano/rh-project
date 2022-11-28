@@ -40,3 +40,26 @@
     </form>
   </div>
   <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+  <script>
+
+    $("#id_puestos_operativos").change(function(){
+      var id_locaciones = $('#id_locaciones').val();
+      var id_puestos_operativos = $('#id_puestos_operativos').val();
+      $.ajax({
+          type: "GET",
+          url:  "staff_autorizado/"+ id_locaciones +"/" + id_puestos_operativos  ,
+          dataType: 'json',
+          success: function(data) {
+              //alert
+              if (typeof data[0]!== 'undefined' && data[0]["fields"]["staf_autorizado"] > 0 ){
+                
+                $('#id_cantidad').attr({'max':data[0]["fields"]["staf_autorizado"]}).val(data[0]["fields"]["staf_autorizado"]).removeAttr('readonly');
+              }else{
+                $('#id_cantidad').attr({'max':0,'readonly':'readonly'}).val("");
+                alert("La locación no cuenta con posiciones autorizadas para el puesto.")
+              }
+          }
+      });
+      //$('#id_staf_autorizado').attr({'max': calcula_max()})
+    });
+  </script>

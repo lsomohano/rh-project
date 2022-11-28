@@ -1,6 +1,7 @@
 {% extends "reclutamiento/base_adminlte.html" %}
 {% load static %}
 {% block content %} 
+{% load user_tags %}
 
 <div class="container-fluid">
     <div class="row">
@@ -43,21 +44,33 @@
             <div class="col-sm-3 invoice-col">
               Otra info:
               <address>
+                {% if  solicitud.locaciones.indicaciones_entrevista %}
+                  <a href="{{solicitud.locaciones.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
+                    <i class="far fa-file-pdf"></i> Instrucciones Entrevistas
+                  </a>
+                {% endif %}
               <strong></strong><br>
               </address>
             </div>
             <div class="col-sm-3 invoice-col">
               <button class="btn btn-success btn-sm btn-block disabled" >
                 <i class="fas fa-thumbs-up"></i> Estatus: {{estatus}} <br> {{estatus.created}}
-              </button>              
-              <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
-                <i class="fas fa-edit"></i> Editar
-              </button>
-              <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
-           
-              <a href="{% url 'CreateCandidatos' solicitud.id %}" class="btn btn-primary btn-sm btn-block" >
-                <i class="fas fa-plus-circle"></i> Agregar Candidatos
-              </a>
+              </button> 
+              {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}             
+                <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" {% if not perms.solicitudes.change_solicitudesvacantes  %} disabled {% endif %} onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Editar
+                </button>
+              {% endif %}
+              
+              {% if request.user|has_group:"RH Admin" or request.user.is_superuser %}
+                <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
+              {% endif %}
+
+              {% if request.user|has_group:"Proveedores" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
+                <a href="{% url 'CreateCandidatos' solicitud.id %}" class="btn btn-primary btn-sm btn-block" >
+                  <i class="fas fa-plus-circle"></i> Agregar Candidatos
+                </a>
+              {% endif %}
             </div>
             <!-- /.col -->
           </div>
