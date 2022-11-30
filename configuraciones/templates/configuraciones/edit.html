@@ -16,13 +16,30 @@
         {% endif %}
         
         {% for field in formulario %}
-          <div class="form-group row justify-content-md-center">
-            <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
-            <div class="col-md-6 col-sm-6 ">
-              {{field}}
-            </div>
-            {{field.errors}}
-          </div>
+          {% if  field.name == 'horario_apertura' or field.name == 'horario_cierre' %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                      <div class="input-group date" id="{{field.name}}" data-target-input="nearest">
+                          {{field}}
+                          <!--<input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>-->
+                          <div class="input-group-append" data-target="#{{field.name}}" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="far fa-clock"></i></div>
+                          </div>
+                        <!-- /.input group -->
+                      </div>
+                      {{field.errors}}
+                  </div>
+              </div>
+          {% else %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                    {{field}}
+                  </div>
+                  {{field.errors}}
+                </div>
+          {% endif %}
         {% endfor %}
       </div>
       <div class="modal-footer justify-content-between">
@@ -32,3 +49,10 @@
     </form>
 </div>
 <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      //calendar("fecha_programada");
+      timespiker("horario_apertura");
+      timespiker("horario_cierre");
+  })
+</script>

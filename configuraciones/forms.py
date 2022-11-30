@@ -117,10 +117,12 @@ class LocacionesCreate(forms.ModelForm):
         self.fields['horario_apertura'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Hora de apertura',
+            'data-target':'#horario_apertura',
         })
         self.fields['horario_cierre'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Hora de cierre',
+            'data-target':'#horario_cierre',
         })
         self.fields['dias_operativos'].widget.attrs.update({
             'class':'form-control',
@@ -162,14 +164,16 @@ class ContactosLocacionesCreation(forms.ModelForm):
         self.fields['horario_inicio'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'horario_inicio',
+            'data-target':'#horario_inicio',
         })
         self.fields['horario_termino'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'horario_termino',
+            'data-target':'#horario_termino',
         })
         self.fields['dias_atencion'].widget.attrs.update({
             'class':'form-control',
-            'placeholder':'dias_atencion',
+            'placeholder':'Dias de Atención',
         })
 
 class PuestosLocacionesCreation(forms.ModelForm):

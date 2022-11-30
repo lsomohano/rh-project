@@ -42,6 +42,12 @@ class Eventos(Enum):
     contratacion = "Contratacion"
     ingreso = "Ingreso"
 
+#Tipos de entrevistas eventos.
+class TiposCandidatos(Enum):
+    normal = "Normal"
+    garantia = "Garantia"
+
+
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
     para los candidatos"""
@@ -171,6 +177,7 @@ class Candidatos(models.Model):
     reporte_entrevista = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True, verbose_name='Referencias Laborales')
+    tipo_candidato = models.CharField(max_length=8, choices=[(tag.name, tag.value) for tag in TiposCandidatos], default='normal')
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now=True)
 
