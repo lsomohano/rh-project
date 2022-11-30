@@ -26,9 +26,9 @@ class Facturas(models.Model):
     factura_xml = models.FileField(upload_to='facturas/xml',null=True,blank=True, verbose_name='XML Prefactura')
     total_facturado = models.DecimalField(max_digits=20, decimal_places=2, null=True, blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
-    pagado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    pagado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='N')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "facturas"
@@ -45,7 +45,7 @@ class FacturasCandidatos(models.Model):
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidato')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'facturas_candidatos'

@@ -20,7 +20,7 @@ class Entidades(models.Model):
     pais = models.CharField(max_length=2, choices=[(tag.name, tag.value) for tag in paises], default='mx')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "entidades"
@@ -37,7 +37,7 @@ class Ciudades(models.Model):
     entidades = models.ForeignKey(Entidades, on_delete=models.CASCADE, verbose_name='Entidad')
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table =  "ciudades"
@@ -71,7 +71,7 @@ class Locaciones(models.Model):
     indicaciones_entrevista = models.FileField(upload_to='locaciones/indicaciones/',null=True,blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table =  "locaciones"
@@ -88,10 +88,10 @@ class Contactos(models.Model):
     horario_termino = models.TimeField()
     dias_atencion = models.CharField(max_length=50)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
-    user=models.OneToOneField(User, on_delete=models.CASCADE)
+    user=models.ForeignKey(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
     
     class Meta:
         db_table =  "contactos"
@@ -107,7 +107,7 @@ class PuestosNominas(models.Model):
     puesto_nomina = models.CharField(max_length=60)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         db_table =  "puestos_nominas"
@@ -133,7 +133,7 @@ class PuestosOperativos(models.Model):
         verbose_name='Reclutamiento')
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         db_table =  "puestos_operativos"
@@ -148,11 +148,12 @@ class PuestosOperativos(models.Model):
 class LocacionesPuestos(models.Model):
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
     puestos_operativos = models.ForeignKey(PuestosOperativos, on_delete=models.CASCADE)
-    staf_requerido = models.IntegerField(null=True, blank=True, default=0)
-    staf_contratado = models.IntegerField(null=True, blank=True, default=0)
+    staf_requerido = models.IntegerField(null=True, blank=True, default=0, verbose_name='Staff Requerido')
+    staf_contratado = models.IntegerField(null=True, blank=True, default=0, verbose_name='Staff Actual')
+    staf_autorizado = models.IntegerField(null=True, blank=True, default=0, verbose_name='Autorizado Contratar')
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
     class Meta:
         db_table =  "locaciones_puestos"

@@ -1,0 +1,117 @@
+{% load static %}
+<!-- iCheck -->
+<link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/iCheck/skins/flat/green.css' %}">
+<link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/select_all/css/all.css' %}">
+<div class="modal-content">
+    <!--<div class="overlay">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>-->
+    <div class="modal-header">
+      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form action="{{request.path}}" method="POST" class="form-horizontal" id="candidatos-form">{% csrf_token %}
+    <div class="modal-body">
+        {% if form.errors %}
+          <p style="color: red;">Valida la información capturada</p>
+        {% endif %}
+        
+        <div class="col-12 table-responsive">
+            <table id="example1" class="table table-striped jambo_table bulk_action">
+                <thead>
+                  <tr class="headings">
+                    <th>
+                      <input type="checkbox" id="check-all" class="flat">
+                      
+                    </th>
+                    <th class="column-title">Solicitud</th>
+                    <th class="column-title">R.F.C.</th>
+                    <th class="column-title">Nombre</th>
+                    <th class="column-title">Apellidos</th>
+                    <th class="column-title">Locación</th>
+                    <th class="column-title">Puesto</th>
+                    <th class="column-title">Estatus</th>
+                    <th class="bulk-actions" colspan="7">
+                        <a class="antoo" style="color:#fff; font-weight:500;">Acción masiva ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for candidato in candidatos %}
+                    <tr>
+                      <td class="a-center ">
+                        <input type="checkbox" name="partidas[]" id="{{candidato.id}}" value="{{candidato.id}}" class="flat" >
+                      </td>
+                      <td>{{candidato.solicitudes_id}}</td>
+                      <td>{{candidato.rfc}}</td>
+                      <td>{{candidato.nombre}}</td>
+                      <td>{{candidato.apellido_paterno}} {{candidato.apellido_materno }}</td>
+                      <td>{{candidato.locacion}}</td>
+                      <td>{{candidato.puesto_operativo}}</td>
+                      <td>
+                        <button class="btn btn-success btn-xs disabled" >
+                          {{candidato.estatus}}
+                        </button>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+            </table> 
+        </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <input type="hidden" name="facturas_id" value="{{facturas_id}}">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+<script src="{% static 'reclutamiento/AdminLTE/iCheck/icheck.min.js' %}"></script>-->
+<script>    
+  $(document).ready(function() {    
+    $('.bulk-actions').hide();   
+    if ($("input.flat")[0]) {
+        $(document).ready(function () {
+            $('input.flat').iCheck({
+                checkboxClass: 'icheckbox_flat-green',
+  //                    radioClass: 'iradio_flat-green'
+            });
+        });
+    }    
+  });
+
+  var checkState = '';
+
+  $('.bulk_action input#check-all').on('ifChecked', function () {
+      checkState = 'all';
+      countCheckedd();
+  });
+  $('.bulk_action input#check-all').on('ifUnchecked', function () {
+      checkState = 'none';
+      countCheckedd();
+  });
+  
+  function countCheckedd() {
+      if (checkState === 'all') {
+          $(".bulk_action input[name='partidas[]']").iCheck('check');
+      }
+      if (checkState === 'none') {
+          $(".bulk_action input[name='partidas[]']").iCheck('uncheck');
+      }
+
+      var checkCount = $(".bulk_action input[name='partidas[]']:checked").length;
+
+      if (checkCount) {
+          $('.column-title').hide();
+          $('.bulk-actions').show();
+          $('.action-cnt').html(checkCount + ' Records Selected');
+      } else {
+          $('.column-title').show();
+          $('.bulk-actions').hide();
+      }
+  }  
+</script>

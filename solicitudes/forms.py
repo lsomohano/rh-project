@@ -20,11 +20,11 @@ class SolicitudesForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         self.fields['locaciones'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Locación',
         })
         self.fields['puestos_operativos'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Puesto',
         })
         self.fields['cantidad'].widget.attrs.update({
@@ -36,19 +36,19 @@ class SolicitudesForm(forms.ModelForm):
             'placeholder':'sueldo',
         })
         self.fields['periodo_pago'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'periodo_pago',
         })
         self.fields['comiciones'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'comiciones',
         })
         self.fields['bono'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'bono',
         })
         self.fields['garantia'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'garantia',
         })
         
@@ -107,7 +107,7 @@ class PersonasForm(forms.ModelForm):
             'placeholder':'Fecha Nacimiento',
         })
         self.fields['genero'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
             'placeholder':'Genero',
         })
         self.fields['email'].widget.attrs.update({
@@ -159,7 +159,7 @@ class EntrevistasForm(forms.ModelForm):
         self.fields['fecha_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
             'placeholder':'Fecha programada',
-             'data-target':"#fecha_programada",
+            'data-target':"#fecha_programada",
         })
         self.fields['hora_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
@@ -189,7 +189,7 @@ class Entrevistas2Form(forms.ModelForm):
         self.fields['fecha_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
             'placeholder':'Fecha programada',
-             'data-target':"#fecha_programada",
+            'data-target':"#fecha_programada",
         })
         self.fields['hora_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
@@ -224,6 +224,48 @@ class Entrevistas3Form(forms.ModelForm):
         labels = {
             "fecha_entrevista": "Fecha Contratación",
             "asistio":"¿Contrató?"
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['fecha_programada'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Fecha programada',
+            'data-target':"#fecha_programada",
+        })
+        self.fields['hora_programada'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Hora Programada',
+            'data-target':'#hora_programada'
+        })
+        self.fields['indicaciones'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Indicaciones para la entrevista',
+        })
+        self.fields['candidatos'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Candidato',
+        })
+        self.fields['fecha_entrevista'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Fecha contratación',
+            'data-target':"#fecha_entrevista",
+            'readonly':"readonly"
+        })
+        self.fields['asistio'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Asistio',
+        })
+
+class IngresoForm(forms.ModelForm):  
+
+    class Meta:
+        model = Entrevistas
+        fields = ['asistio','fecha_entrevista','fecha_programada','hora_programada','indicaciones','candidatos']
+        labels = {
+            "fecha_entrevista": "Fecha Ingreso",
+            "asistio":"Asistio"
         }
         
     def __init__(self, *args, **kwargs):

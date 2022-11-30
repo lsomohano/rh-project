@@ -65,34 +65,10 @@
   </div>
   <!-- /.card-footer-->
 </div>
-
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
-  /*
-  * 
-  *Carga una pagina en un div
-  *
-  */
-  function cargaModal(metodo, div){
-    $.ajax({
-        type: "GET",
-        url: metodo,
-        success: function(html){
-            $("#"+div).html(html);
-        }
-    });
-  };
-
-  $(function () {
-    
-    $('#example1').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
+  $(document).ready(function() {
+    cargaDataTablet("example1")
   });
 </script>
 {% endblock content %}

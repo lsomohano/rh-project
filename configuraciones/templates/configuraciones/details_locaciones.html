@@ -84,6 +84,7 @@
                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContactoLoc' locacion.id %}', 'myModal')" >
                       <i class="fas fa-edit"></i> Agregar Contacto
                     </button> 
+                    <br><br>
                     <table id="example1" class="table table-bordered table-striped">
                         <thead>
                           <tr>
@@ -133,6 +134,7 @@
                     <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreatePuestoLoc' locacion.id %}', 'myModal')" >
                       <i class="fas fa-edit"></i> Agregar Puesto
                     </button> 
+                    <br><br>
                     <table id="example2" class="table table-bordered table-striped">
                         <thead>
                           <tr>
@@ -140,6 +142,8 @@
                             <th>P. Nomina</th>
                             <th>Staff Requerido</th>
                             <th>Staff Contratado</th>
+                            <th>Staff Faltante</th>
+                            <th>Autorizado Contratar</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
                           </tr>
@@ -151,7 +155,8 @@
                             <td>{{puesto.puestos_operativos.puestos_nominas}}</td>
                             <td>{{puesto.staf_requerido}}</td>
                             <td>{{puesto.staf_contratado}}</td>
-                            
+                            <td>{{puesto.staff_faltante}}</td>
+                            <td>{{puesto.staf_autorizado}}</td>
                             <td>
                               {% if puesto.activo == "Y" %}
                                   <button class="btn btn-success btn-xs disabled" >
@@ -198,21 +203,8 @@
       </div><!-- /.col -->
     </div><!-- /.row -->
   </div><!-- /.container-fluid -->
-  <script>
-    /*
-    * 
-    *Carga una pagina en un div
-    *
-    */
-    function cargaModal(metodo, div){
-      $.ajax({
-          type: "GET",
-          url: metodo,
-          success: function(html){
-              $("#"+div).html(html);
-          }
-      });
-    };
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
 
     $(function () {
       $('a.elimina').confirm({
@@ -223,31 +215,10 @@
       });
     });
 
-    $(function () {
-    
-        $('#example1').DataTable({
-          "paging": true,
-          "lengthChange": false,
-          "searching": true,
-          "ordering": true,
-          "info": true,
-          "autoWidth": false,
-          "responsive": true,
-        });
+    $(document).ready(function() {
+        cargaDataTablet("example1")
+        cargaDataTablet("example2")
     });
-
-    $(function () {
     
-      $('#example2').DataTable({
-        "paging": true,
-        "lengthChange": false,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-      });
-  });
-
   </script>
 {% endblock content %}

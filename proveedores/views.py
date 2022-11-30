@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import Proveedores, ContactosProveedores, LocacionesProveedores
 from .forms import ProveedoresCreation, ContactosProveedoresCreation, LocacionesProveedoresCreation
-from autenticacion.forms import UserCreationForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
+@login_required(login_url="Log_In")
 def proveedores(request):
     titles = {"title_page":'Proveedores',"sub_title_page":'Gestión de info de Provedores.'}
     proveedores = Proveedores.objects.filter(activo='Y')
@@ -12,6 +14,7 @@ def proveedores(request):
     return render(request,"proveedores/proveedores.html",{"titles":titles, "proveedores":proveedores})
 
 
+@login_required(login_url="Log_In")
 def createView(request):
     titles = {"title_page":'Proveedores',"sub_title_page":'Nuevo proveedor.'}
     if request.method == "POST":
@@ -25,6 +28,7 @@ def createView(request):
     return render(request,"proveedores/create.html",{"titles":titles, "formulario":formulario})
 
 
+@login_required(login_url="Log_In")
 def editView(request, id):
 
     titles = {"title_page":'Proveedores',"sub_title_page":'Editar información del proveedor.'}
@@ -40,6 +44,7 @@ def editView(request, id):
     return render(request,"proveedores/edit.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
+@login_required(login_url="Log_In")
 def detailsView(request, id):
     
     titles = {"title_page":'Proveedores',"sub_title_page":'Información del proveedor.'}
@@ -53,6 +58,8 @@ def detailsView(request, id):
         "contactos":contactos, 
         "locaciones":locaciones})
 
+
+@login_required(login_url="Log_In")
 def deleteView(request, id):
 
     proveedor = Proveedores.objects.get(id=id)
@@ -66,6 +73,8 @@ def deleteView(request, id):
 Vistas que controlan los evnetos de los contactos de los proveedores
 
 """
+
+@login_required(login_url="Log_In")
 def createContactosView(request,proveedores_id):
     
     titles = {"title_page":'Proveedores',"sub_title_page":'Agregar nuevo contacto.'}
@@ -80,6 +89,7 @@ def createContactosView(request,proveedores_id):
     return render(request,"proveedores/create_contacto.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
 
 
+@login_required(login_url="Log_In")
 def editContactosView(request, id):
 
     titles = {"title_page":'Proveedores',"sub_title_page":'Editar información del contactos.'}
@@ -96,6 +106,7 @@ def editContactosView(request, id):
     return render(request,"proveedores/edit_contacto.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
+@login_required(login_url="Log_In")
 def DeleteContactosView(request, id):
 
     contacto = ContactosProveedores.objects.get(id=id)
@@ -107,6 +118,8 @@ def DeleteContactosView(request, id):
     return redirect('Details',id=proveedores_id)
 
 """Sección de gestion de las locaciones asignadas"""
+
+@login_required(login_url="Log_In")
 def createLocacionesViews(request, proveedores_id):
     titles = {"title_page":'Proveedores',"sub_title_page":'Agregar nuevo contacto.'}
     if request.method == "POST":
@@ -119,6 +132,8 @@ def createLocacionesViews(request, proveedores_id):
 
     return render(request,"proveedores/create_locacion.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
 
+
+@login_required(login_url="Log_In")
 def DeleteLocacionesView(request, id):
 
     locacion = LocacionesProveedores.objects.get(id=id)

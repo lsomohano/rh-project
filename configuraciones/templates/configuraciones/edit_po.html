@@ -1,3 +1,4 @@
+{% load static %}
 <div class="modal-content">
     <!--<div class="overlay">
         <i class="fas fa-2x fa-sync fa-spin"></i>
@@ -34,12 +35,4 @@
       </div>
     </form>
 </div>
-<script>
-  $(function () {
-      //Initialize Select2 Elements
-      $('.select2bs4').select2({
-        theme: 'bootstrap4'
-      })
-  
-  })
-</script> 
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>

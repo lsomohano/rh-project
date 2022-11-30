@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect
 from .models import Ciudades, Contactos, Entidades, PuestosNominas, PuestosOperativos, Locaciones, LocacionesPuestos
 from .forms import ContactosLocacionesCreation, PuestosLocacionesCreation, ciudadesCreate, entidadesCreate, puestosNominasCreate, puestosOperativosCreate, LocacionesCreate
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, F, Q
 
 # Create your views here.
-
+@login_required(login_url="Log_In")
 def entidadesView(request):
     """Vista que gestiona la información de las entidades"""
     titles = {"title_page":'Entidades',"sub_title_page":'Gestión de info de Entidades.'}
     entidades = Entidades.objects.filter(activo='Y')
     return render(request,"configuraciones/entidades.html",{"titles":titles, "entidades":entidades})
 
+
+@login_required(login_url="Log_In")
 def createEntidades(request):
     """Vista que permite agregar nuevas entidades"""
     titles = {"title_page":'Entidades',"sub_title_page":'Nueva entidad.'}
@@ -24,6 +28,7 @@ def createEntidades(request):
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
 
 
+@login_required(login_url="Log_In")
 def editEntidades(request, id):
     """Vista que permite editar la información una entidad"""
     titles = {"title_page":'Entidades',"sub_title_page":'Editar información de la entidad.'}
@@ -39,12 +44,14 @@ def editEntidades(request, id):
     return render(request,"configuraciones/edit.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
+@login_required(login_url="Log_In")
 def ciudadesView(request):
     titles = {"title_page":'Ciudades',"sub_title_page":'Gestión de info de ciudades.'}
     ciudades = Ciudades.objects.filter(activo='Y')
     return render(request,"configuraciones/ciudades.html",{"titles":titles, "ciudades":ciudades})
 
 
+@login_required(login_url="Log_In")
 def createCiudades(request):
     titles = {"title_page":'Entidades',"sub_title_page":'Nueva entidad.'}
     if request.method == "POST":
@@ -58,6 +65,7 @@ def createCiudades(request):
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
 
 
+@login_required(login_url="Log_In")
 def editCiudades(request, id):
 
     titles = {"title_page":'Proveedores',"sub_title_page":'Editar información de ciudad.'}
@@ -75,12 +83,14 @@ def editCiudades(request, id):
 
 """ --- Gestion de Puesto Nomina --- """
 
+@login_required(login_url="Log_In")
 def puestosView(request):
     titles = {"title_page":'Puestos de Nomina',"sub_title_page":'Gestión de los puestos de trabajo.'}
     puestos = PuestosNominas.objects.filter(activo='Y')
     return render(request,"configuraciones/puestos.html",{"titles":titles, "puestos":puestos})
 
 
+@login_required(login_url="Log_In")
 def createPuestoNomina(request):
     titles = {"title_page":'Puestos Nomina',"sub_title_page":'Nuevo puesto nomina.'}
     if request.method == "POST":
@@ -94,6 +104,7 @@ def createPuestoNomina(request):
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
 
 
+@login_required(login_url="Log_In")
 def editPuestosNominas(request, id):
 
     titles = {"title_page":'Puestos nominas',"sub_title_page":'Editar información del puesto.'}
@@ -109,6 +120,7 @@ def editPuestosNominas(request, id):
     return render(request,"configuraciones/edit.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
+@login_required(login_url="Log_In")
 def deletePuestosNominas(request, id):
 
     puesto = PuestosNominas.objects.get(id=id)
@@ -118,6 +130,7 @@ def deletePuestosNominas(request, id):
     return redirect('Puestos')
 
 
+@login_required(login_url="Log_In")
 def detailsPuestos(request, id):
     
     titles = {"title_page":'Puestos nominas',"sub_title_page":'Información del proveedor.'}
@@ -132,6 +145,7 @@ def detailsPuestos(request, id):
 
 """ --- Gestion de Puesto Operativos --- """
 
+@login_required(login_url="Log_In")
 def createPuestoOperativo(request,puestos_nominas_id):
     titles = {"title_page":'Puestos Operativo',"sub_title_page":'Nuevo puesto operativo.'}
     if request.method == "POST":
@@ -144,6 +158,8 @@ def createPuestoOperativo(request,puestos_nominas_id):
        
     return render(request,"configuraciones/create_po.html",{"titles":titles, "formulario":formulario,"puestos_nominas_id":puestos_nominas_id})
 
+
+@login_required(login_url="Log_In")
 def editPuestosOperativos(request, id):
 
     titles = {"title_page":'Puestos nominas',"sub_title_page":'Editar información del puesto.'}
@@ -159,6 +175,8 @@ def editPuestosOperativos(request, id):
 
     return render(request,"configuraciones/edit_po.html",{"titles":titles, "formulario":formulario, "id":id})
 
+
+@login_required(login_url="Log_In")
 def deletePuestosOperativos(request, id):
 
     puesto = PuestosOperativos.objects.get(id=id)
@@ -171,12 +189,14 @@ def deletePuestosOperativos(request, id):
 
 """ --- Gestion de locaciones --- """
 
+@login_required(login_url="Log_In")
 def locacionesView(request):
     titles = {"title_page":'Locaciones',"sub_title_page":'Gestión de las locaciones.'}
     locaciones = Locaciones.objects.filter(activo='Y')
     return render(request,"configuraciones/locaciones.html",{"titles":titles, "locaciones":locaciones})
 
 
+@login_required(login_url="Log_In")
 def createLocaciones(request):
     titles = {"title_page":'Locaciones',"sub_title_page":'Nuevo puesto nomina.'}
     if request.method == "POST":
@@ -190,6 +210,7 @@ def createLocaciones(request):
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
 
 
+@login_required(login_url="Log_In")
 def editLocaciones(request, id):
 
     titles = {"title_page":'Locaciones',"sub_title_page":'Editar información de la locación.'}
@@ -205,12 +226,13 @@ def editLocaciones(request, id):
     return render(request,"configuraciones/edit.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
+@login_required(login_url="Log_In")
 def detailsLocaciones(request, id):
     
     titles = {"title_page":'Locaciones',"sub_title_page":'Información de la locación.'}
     locacion = Locaciones.objects.get(id=id)
     contactos = Contactos.objects.filter(locaciones_id=id, activo='Y')
-    puestos = LocacionesPuestos.objects.filter(locaciones_id=id, activo='Y')
+    puestos = LocacionesPuestos.objects.filter(locaciones_id=id,activo='Y').annotate(staff_faltante=F("staf_requerido")-F("staf_contratado"))
 
     return render(request,"configuraciones/details_locaciones.html",{
         "titles":titles, 
@@ -221,6 +243,7 @@ def detailsLocaciones(request, id):
 
 """ Modulo de contactos de las locaciones"""
 
+@login_required(login_url="Log_In")
 def createContacto(request, locaciones_id):
     titles = {"title_page":'Locaciones',"sub_title_page":'Nuevo contacto.'}
     if request.method == "POST":
@@ -234,6 +257,7 @@ def createContacto(request, locaciones_id):
     return render(request,"configuraciones/create_contactos.html",{"titles":titles, "formulario":formulario,"locaciones_id":locaciones_id})
 
 
+@login_required(login_url="Log_In")
 def editContacto(request, id):
 
     titles = {"title_page":'Locaciones',"sub_title_page":'Editar información del contacto.'}
@@ -250,6 +274,7 @@ def editContacto(request, id):
     return render(request,"configuraciones/edit_contactos.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
+@login_required(login_url="Log_In")
 def deleteContacto(request, id):
 
     contacto = Contactos.objects.get(id=id)
@@ -261,6 +286,7 @@ def deleteContacto(request, id):
 
 """ Asignación de puestos a locaciones """
 
+@login_required(login_url="Log_In")
 def createLocacinesPuestos(request, locaciones_id):
     titles = {"title_page":'Locaciones',"sub_title_page":'Agregar puestos.'}
     if request.method == "POST":
@@ -273,6 +299,7 @@ def createLocacinesPuestos(request, locaciones_id):
     return render(request,"configuraciones/create_contactos.html",{"titles":titles, "formulario":formulario,"locaciones_id":locaciones_id})
 
 
+@login_required(login_url="Log_In")
 def editLocacinesPuestos(request, id):
 
     titles = {"title_page":'Locaciones',"sub_title_page":'Editar información del puesto.'}

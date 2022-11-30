@@ -1,0 +1,168 @@
+{% extends "reclutamiento/base_adminlte.html" %}
+{% load static %}
+{% block content %} 
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <!-- Main content -->
+        <div class="invoice p-3 mb-3">
+          <!-- title row -->
+          <div class="row">
+            <div class="col-12">
+              <h4>
+                <i class="fas fa-user"></i> (Id:{{facturacion.id}}) {{facturacion.proveedores}}  
+                <small class="float-right">Alta: {{facturacion.created}}</small>
+              </h4>
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- info row -->
+          <div class="row invoice-info">
+            <div class="col-sm-4 invoice-col">
+              Reporte de facturación
+              <address>
+                <strong>R.F.C.: {{facturacion.proveedores.rfc}}</strong><br>
+                Proveedor : {{facturacion.proveedores.razon_social}}<br>
+                Periodo de facturación : {{facturacion.fecha_ini|date:'Y-m-d'}} a {{facturacion.fecha_fin|date:'Y-m-d'}}<br>
+                Total Facturado: {{facturacion.total_facturado|floatformat:2 }}<br>
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+              <strong>Pre Factura: </strong>
+              <address>
+                {% if facturacion.pre_factura_pdf %}
+                  <a href="{{facturacion.pre_factura_pdf.url}}" class="btn btn-danger btn-sm" target="_blank">
+                    <i class="fas fa-file-pdf"></i> PDF
+                  </a>
+                  <a href="{{facturacion.pre_factura_xml.url}}" class="btn btn-info btn-sm" target="_blank">
+                    <i class="fas fa-file-code"></i> XML
+                  </a>
+                {% endif %}
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+              <strong>Factura: </strong>
+              <address>
+                {% if facturacion.factura_pdf %}
+                <a href="{{facturacion.factura_pdf.url}}" class="btn btn-danger btn-sm" target="_blank">
+                  <i class="fas fa-file-pdf"></i> PDF
+                </a>
+                <a href="{{facturacion.factura_xml.url}}" class="btn btn-info btn-sm" target="_blank">
+                  <i class="fas fa-file-code"></i> XML
+                </a>
+                {% endif %}
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-2 invoice-col">
+              {% if fc <= 0 %}          
+                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddCandidatos' facturacion.proveedores.id facturacion.id facturacion.fecha_ini facturacion.fecha_fin %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Agregar Candidatos
+                </button>
+
+              {% elif not facturacion.pre_factura_pdf  %}
+                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddPrefactura' facturacion.id %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Agregar Pre Factura
+                </button>
+              {% elif not facturacion.factura_pdf  %}
+                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddFactura' facturacion.id %}', 'myModal')" >
+                  <i class="fas fa-edit"></i> Agregar Factura
+                </button>
+              {% elif facturacion.pagado == 'N' %}
+                <a href="{% url 'PaymentFactura' facturacion.id %}" class="btn btn-danger btn-xs confirmar_pago" data-title="Confirmación del pago" data-content="Esta por confirmar el pago de una factura, ¿Desea continuar? " >
+                  <i class="fas fa-check"></i> Confirmar Pago
+                </a>
+              {% else %}
+                <button class="btn btn-success btn-sm btn-block"  >
+                  <i class="fas fa-check-double"></i> Pagado
+                </button>
+              {% endif %} 
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+          <br>
+          <!-- Table row -->
+          <div class="row">
+            <div class="col-12 table-responsive">
+                <table id="example1" class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th>Id</th>
+                        <th>R.F.C.</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Locación</th>
+                        <th>Puesto</th>
+                        <th>Estatus</th>
+                        <th>Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for candidato in candidatos %}
+                        <tr>
+                          <td>{{candidato.solicitudes_id}}</td>
+                          <td>{{candidato.rfc}}</td>
+                          <td>{{candidato.nombre}}</td>
+                          <td>{{candidato.apellido_paterno}} {{candidato.apellido_materno }}</td>
+                          <td>{{candidato.locacion}}</td>
+                          <td>{{candidato.puesto_operativo}}</td>
+                          <td>
+                            <button class="btn btn-success btn-xs disabled" >
+                              <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
+                            </button>
+                          </td>
+                          <td>
+                            <a href="#" class="btn btn-danger btn-xs " data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " >
+                              <i class="fas fa-thumbs-up"></i> Pagado
+                            </a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table> 
+            </div>
+            <!-- /.col -->
+          </div>
+          <!-- /.row -->
+
+          <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg" id="myModal">
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+          </div>
+          <!-- /.modal -->
+
+        </div>
+        <!-- /.invoice -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.container-fluid -->
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
+  $(document).ready(function() {
+    cargaDataTablet("example1")
+  });
+
+  $(function () {
+      $('a.elimina').confirm({
+        content: "¿Estas seguro de querer eliminar este registro?",
+        icon: 'fas fa-exclamation-triangle',
+        closeIcon: true,
+        closeIconClass: 'fas fa-times',
+      });
+  });
+  $(function () {
+    $('a.confirmar_pago').confirm({
+      //content: "¿Estas seguro de querer eliminar este registro?",
+      icon: 'fas fa-exclamation-triangle',
+      closeIcon: true,
+      closeIconClass: 'fas fa-times',
+    });
+  });
+</script>
+{% endblock content %}

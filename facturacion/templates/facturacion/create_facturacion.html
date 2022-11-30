@@ -1,0 +1,73 @@
+{% load static %}
+<div class="modal-content">
+  <!--<div class="overlay">
+      <i class="fas fa-2x fa-sync fa-spin"></i>
+  </div>-->
+  <div class="modal-header">
+    <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form action="{{request.path}}" method="POST" class="form-horizontal" enctype="multipart/form-data">{% csrf_token %}
+  <div class="modal-body">
+      {% if form.errors %}
+        <p style="color: red;">Valida la información capturada</p>
+      {% endif %}
+      
+      {% for field in formulario %}
+          
+          {% if  field.name == 'fecha_ini' %}
+              <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                      <div class="input-group date" id="fecha_ini" data-target-input="nearest">
+                      {{field}}
+                      {{field.errors}}
+                      <div class="input-group-append" data-target="#fecha_ini" data-toggle="datetimepicker">
+                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                      </div>
+                  </div>
+              </div>
+          {% elif  field.name == 'fecha_fin' %}
+            <div class="form-group row justify-content-md-center">
+              <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+              <div class="col-md-6 col-sm-6 ">
+                  <div class="input-group date" id="fecha_fin" data-target-input="nearest">
+                  {{field}}
+                  {{field.errors}}
+                  <div class="input-group-append" data-target="#fecha_fin" data-toggle="datetimepicker">
+                      <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+          {%  else  %}
+              <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                      {{field}}
+                      {{field.errors}}
+                  </div>
+              </div>
+          {% endif %}
+
+
+      {% endfor %}
+    </div>
+    <div class="modal-footer justify-content-between">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+  </div>
+  </form>
+</div>
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
+  $(function () {
+      //Date picker
+      calendar("fecha_ini")
+      calendar("fecha_fin")
+  })
+</script>
