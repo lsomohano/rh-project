@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `autenticacion_user` (
 /*!40000 ALTER TABLE `autenticacion_user` DISABLE KEYS */;
 INSERT INTO `autenticacion_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `phone`, `image`) VALUES
 	(1, 'pbkdf2_sha256$260000$zChegL9Py9mD5sYor5an6L$4VpnRU3Y8OzM6jebJ8ED5OurwJjDIuZucIHMMdSVxPQ=', '2022-11-23 22:00:53.589559', 1, 'lsomohano', 'Leonel', 'Somohano Carmona', 'lsomohano20@hotmail.com', 1, 1, '2022-10-07 17:35:44.000000', NULL, 'users/219983.png'),
-	(2, 'pbkdf2_sha256$260000$d3f2AFIk5gCVmf6keiNzOS$ddSlf/TG6G/QBBNLYqbzKwiMhHZUkfCwNmVlPNSb4vc=', '2022-10-18 18:29:54.077752', 0, 'lsomohano20', 'Gerente', 'Ciudad', 'lsomohano20@gmail.com', 0, 1, '2022-10-07 17:54:59.000000', '985471245', 'users/img.jpg'),
+	(2, 'pbkdf2_sha256$260000$kW5j5pJ1SAM09GvRfjvwzq$/DAvN9pqu3+0WRZBDzsOuAF2O+usbpj4+sGbozBB3kk=', '2022-11-29 15:14:44.000000', 0, 'lsomohano20', 'Proveedor', 'Veracruz', 'lsomohano20@gmail.com', 0, 1, '2022-10-07 17:54:59.000000', '985471245', 'users/img.jpg'),
 	(3, 'pbkdf2_sha256$260000$lDnXtUM4SllivZapSyTpKw$xhcOm+1v9d4uG9yOcQU0izAMYVWdbAuwWC88mpdaUgc=', '2022-11-28 16:36:54.000000', 0, 'gerente.ver', 'Gerente', 'Veracruz', 'gveracruz@mail.com', 0, 1, '2022-10-13 21:25:08.000000', '741258963', 'users/img_dF0xm2b.jpg'),
 	(4, 'pbkdf2_sha256$260000$DLbQdn3aMH9ScCkB32XwBQ$Zq8zybYXJn3AfhDGrmWcZdx5oeRLkD7b1hN4n4KliSI=', '2022-11-28 22:10:44.000000', 0, 'corporativo.rh', 'RH', 'Corporativo', 'corporativo@avasa.com.mx', 0, 1, '2022-11-28 22:03:40.000000', '748547842', 'users/QR.jpg');
 /*!40000 ALTER TABLE `autenticacion_user` ENABLE KEYS */;
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `autenticacion_user_groups` (
 -- Volcando datos para la tabla rhdb_dev.autenticacion_user_groups: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `autenticacion_user_groups` DISABLE KEYS */;
 INSERT INTO `autenticacion_user_groups` (`id`, `user_id`, `group_id`) VALUES
+	(3, 2, 2),
 	(1, 3, 1),
 	(2, 4, 3);
 /*!40000 ALTER TABLE `autenticacion_user_groups` ENABLE KEYS */;
@@ -117,7 +118,7 @@ INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES
 	(84, 1, 104),
 	(85, 1, 108),
 	(4, 2, 89),
-	(5, 2, 90),
+	(90, 2, 90),
 	(6, 2, 93),
 	(7, 2, 94),
 	(3, 2, 104),
@@ -394,7 +395,7 @@ INSERT INTO `candidatos` (`id`, `reporte_entrevista`, `evaluacion_psicometrica`,
 	(4, 'candidatos/personas/3__ZZCPDjo.pdf', 'candidatos/personas/2__ZpKFAQx.pdf', 'Y', '2022-11-20 00:34:27.464960', 4, 1, 1, 'candidatos/personas/cv/1__EmNBpXq.pdf', 'candidatos/referencias/carta_JACbvH7.pdf'),
 	(5, 'candidatos/personas/3__is9Sg0b.pdf', 'candidatos/personas/2__fK2H3V4.pdf', 'Y', '2022-11-23 22:29:51.349844', 5, 2, 1, 'candidatos/personas/cv/1__YijSJkb.pdf', 'candidatos/referencias/carta_9vNlDqe.pdf'),
 	(6, 'candidatos/personas/2__Gx52ImX.pdf', 'candidatos/personas/3__El0ILAR.pdf', 'Y', '2022-11-23 22:18:07.043417', 6, 4, 1, 'candidatos/personas/cv/1__Hx4Em0c.pdf', 'candidatos/referencias/carta_sCJBOl1.pdf'),
-	(7, 'candidatos/personas/3__i33fCeN.pdf', 'candidatos/personas/carta.pdf', 'Y', '2022-11-28 15:49:27.461931', 7, 1, 1, 'candidatos/personas/cv/1__ud3ryLQ.pdf', 'candidatos/referencias/3__saAghO1.pdf');
+	(7, 'candidatos/personas/3__i33fCeN.pdf', 'candidatos/personas/carta.pdf', 'Y', '2022-11-29 18:31:52.622400', 7, 1, 1, 'candidatos/personas/cv/1__ud3ryLQ.pdf', 'candidatos/referencias/3__saAghO1.pdf');
 /*!40000 ALTER TABLE `candidatos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.candidatos_documentos
@@ -490,20 +491,20 @@ INSERT INTO `candidatos_documentos` (`id`, `check_proveedor`, `check_locacion`, 
 	(74, 'Y', 'Y', 6, 16),
 	(75, 'N', 'Y', 6, 6),
 	(76, 'N', 'Y', 6, 17),
-	(77, 'Y', 'N', 7, 1),
-	(78, 'Y', 'N', 7, 2),
-	(79, 'Y', 'N', 7, 3),
-	(80, 'Y', 'N', 7, 4),
-	(81, 'Y', 'N', 7, 5),
-	(82, 'Y', 'N', 7, 8),
-	(83, 'Y', 'N', 7, 9),
-	(84, 'Y', 'N', 7, 10),
-	(85, 'Y', 'N', 7, 11),
-	(86, 'Y', 'N', 7, 12),
-	(87, 'Y', 'N', 7, 13),
-	(88, 'Y', 'N', 7, 14),
-	(89, 'Y', 'N', 7, 15),
-	(90, 'Y', 'N', 7, 16);
+	(77, 'Y', 'Y', 7, 1),
+	(78, 'Y', 'Y', 7, 2),
+	(79, 'Y', 'Y', 7, 3),
+	(80, 'Y', 'Y', 7, 4),
+	(81, 'Y', 'Y', 7, 5),
+	(82, 'Y', 'Y', 7, 8),
+	(83, 'Y', 'Y', 7, 9),
+	(84, 'Y', 'Y', 7, 10),
+	(85, 'Y', 'Y', 7, 11),
+	(86, 'Y', 'Y', 7, 12),
+	(87, 'Y', 'Y', 7, 13),
+	(88, 'Y', 'Y', 7, 14),
+	(89, 'Y', 'Y', 7, 15),
+	(90, 'Y', 'Y', 7, 16);
 /*!40000 ALTER TABLE `candidatos_documentos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.candidatos_estatus
@@ -566,7 +567,11 @@ INSERT INTO `candidatos_estatus` (`id`, `activo`, `created`, `updated`, `candida
 	(40, 'N', '2022-11-23 22:53:43.136631', '2022-11-23 22:53:43.138195', 6, 15),
 	(41, 'Y', '2022-11-23 22:55:42.624071', '2022-11-23 22:55:42.625381', 5, 16),
 	(42, 'Y', '2022-11-23 22:55:42.629778', '2022-11-23 22:55:42.631026', 6, 16),
-	(43, 'Y', '2022-11-28 15:49:27.467734', '2022-11-28 15:49:27.470373', 7, 8);
+	(43, 'N', '2022-11-28 15:49:27.467734', '2022-11-28 15:49:27.470373', 7, 8),
+	(44, 'N', '2022-11-29 18:14:58.938480', '2022-11-29 18:14:58.945076', 7, 9),
+	(45, 'N', '2022-11-29 18:31:52.725184', '2022-11-29 18:31:52.727187', 7, 10),
+	(46, 'N', '2022-11-29 20:37:19.992937', '2022-11-29 20:37:19.994798', 7, 13),
+	(47, 'Y', '2022-11-29 22:00:58.944594', '2022-11-29 22:00:58.947409', 7, 14);
 /*!40000 ALTER TABLE `candidatos_estatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.ciudades
@@ -776,7 +781,17 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 	(117, '2022-11-28 21:13:56.374046', '1', 'RH Gerentes', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
 	(118, '2022-11-28 22:03:40.595914', '4', 'corporativo.rh', 1, '[{"added": {}}]', 16, 1),
 	(119, '2022-11-28 22:04:22.509365', '4', 'corporativo.rh', 2, '[{"changed": {"fields": ["First name", "Last name", "Email address", "Phone", "Groups"]}}]', 16, 1),
-	(120, '2022-11-28 22:11:46.494644', '4', 'corporativo.rh', 2, '[{"changed": {"fields": ["Image"]}}]', 16, 1);
+	(120, '2022-11-28 22:11:46.494644', '4', 'corporativo.rh', 2, '[{"changed": {"fields": ["Image"]}}]', 16, 1),
+	(121, '2022-11-29 15:13:43.062066', '2', 'lsomohano20', 2, '[{"changed": {"fields": ["First name", "Last name", "Groups"]}}]', 16, 1),
+	(122, '2022-11-29 15:14:33.567039', '2', 'lsomohano20', 2, '[{"changed": {"fields": ["password"]}}]', 16, 1),
+	(123, '2022-11-29 16:17:44.846510', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(124, '2022-11-29 16:22:59.914518', '2', 'Proveedores', 2, '[]', 3, 1),
+	(125, '2022-11-29 16:45:37.440046', '2', 'lsomohano20', 2, '[]', 16, 1),
+	(126, '2022-11-29 17:22:22.157701', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(127, '2022-11-29 17:29:36.813030', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(128, '2022-11-29 17:31:54.741543', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(129, '2022-11-29 17:40:41.266677', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(130, '2022-11-29 17:41:13.356622', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.django_content_type
@@ -893,11 +908,12 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
 	('7cebbb32utsyjng2kzcudolas8to2b4w', '.eJxVjMsOwiAQRf-FtSFDh_Jw6d5vIAOMUjWQlHZl_HfbpAvd3nPOfYtA61LC2nkOUxZnocXpd4uUnlx3kB9U702mVpd5inJX5EG7vLbMr8vh_h0U6mWrgW7eGyYdMznvB1SjIvKODEVEGIFZAdvN0uiSyVYpFa1DBgQzYBKfL-T7N2U:1ozmKq:RgONb2BUjRA0ZbO_BV70tqKtcrFcssWpiVaEX5n9eHQ', '2022-12-12 22:10:44.566029'),
+	('7hphlchb3vtn7tufvttyyf3q0vsjj5px', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1p02Jd:4Yv9lpsJolUH9IcNqADpkmPdMZuIl4v6qazhspyIPgo', '2022-12-13 15:14:33.577919'),
 	('f31oxn8v9j8mm5cvycu9vkuf1k00kq6p', '.eJxVjEEOwiAQRe_C2pBOCwO4dO8ZyDAMUjVtUtqV8e7apAvd_vfef6lI21rj1mSJY1ZnNajT75aIHzLtIN9pus2a52ldxqR3RR-06euc5Xk53L-DSq1-a8JUOA3QkREfLPRi0LDtnGTGTKb0GKRY78AVCIA-gQj7QGgHBGL1_gDxYjgP:1oxc1N:85BJWv9v07LCdBpKYB3DoUvGRPISoqUWqETxXv6_Ll0', '2022-12-06 22:45:41.985094'),
-	('jbcnqxolxi5xq1lxspms2pxnid32sanr', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1oxxnZ:Z-XSi9-J7WG8ftJ2Bo8MRatE2DEOQm_9jkZYe4XxadY', '2022-12-07 22:00:53.593105'),
 	('l28td9nhbr9lbryyy4hlogqnr4nim6fg', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1or0vc:R3FzPExs0ZykkEJkE8jl4v3fC57etVf4j92_s6lGvwg', '2022-11-18 17:56:28.329250'),
 	('q2el5h3kq38uigv7dsknhh63mjx7f0ov', '.eJxVjEEOwiAQRe_C2pBOCwO4dO8ZyDAMUjVtUtqV8e7apAvd_vfef6lI21rj1mSJY1ZnNajT75aIHzLtIN9pus2a52ldxqR3RR-06euc5Xk53L-DSq1-a8JUOA3QkREfLPRi0LDtnGTGTKb0GKRY78AVCIA-gQj7QGgHBGL1_gDxYjgP:1ozh7m:Hv5v4LBNLaAJHFuyPKi4qOpAbdHl4ivjxQsn8LyNDz0', '2022-12-12 16:36:54.118733'),
 	('wy40p1m887jdob5wpnxq4kb27fz0n248', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1oxbaA:NL830LNwW8kDB2WN1G-PWuomkcKNAcx6XTYodvoRh64', '2022-12-06 22:17:34.823102'),
+	('x0n8rgnkf34fyqws7mwk1nvb2w21whsu', '.eJxVjDsOwjAQBe_iGll44xCbkj5nsN6ubRxAjpRPhbg7iZQC2pl5760C1qWEdU5TGKK6KlKnX8aQZ6q7iA_U-6hlrMs0sN4TfdhZ92NMr9vR_h0UzGVbS2eILtZEn01uOdvUJDpbRNOy9dwm14GdkJARNOTBcLB-gzDIEPX5AuwfONQ:1p02Jo:x0ocfqtm7b249ZxJPFpo5gJXT6V_qeMG-xViLO3r6pY', '2022-12-13 15:14:44.980886'),
 	('xba4hjcs04vgceva028pd1unl96iuqic', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1olvft:K1SxnHKWM6kJikoQUt1A6JOul-DZJtHP2yqHdgo3wcY', '2022-11-04 17:19:13.062763');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 
@@ -983,7 +999,10 @@ INSERT INTO `entrevistas` (`id`, `indicaciones`, `created`, `fecha_programada`, 
 	(11, 'f', '2022-11-20 00:34:47.692813', '2022-11-19', '11:21:00.000000', '2022-11-20 00:35:08.055629', 'Y', 4, 'contratacion'),
 	(12, 'se va en transporte de la empresa', '2022-11-23 22:13:54.048705', '2022-11-24', '11:51:00.000000', '2022-11-23 22:18:07.047153', 'Y', 6, 'entrevista'),
 	(13, 'rewiriryr', '2022-11-23 22:20:03.727240', '2022-11-25', '09:19:00.000000', '2022-11-23 22:20:53.913605', 'Y', 6, 'contratacion'),
-	(14, 'ccc', '2022-11-23 22:30:29.759967', '2022-11-25', '17:30:00.000000', '2022-11-23 22:33:56.955550', 'Y', 5, 'contratacion');
+	(14, 'ccc', '2022-11-23 22:30:29.759967', '2022-11-25', '17:30:00.000000', '2022-11-23 22:33:56.955550', 'Y', 5, 'contratacion'),
+	(15, 'ok', '2022-11-29 18:14:58.912753', '2022-11-30', '13:14:00.000000', '2022-11-29 18:31:52.628247', 'Y', 7, 'entrevista'),
+	(16, 'ok', '2022-11-29 20:37:19.978404', '2022-12-03', '14:04:00.000000', '2022-11-29 22:00:58.929843', 'Y', 7, 'contratacion'),
+	(17, 'd', '2022-11-29 22:18:55.462652', '2022-11-23', '17:18:00.000000', NULL, NULL, 7, 'ingreso');
 /*!40000 ALTER TABLE `entrevistas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.facturas
@@ -1147,7 +1166,7 @@ INSERT INTO `personas` (`id`, `nombre`, `apellido_paterno`, `apellido_materno`, 
 	(4, 'Ruben', 'Sanchez', 'Sambrano', 'XEXX010101014', '2020-11-20', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-14 17:11:21.080302', '2022-11-20 00:34:27.470555', 'M'),
 	(5, 'Leonel', 'Somohano', 'Carmona', 'XEXX010101005', '2017-02-19', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-15 15:47:54.870857', '2022-11-23 22:29:51.353915', 'M'),
 	(6, 'Marcos', 'Sambrano', 'Ochoa', 'XEXX010101058', '2005-05-19', 'email@email.com', '74581236', 'Y', '2022-11-23 22:05:53.469374', '2022-11-23 22:18:07.045344', 'M'),
-	(7, 'Leonel', 'Somohano', 'Carmona', 'XEXX010101016', '2022-11-15', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-28 15:49:27.396129', '2022-11-28 15:49:27.396157', 'M');
+	(7, 'Leonel', 'Somohano', 'Carmona', 'XEXX010101016', '2022-11-15', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-28 15:49:27.396129', '2022-11-29 18:31:52.624975', 'M');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.proveedores
