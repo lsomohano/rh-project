@@ -82,10 +82,12 @@ def detailsSolicitudes(request, id):
     estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=id, activo='Y')
 
     #candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=id).select_related('personas').prefetch_related('id__candidatos_estatus')
-    candidatos = Candidatos.objects.raw("""SELECT c.id, c.created, c.aceptado, c.personas_id, p.nombre, p.apellido_paterno,p.apellido_materno, p.rfc, p.fecha_nacimiento, p.email, p.genero, ce.created AS fecha_estatus, e.estatus, e.descripcion FROM candidatos c
+    candidatos = Candidatos.objects.raw("""SELECT c.id, c.created, c.aceptado, c.personas_id, p.nombre, p.apellido_paterno,p.apellido_materno, p.rfc, p.fecha_nacimiento, p.email, p.genero, ce.created AS fecha_estatus, e.estatus, e.descripcion, en.tipo_evento 
+                                            FROM candidatos c
                                             INNER JOIN personas p ON p.id=c.personas_id
                                             INNER JOIN candidatos_estatus ce ON ce.candidatos_id=c.id AND ce.activo='Y'
                                             INNER JOIN calogos_estatus e ON e.id=ce.estatus_id
+                                            LEFT JOIN entrevistas en ON en.candidatos_id=c.id AND en.tipo_evento='ingreso'
                                             WHERE c.solicitudes_vacantes_id=%s""",(id,))
                                                 
 
@@ -385,8 +387,8 @@ WHERE d.activo='Y' """,(pk,))
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
 
-            #return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
-            return redirect('Entrevistas')
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+            #return redirect('Entrevistas')
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
 
@@ -395,7 +397,7 @@ WHERE d.activo='Y' """,(pk,))
 
 @login_required(login_url="Log_In")
 def createContratacion(request, candidatos_id):
-    """Vista que permite agendar entrevistas de los candidatos"""
+    """Vista que permite agendar entrevistas para firmar contrato"""
 
     titles = {"title_page":'Reclutamiento',"sub_title_page":'Agendar nueva contratación.'}
     if request.method == "POST":
@@ -503,15 +505,62 @@ WHERE d.activo='Y' """,(pk,))
                 """estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()"""
-
-            return redirect('Entrevistas')
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id)
+            #return redirect('Entrevistas')
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
 
 
+#Gestion de entrevistas para contratación
+
+@login_required(login_url="Log_In")
+def createIngreso(request, candidatos_id):
+    """Vista que permite agendar el primer dia laboral"""
+
+    titles = {"title_page":'Reclutamiento',"sub_title_page":'Agendar el primer día laboral.'}
+    if request.method == "POST":
+        formulario = EntrevistasForm(request.POST or None)
+        candidato = Candidatos.objects.get(id=candidatos_id)
+        if formulario.is_valid():
+            entrevista = formulario.save(commit=False)
+            entrevista.candidatos = candidato
+            entrevista.tipo_evento = 'ingreso'
+            entrevista.save()
+            
+            """CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+            estatus = Estatus.objects.get(tipos='candidato', estatus='Contratación')
+            ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+            ce.save()"""
+
+            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+        else:
+            return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
+    
+    candidato = Candidatos.objects.get(id=candidatos_id)
+    formulario = EntrevistasForm()
+       
+    return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidato":candidato})
+
+
+@login_required(login_url="Log_In")
+def editIngreso(request, id):
+    """Esta vista permite confirmar la asistencia al primer dia laboral de un candidato contratado"""
+
+    titles = {"title_page":'Solicitudes',"sub_title_page":'Confirmación de asistencia al dia laboral .'}
+    estatus = Estatus.objects.get(id=id)
+    if request.method == "POST":
+        formulario = EstatusForm(request.POST or None, instance=estatus)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('Estatus')
+    else:
+        formulario = EstatusForm(instance=estatus)
+
+    return render(request,"solicitudes/create_estatus.html",{"titles":titles, "formulario":formulario, "id":id})
 
 
 def staffAutorizado(request, locaciones_id, puestos_operativos_id):
+    """vista que devuelve json de los puestos de una locación"""
     #if request.method == 'POST':
     puesto = serialize('json',LocacionesPuestos.objects.filter(locaciones_id=locaciones_id,puestos_operativos_id=puestos_operativos_id,activo='Y'))
     return HttpResponse(puesto, 'application/json')

@@ -257,3 +257,45 @@ class Entrevistas3Form(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Asistio',
         })
+
+class IngresoForm(forms.ModelForm):  
+
+    class Meta:
+        model = Entrevistas
+        fields = ['asistio','fecha_entrevista','fecha_programada','hora_programada','indicaciones','candidatos']
+        labels = {
+            "fecha_entrevista": "Fecha Ingreso",
+            "asistio":"Asistio"
+        }
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['fecha_programada'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Fecha programada',
+            'data-target':"#fecha_programada",
+        })
+        self.fields['hora_programada'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Hora Programada',
+            'data-target':'#hora_programada'
+        })
+        self.fields['indicaciones'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Indicaciones para la entrevista',
+        })
+        self.fields['candidatos'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Candidato',
+        })
+        self.fields['fecha_entrevista'].widget.attrs.update({
+            'class':'form-control datetimepicker-input',
+            'placeholder':'Fecha contratación',
+            'data-target':"#fecha_entrevista",
+            'readonly':"readonly"
+        })
+        self.fields['asistio'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Asistio',
+        })

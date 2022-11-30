@@ -1,3 +1,4 @@
+{% load static %}
 <div class="modal-content">
     <!--<div class="overlay">
         <i class="fas fa-2x fa-sync fa-spin"></i>
@@ -25,10 +26,10 @@
                 <div class="form-group row justify-content-md-center">
                     <label class="col-form-label col-md-3 col-sm-3" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
                     <div class="col-md-6 col-sm-6 ">
-                        <div class="input-group date" id="fecha_nacimiento" data-target-input="nearest">
+                        <div class="input-group date" id="fecha_programada" data-target-input="nearest">
                         {{field}}
                         {{field.errors}}
-                        <div class="input-group-append" data-target="#fecha_nacimiento" data-toggle="datetimepicker">
+                        <div class="input-group-append" data-target="#fecha_programada" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
                         </div>
@@ -73,8 +74,12 @@
   </div>
   <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
   <script>
-    $(function () {
-        calendar("fecha_programada")
-        timepicker("hora_programada")
+    $(document).ready(function() {
+        /*$('#'+input_id).datetimepicker({
+            format: 'YYYY-MM-DD'
+        });*/
+
+        calendar("fecha_programada");
+        timespiker("hora_programada");
     })
   </script>

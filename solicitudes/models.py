@@ -40,6 +40,7 @@ class Generos(Enum):
 class Eventos(Enum):
     entrevista = "Entrevista"
     contratacion = "Contratacion"
+    ingreso = "Ingreso"
 
 class Estatus(models.Model):
     """Este modelo es un catologo es estatus, se podra tener estatus para las solicitudes y 
