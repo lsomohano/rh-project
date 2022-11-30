@@ -63,7 +63,8 @@
               {% endif %}
               
               {% if request.user|has_group:"RH Admin" or request.user.is_superuser %}
-                <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina"><i class="fas fa-trash-alt"></i> Eliminar</a>
+                <a href="{% url 'DeletePuestosNominas' solicitud.id %}" class="btn btn-danger btn-sm btn-block elimina" data-title="Eliminar Puesto Nomina">
+                  <i class="fas fa-trash-alt"></i> Eliminar</a>
               {% endif %}
 
               {% if request.user|has_group:"Proveedores" or request.user|has_group:"RH Admin" or request.user.is_superuser %}

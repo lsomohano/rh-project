@@ -125,11 +125,15 @@ class CandidatosForm(forms.ModelForm):
 
     class Meta:
         model = Candidatos
-        fields = ['cv_solicitud','reporte_entrevista','evaluacion_psicometrica','referencias','solicitudes_vacantes','user']
+        fields = ['tipo_candidato','cv_solicitud','reporte_entrevista','evaluacion_psicometrica','referencias','solicitudes_vacantes','user']
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['tipo_candidato'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Tipo de Candidato',
+        })
         self.fields['cv_solicitud'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'CV o Solicitud de empleo',

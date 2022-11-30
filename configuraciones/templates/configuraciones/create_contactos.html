@@ -16,7 +16,22 @@
         {% endif %}
         
         {% for field in formulario %}
-            {% if field.name != 'locaciones' %}
+            {% if  field.name == 'horario_inicio' or field.name == 'horario_termino' %}
+                <div class="form-group row justify-content-md-center">
+                  <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+                  <div class="col-md-6 col-sm-6 ">
+                      <div class="input-group date" id="{{field.name}}" data-target-input="nearest">
+                          {{field}}
+                          <!--<input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>-->
+                          <div class="input-group-append" data-target="#{{field.name}}" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="far fa-clock"></i></div>
+                          </div>
+                        <!-- /.input group -->
+                      </div>
+                      {{field.errors}}
+                  </div>
+               </div>
+            {% elif field.name != 'locaciones' %}
                 <div class="form-group row justify-content-md-center">
                     <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
                     <div class="col-md-6 col-sm-6 ">
@@ -36,3 +51,10 @@
     </form>
 </div>
 <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+<script>
+  $(document).ready(function() {
+      //calendar("fecha_programada");
+      timespiker("horario_inicio");
+      timespiker("horario_termino");
+  })
+</script>
