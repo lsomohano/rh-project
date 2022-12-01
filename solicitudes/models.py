@@ -91,10 +91,10 @@ class SolicitudesVacantes(models.Model):
         db_table =  "solicitudes_vacantes"
         verbose_name = 'solicitud vacante'
         verbose_name_plural = 'solicitudes vacantes'
-        ordering = ["-locaciones"]
+        #ordering = ["-locaciones"]
 
     def __str__(self):
-        return self.activo
+        return self.locaciones.locacion
 
 
 

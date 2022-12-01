@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
-from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos
+from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos, Contactos
 from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
@@ -20,7 +20,17 @@ def solicitudesView(request):
     """Vista que gestiona la información de las entidades"""
     
     titles = {"title_page":'Solicitudes',"sub_title_page":'Gestión de solicitudes de vacantes.'}
+
     solicitudes = SolicitudesVacantes.objects.filter(activo='Y')
+    #Se comprueba si el ususario no pertenece al grupo RH Gerentes
+    for group in request.user.groups.all():
+        #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
+        if group.name == 'Proveedores':
+            solicitudes = solicitudes.filter(locaciones__locacionesproveedores__proveedores__contactosproveedores__user_id=request.user.id)
+        if group.name == 'RH Gerentes':
+            solicitudes = solicitudes.filter(locaciones__contactos__user_id=request.user.id)
+            
+    
     return render(request,"solicitudes/solicitudes.html",{"titles":titles, "solicitudes":solicitudes})
 
 
@@ -45,7 +55,6 @@ def createSolicitudes(request):
 
     #Se comprueba si el ususario no pertenece al grupo RH Gerentes
     for group in request.user.groups.all():
-
         #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
         if group.name == 'RH Gerentes':
             qs = Locaciones.objects.filter(contactos__user_id=request.user.id).select_related()
@@ -78,9 +87,10 @@ def detailsSolicitudes(request, id):
     """Vista del datalle de la vacante y gestiona la información de los candidatos"""    
 
     titles = {"title_page":'Solicitudes',"sub_title_page":'Información de la vacante.'}
+
     solicitud = SolicitudesVacantes.objects.get(id=id)
     estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=id, activo='Y')
-
+    contacto = Contactos.objects.get(user__id=solicitud.user_id)
     #candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=id).select_related('personas').prefetch_related('id__candidatos_estatus')
     candidatos = Candidatos.objects.raw("""SELECT c.id, c.created, c.aceptado, c.personas_id, p.nombre, p.apellido_paterno,p.apellido_materno, p.rfc, p.fecha_nacimiento, p.email, p.genero, ce.created AS fecha_estatus, e.estatus, e.descripcion, en.tipo_evento 
                                             FROM candidatos c
@@ -94,6 +104,7 @@ def detailsSolicitudes(request, id):
     return render(request,"solicitudes/details_solicitud.html",{
         "titles":titles, 
         "solicitud":solicitud, 
+        "contacto":contacto,
         "estatus":estatus,
         "candidatos":candidatos,
     })

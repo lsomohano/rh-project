@@ -15,6 +15,11 @@ def facturasView(request):
     
     titles = {"title_page":'Facturas',"sub_title_page":'Lista de facturas.'}
     facturas = Facturas.objects.filter(activo='Y')
+    #Se comprueba si el ususario no pertenece un grupo
+    for group in request.user.groups.all():
+        #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
+        if group.name == 'Proveedores':
+            facturas = facturas.filter(proveedores__contactosproveedores__user_id=request.user.id)
     return render(request,"facturacion/facturacion.html",{"titles":titles, "facturas":facturas})
 
 

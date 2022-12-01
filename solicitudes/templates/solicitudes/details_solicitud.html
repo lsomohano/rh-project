@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %} 
 {% load user_tags %}
-
 <div class="container-fluid">
     <div class="row">
       <div class="col-12">
@@ -23,7 +22,7 @@
             <div class="col-sm-3 invoice-col">
               Datos de la vancante
               <address>
-                <strong>Vacantes : {{solicitud.cantidad}}</strong><br>
+                <strong>Cantidad : {{solicitud.cantidad}}</strong><br>
                 Suledo : $ {{solicitud.sueldos}}<br>
                 Pago: {{solicitud.periodo_pago}}<br>
                 Comiciones: {{solicitud.comiciones}}<br>
@@ -34,22 +33,28 @@
             <div class="col-sm-3 invoice-col">
               Lolicitante:
               <address>
-                <strong>Contacto: {{solicitud.user.first_name}} {{solicitud.user.last_name}}</strong><br>
-                {{solicitud.locaciones}}<br>
-                {{solicitud.locaciones.direccion}}<br>
-                {{solicitud.user.email}} <br>
+                <strong>Contacto: {{contacto.user.first_name}} {{contacto.user.last_name}}</strong><br>
+                Dias de atención: {{contacto.dias_atencion}}<br>
+                Horario de atención: {{contacto.horario_inicio}} - {{contacto.horario_termino}} hrs.<br>
+                Email: {{contacto.user.email}} <br>
+                {% if  solicitud.locaciones.indicaciones_entrevista %}
+                  <a href="{{solicitud.locaciones.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
+                    <i class="far fa-file-pdf"></i> Instrucciones para la Entrevista.
+                  </a>
+                {% endif %}
               </address>
             </div>
             <!-- /.col -->
             <div class="col-sm-3 invoice-col">
-              Otra info:
+              Locacion:
               <address>
-                {% if  solicitud.locaciones.indicaciones_entrevista %}
-                  <a href="{{solicitud.locaciones.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
-                    <i class="far fa-file-pdf"></i> Instrucciones Entrevistas
-                  </a>
-                {% endif %}
-              <strong></strong><br>
+                <strong>{{solicitud.locaciones}} - {{solicitud.locaciones.locacion_name}}</strong><br>
+                Telefono: {{solicitud.locaciones.telefono}} <br>
+                Email: {{solicitud.locaciones.email}} <br>
+                Dirección: {{solicitud.locaciones.direccion}}<br>
+                <a href="https://www.google.es/maps?q={{solicitud.locaciones.latitud}}, {{solicitud.locaciones.longitud}}" class="btn btn-success btn-xs" target="_blank">
+                  <i class="fas fa-map-marker-alt"></i> Ver en Google maps
+                </a>
               </address>
             </div>
             <div class="col-sm-3 invoice-col">
