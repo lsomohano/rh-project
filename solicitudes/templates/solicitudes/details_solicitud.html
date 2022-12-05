@@ -169,9 +169,12 @@
                             {% endif %}
 
                             {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
-                              <a href="{% url 'DeletePuestosOperativo' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %} >
+                              <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
                                 <i class="fas fa-trash-alt"></i> Rechazar
-                              </a>
+                              </button>
+                              <!--<a href="{% url 'RechazoCandidato' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %} >
+                                <i class="fas fa-trash-alt"></i> Rechazar
+                              </a>-->
                             {% endif %}
                           </td>
                         </tr>

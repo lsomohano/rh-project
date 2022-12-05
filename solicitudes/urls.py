@@ -22,6 +22,7 @@ urlpatterns = [
     path('edit_contratacion/<int:pk>',views.ContratacionUpdate.as_view(), name="EditContratacion"),
 
     path('create_ingreso/<int:candidatos_id>',views.createIngreso, name="CreateIngreso"),
-
+    path('rechazo_candidato/<int:candidatos_id>',views.createRechazo, name="RechazoCandidato"),
+    
     path('staff_autorizado/<int:locaciones_id>/<int:puestos_operativos_id>',views.staffAutorizado, name="StaffAutorizado"),
 ]

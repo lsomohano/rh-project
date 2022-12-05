@@ -60,7 +60,7 @@ class Estatus(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table =  "calogos_estatus"
+        db_table =  "catalogos_estatus"
         verbose_name = 'catalogo estatus'
         verbose_name_plural = 'catalogos estatus'
         ordering = ["created"]
@@ -192,12 +192,30 @@ class Candidatos(models.Model):
 
 
 
+class MotivosRechazos(models.Model):
+    """Modelo que permite generar un catalogo de los motivos de rechazo"""
+
+    motivo_rechazo = models.CharField(max_length=100)
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table =  "motivos_rechazos"
+        verbose_name = 'motivo rechazo'
+        verbose_name_plural = 'motivos rechazos'
+
+    def __str__(self):
+        return self.motivo_rechazo
+        
+
 class CandidatosEstatus(models.Model):
     """Esta model gestionara los cambios de estatus de los candidatos, 
     guardando las fechas de cada cambio"""
 
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
+    motivos_rechazos = models.ForeignKey(MotivosRechazos, on_delete=models.CASCADE,null=True, blank=True, verbose_name='Motivo de Rechazo')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -249,3 +267,4 @@ class Entrevistas(models.Model):
 
     def __str__(self):
         return self.tipo_evento
+

@@ -16,16 +16,7 @@
   </div>
   <div class="card-body">
     Home <br>
-    {{ request.user.groups.all.0.name }}
-    {{perms.solicitudes.change_candidatos}}
-    <br>
-
-    {% if not perms.solicitudes.change_candidatos %} 
-      disabled 
-    {% else %}
-      no disabled
-    {% endif %}
-
+    
   </div>
   <!-- /.card-body -->
   <div class="card-footer">

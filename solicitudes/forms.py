@@ -1,6 +1,6 @@
 from curses.ascii import SO
 from django import forms
-from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes
+from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes, CandidatosEstatus
 from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locaciones
 
 
@@ -16,6 +16,7 @@ class SolicitudesForm(forms.ModelForm):
         widgets = {
             'user': forms.HiddenInput(),
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -303,3 +304,28 @@ class IngresoForm(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Asistio',
         })
+
+
+class EstatusCandidatosForm(forms.ModelForm):    
+
+    class Meta:
+        model = CandidatosEstatus
+        fields = ['motivos_rechazos',]
+        widgets = {
+            'candidatos': forms.HiddenInput(),
+            'estatus': forms.HiddenInput(),
+        }
+        labels = {
+            "candidatos": "",
+            "estatus":""
+        }
+        
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['motivos_rechazos'].widget.attrs.update({
+            'class':'form-control',
+            'placeholder':'Motivos de Rechazo',
+        })
+        

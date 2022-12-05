@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
 from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos, Contactos
-from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form
+from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form, EstatusCandidatosForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -96,7 +96,7 @@ def detailsSolicitudes(request, id):
                                             FROM candidatos c
                                             INNER JOIN personas p ON p.id=c.personas_id
                                             INNER JOIN candidatos_estatus ce ON ce.candidatos_id=c.id AND ce.activo='Y'
-                                            INNER JOIN calogos_estatus e ON e.id=ce.estatus_id
+                                            INNER JOIN catalogos_estatus e ON e.id=ce.estatus_id
                                             LEFT JOIN entrevistas en ON en.candidatos_id=c.id AND en.tipo_evento='ingreso'
                                             WHERE c.solicitudes_vacantes_id=%s""",(id,))
                                                 
@@ -152,6 +152,7 @@ def editEstatus(request, id):
         formulario = EstatusForm(instance=estatus)
 
     return render(request,"solicitudes/create_estatus.html",{"titles":titles, "formulario":formulario, "id":id})
+
 
 
 ##### Gestion de los candidatos #####
@@ -273,6 +274,33 @@ WHERE d.activo='Y' """,(pk,))
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
 
 
+def createRechazo(request, candidatos_id):
+    """Vista que permite cambiar a rechazado un candidato"""
+    titles = {"title_page":'Solicitudes',"sub_title_page":'Rechazo del candidato.'}
+    
+    if request.method == "POST":
+        formulario = EstatusCandidatosForm(request.POST or None)
+        if formulario.is_valid():
+            
+            #entrevista = formulario.save(commit=False)
+            CandidatosEstatus.objects.filter(candidatos_id=candidatos_id).update(activo='N')
+            candidato = Candidatos.objects.get(id=candidatos_id)
+
+            candidatoestatus = formulario.save(commit=False)
+            candidatoestatus.candidatos = candidato
+            candidatoestatus.estatus = Estatus.objects.get(tipos='candidato',estatus='Rechazado')
+
+            #solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
+            candidatoestatus.save()
+            return redirect('DetailsSolicitudes', id=candidato.solicitudes_vacantes_id)
+        else:
+            return redirect('Home')
+    formulario = EstatusCandidatosForm()    
+     
+
+    return render(request,"solicitudes/create_rechazo.html",{"titles":titles, "formulario":formulario,"candidatos_id":candidatos_id})
+
+
 """ Gestion de entrevistas """
 
 @login_required(login_url="Log_In")
@@ -312,6 +340,7 @@ def createEntrevistas(request, candidatos_id):
     formulario = EntrevistasForm()
        
     return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidato":candidato})
+
 
 
 class EntrevistasUpdate(UpdateView):
