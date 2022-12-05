@@ -57,8 +57,7 @@ def createSolicitudes(request):
     for group in request.user.groups.all():
         #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
         if group.name == 'RH Gerentes':
-            qs = Locaciones.objects.filter(contactos__user_id=request.user.id).select_related()
-            formulario.fields['locaciones'].queryset = qs
+            formulario.fields['locaciones'].queryset = Locaciones.objects.filter(contactos__user_id=request.user.id).select_related()
             formulario.fields['puestos_operativos'].queryset = PuestosOperativos.objects.filter(locacionespuestos__locaciones__contactos__user_id=request.user.id)
     
         
@@ -165,16 +164,19 @@ class CandidatosCreate(CreateView):
     form_class = CandidatosForm
     second_form_class = PersonasForm
 
-
-    
     def get_context_data(self, **kwargs):
         context = super(CandidatosCreate, self).get_context_data(**kwargs)
+        solicitudes_id= self.kwargs.get('solicitudes_id')
+        
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
-        context['solicitudes_id'] = self.kwargs.get('solicitudes_id')
+        context['solicitudes_id'] = solicitudes_id
         context['documentos'] = Documentos.objects.filter(activo='Y')
-
+   
+        candidato = self.form_class(solicitudes_id, self.request.GET)
+        #candidato.fields['candidato_sustituye'].queryset = Candidatos.objects.filter(solicitudes_vacantes_id=solicitudes_id).filter(candidatosestatus__activo='Y',candidatosestatus__estatus__estatus='rechazado')
+        
         if 'form' not in context:
-            context['form'] = self.form_class(self.request.GET)
+            context['form'] = candidato
         if 'form2' not in context:
             context['form2'] =self.second_form_class(self.request.GET)
 

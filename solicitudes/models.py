@@ -178,6 +178,7 @@ class Candidatos(models.Model):
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True, verbose_name='Referencias Laborales')
     tipo_candidato = models.CharField(max_length=8, choices=[(tag.name, tag.value) for tag in TiposCandidatos], default='normal')
+    candidato_sustituye = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name='Candidato Sustituye', null=True, blank=True)
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now=True)
 

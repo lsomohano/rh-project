@@ -122,13 +122,17 @@ class PersonasForm(forms.ModelForm):
         
         
 
-class CandidatosForm(forms.ModelForm):  
+class CandidatosForm(forms.ModelForm):
+
+    candidato_sustituye = forms.ModelChoiceField(queryset=Candidatos.objects.all(), empty_label="-- Candidato a sustituir --", to_field_name="id",)
 
     class Meta:
         model = Candidatos
-        fields = ['tipo_candidato','cv_solicitud','reporte_entrevista','evaluacion_psicometrica','referencias','solicitudes_vacantes','user']
+        fields = ['tipo_candidato','cv_solicitud','reporte_entrevista','evaluacion_psicometrica','referencias','solicitudes_vacantes','candidato_sustituye','user']
         
+
     def __init__(self, *args, **kwargs):
+        solicitudes_id = kwargs.pop('solicitudes_id')
         super().__init__(*args, **kwargs)
 
         self.fields['tipo_candidato'].widget.attrs.update({
@@ -151,6 +155,13 @@ class CandidatosForm(forms.ModelForm):
             'class':'form-control',
             'placeholder':'referencias',
         })
+        self.fields['candidato_sustituye'].queryset = Candidatos.objects.filter(solicitudes_vacantes_id=self.solicitudes_id).filter(candidatosestatus__activo='Y',candidatosestatus__estatus__estatus='rechazado')
+        self.fields['candidato_sustituye'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Candidato a sustituir',
+            
+        })
+
 
 class EntrevistasForm(forms.ModelForm):  
 
