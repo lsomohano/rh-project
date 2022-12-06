@@ -66,6 +66,7 @@ $("#id_staf_requerido").change(function(){
 /**
  * 
  * Calendarios  Date picker
+ * 
  */
 function calendar(input_id){
     $('#'+input_id).datetimepicker({

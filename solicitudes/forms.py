@@ -124,7 +124,7 @@ class PersonasForm(forms.ModelForm):
 
 class CandidatosForm(forms.ModelForm):
 
-    candidato_sustituye = forms.ModelChoiceField(queryset=Candidatos.objects.all(), empty_label="-- Candidato a sustituir --", to_field_name="id",)
+    candidato_sustituye = forms.ModelChoiceField(queryset=Candidatos.objects.all(), empty_label="-- Candidato a sustituir --", to_field_name="id")
 
     class Meta:
         model = Candidatos
@@ -132,8 +132,7 @@ class CandidatosForm(forms.ModelForm):
         
 
     def __init__(self, *args, **kwargs):
-        solicitudes_id = kwargs.pop('solicitudes_id')
-        super().__init__(*args, **kwargs)
+        super(CandidatosForm, self).__init__(*args, **kwargs)
 
         self.fields['tipo_candidato'].widget.attrs.update({
             'class':'form-control select2bs4',
@@ -150,16 +149,18 @@ class CandidatosForm(forms.ModelForm):
         self.fields['evaluacion_psicometrica'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'evaluacion_psicometrica',
+            'required': False,
         })
         self.fields['referencias'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'referencias',
+            'required': False,
         })
-        self.fields['candidato_sustituye'].queryset = Candidatos.objects.filter(solicitudes_vacantes_id=self.solicitudes_id).filter(candidatosestatus__activo='Y',candidatosestatus__estatus__estatus='rechazado')
         self.fields['candidato_sustituye'].widget.attrs.update({
             'class':'form-control select2bs4',
             'placeholder':'Candidato a sustituir',
-            
+            'readonly':'readonly',
+            'required': False,
         })
 
 

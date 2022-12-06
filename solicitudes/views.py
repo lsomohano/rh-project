@@ -163,20 +163,23 @@ class CandidatosCreate(CreateView):
     template_name = "solicitudes/create_candidatos.html"
     form_class = CandidatosForm
     second_form_class = PersonasForm
+    
+    def get_form(self, form_class=None):
+        solicitudes_id = self.kwargs.get('solicitudes_id')
+        form = CandidatosForm()
+        form.fields['candidato_sustituye'].queryset = Candidatos.objects.filter(solicitudes_vacantes_id=solicitudes_id).filter(candidatosestatus__activo='Y', candidatosestatus__estatus__estatus='rechazado')
+        return form
 
     def get_context_data(self, **kwargs):
         context = super(CandidatosCreate, self).get_context_data(**kwargs)
-        solicitudes_id= self.kwargs.get('solicitudes_id')
+        solicitudes_id = self.kwargs.get('solicitudes_id')
         
         context['titles'] = {"title_page":'Candidatos',"sub_title_page":'Nuevo Candidato.'}
         context['solicitudes_id'] = solicitudes_id
         context['documentos'] = Documentos.objects.filter(activo='Y')
-   
-        candidato = self.form_class(solicitudes_id, self.request.GET)
-        #candidato.fields['candidato_sustituye'].queryset = Candidatos.objects.filter(solicitudes_vacantes_id=solicitudes_id).filter(candidatosestatus__activo='Y',candidatosestatus__estatus__estatus='rechazado')
-        
+           
         if 'form' not in context:
-            context['form'] = candidato
+            context['form'] = self.form_class(self.request.GET)
         if 'form2' not in context:
             context['form2'] =self.second_form_class(self.request.GET)
 

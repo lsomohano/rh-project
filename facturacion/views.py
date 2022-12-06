@@ -58,7 +58,7 @@ def detailsFacturacion(request, id):
         FROM candidatos c
         INNER JOIN personas p ON p.id=c.personas_id
         INNER JOIN candidatos_estatus ce ON ce.candidatos_id=c.id AND ce.activo='Y'
-        INNER JOIN calogos_estatus ec ON ec.id=ce.estatus_id
+        INNER JOIN catalogos_estatus ec ON ec.id=ce.estatus_id
         INNER JOIN autenticacion_user u ON u.id=c.user_id
         INNER JOIN contactos_proveedores cp ON cp.user_id=u.id
         INNER JOIN proveedores pr ON pr.id=cp.proveedores_id 
@@ -113,7 +113,7 @@ def addCandidatos(request,proveedores_id,facturas_id,fecha_ini,fecha_fin):
         FROM candidatos c
         INNER JOIN personas p ON p.id=c.personas_id
         INNER JOIN candidatos_estatus ce ON ce.candidatos_id=c.id AND ce.activo='Y'
-        INNER JOIN calogos_estatus ec ON ec.id=ce.estatus_id
+        INNER JOIN catalogos_estatus ec ON ec.id=ce.estatus_id
         INNER JOIN autenticacion_user u ON u.id=c.user_id
         INNER JOIN contactos_proveedores cp ON cp.user_id=u.id
         INNER JOIN proveedores pr ON pr.id=cp.proveedores_id AND pr.id=%s
