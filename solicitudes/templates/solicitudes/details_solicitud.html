@@ -101,23 +101,17 @@
                     <tbody>
                       {% for candidato in candidatos %}
                         <tr>
-                          <td>{{candidato.id}}</td>
-                          <td>{{candidato.personas.rfc}}</td>
+                          <td>{{candidato.id}} </td>
+                          <td>{{candidato.personas.rfc}} {% if candidato.tipo_candidato == "garantia" %}**{% endif %}</td>
                           <td>{{candidato.personas.nombre}}</td>
                           <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
                           <td>{{candidato.personas.email}}</td>
                           <td>{{candidato.personas.telefono}}</td>
                           <td>
                             <button class="btn btn-success btn-xs disabled" >
-                              <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
+                              <i class="fas fa-thumbs-up"></i> {{candidato.estatus}} <br> ({{candidato.get_dias_estatus}} días)
                             </button>
-                            <!--{% for estatus in candidato.candidatosestatus_set.all %}
-                              {% if estatus.activo == 'Y' %}
-                                <button class="btn btn-success btn-xs disabled" >
-                                  <i class="fas fa-thumbs-up"></i> {{estatus}}
-                                </button>
-                              {% endif %}
-                            {% endfor %}-->
+
                           </td>
                           <td>
                             {% if candidato.estatus == "Postulado" %}
@@ -126,56 +120,98 @@
                                   <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateEntrevistas' candidato.id %}', 'myModal')" >
                                     <i class="far fa-calendar-alt"></i> Agendar Entrevista
                                   </button>
+                                  <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if not perms.solicitudes.change_candidatos %} disabled {% endif %}" >
+                                    <i class="fas fa-edit"></i> Editar
+                                  </a>
+                                  <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
+                                    <i class="fas fa-trash-alt"></i> Rechazar
+                                  </button>
+                                {% else %}
+                                  <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if not perms.solicitudes.change_candidatos %} disabled {% endif %}" >
+                                    <i class="fas fa-edit"></i> Editar
+                                  </a>
                                 {% endif %}
 
-                                <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if not perms.solicitudes.change_candidatos %} disabled {% endif %}" >
-                                  <i class="fas fa-edit"></i> Editar
-                                </a> 
-                            
                             {% elif candidato.estatus == "Programado" %}
+
                                 {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
-                                  <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Ver Cita</a>
-                                  <!--<a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if candidato.estatus != "Postulado" %}disabled{% endif %} "><i class="fas fa-edit"></i> Editar</a> -->
+                                    <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Entrevista</a>
+                                    <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
+                                      <i class="fas fa-trash-alt"></i> Rechazar
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'ViewEntrevistas' candidato.id %}', 'myModal')" >
+                                      <i class="far fa-calendar-alt"></i> Ver Cita
+                                    </button>
+                                    <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if not perms.solicitudes.change_candidatos %} disabled {% endif %}" >
+                                      <i class="fas fa-edit"></i> Editar
+                                    </a>
                                 {% endif %}
+
                             {% elif candidato.estatus == "Entrevistado" %}
                                 {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
                                     <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContratacion' candidato.id %}', 'myModal')" >
                                       <i class="far fa-calendar-alt"></i> Agendar Contratación
                                     </button>
+                                    <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-default btn-xs "><i class="fas fa-user"></i> Info Candidato</a>
+                                    <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
+                                      <i class="fas fa-trash-alt"></i> Rechazar
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'ViewEntrevistas' candidato.id %}', 'myModal')" >
+                                      <i class="far fa-calendar-alt"></i> Ver Entrevista
+                                    </button>
+                                    <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if not perms.solicitudes.change_candidatos %} disabled {% endif %}" >
+                                      <i class="fas fa-edit"></i> Editar
+                                    </a>
                                 {% endif %}
-                                <a href="{% url 'EditEntrevistas' candidato.id %}" class="btn btn-default btn-xs "><i class="far fa-calendar-alt"></i> Info Candidato</a>
                               
                             {% elif candidato.estatus == "Contratación" %}
-                                <!--<button class="btn btn-default btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateContratacion' candidato.id %}', 'myModal')" >
-                                  <i class="far fa-calendar-alt"></i> Agendar Contratación
-                                </button>-->
+
                                 {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
-                                    <a href="{% url 'EditContratacion' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Confirmar Contratación</a>
+                                    <a href="{% url 'EditContratacion' candidato.id %}" class="btn btn-info btn-xs "><i class="far fa-calendar-alt"></i> Contratación</a>
+                                    <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
+                                      <i class="fas fa-trash-alt"></i> Rechazar
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'ViewContratacion' candidato.id %}', 'myModal')" >
+                                      <i class="far fa-calendar-alt"></i> Ver Cita
+                                    </button>
+                                    <a href="{% url 'EditCandidatos' candidato.id %}" class="btn btn-default btn-xs {% if not perms.solicitudes.change_candidatos %} disabled {% endif %}" >
+                                      <i class="fas fa-edit"></i> Editar
+                                    </a>
                                 {% endif %}
 
-                            {% elif candidato.estatus == "Contratado" %}
+                            {% elif candidato.estatus == "Contratado" or candidato.estatus == "Facturado" %}
                                 {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
                                     {% if not candidato.tipo_evento == 'ingreso' %}
                                         <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateIngreso' candidato.id %}', 'myModal')" >
                                           <i class="far fa-calendar-alt"></i> Agendar Ingreso
                                         </button>
+                                    {% elif candidato.get_dias_garantia >= 0 %}
+                                        <!-- Queda abierto el periodo de garantia -->
+                                        <button class="btn btn-warning btn-xs disabled" >
+                                          {% if candidato.get_dias_garantia <= 15 %}
+                                            <i class="fas fa-lock-open"></i> {{candidato.get_dias_garantia}} Días de garantía
+                                          {% else %}
+                                            <i class="fas fa-lock"></i> Garantía Cumplida
+                                          {% endif %}
+                                        </button>
                                     {% else %}
-                                        <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateIngreso' candidato.id %}', 'myModal')" >
+                                        <!-- Queda en espera a confirmar asistencia -->
+                                        <button class="btn btn-info btn-xs" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'EditIngreso' candidato.id %}', 'myModal')" >
                                           <i class="fas fa-check"></i> Confirmar Asistencia
                                         </button>
                                     {% endif %}
+                                    <a href="{% url 'EditContratacion' candidato.id %}" class="btn btn-default btn-xs "><i class="fas fa-user"></i> Info Candidato</a>
+                                    <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
+                                      <i class="fas fa-trash-alt"></i> Rechazar
+                                    </button>
                                 {% endif %}
-
+                            {% else %}
+                                <a href="{% url 'EditContratacion' candidato.id %}" class="btn btn-default btn-xs "><i class="fas fa-user"></i> Info Candidato</a>
                             {% endif %}
-
-                            {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
-                              <button class="btn btn-danger btn-xs {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %}" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'RechazoCandidato' candidato.id %}', 'myModal')" >
-                                <i class="fas fa-trash-alt"></i> Rechazar
-                              </button>
-                              <!--<a href="{% url 'RechazoCandidato' candidato.id %}" class="btn btn-danger btn-xs elimina" data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " {% if not perms.solicitudes.delete_candidatos %} disabled {% endif %} >
-                                <i class="fas fa-trash-alt"></i> Rechazar
-                              </a>-->
-                            {% endif %}
+                            
                           </td>
                         </tr>
                       {% endfor %}

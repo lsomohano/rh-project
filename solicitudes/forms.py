@@ -156,10 +156,11 @@ class CandidatosForm(forms.ModelForm):
             'placeholder':'referencias',
             'required': False,
         })
+        self.fields['candidato_sustituye'].required = False
         self.fields['candidato_sustituye'].widget.attrs.update({
             'class':'form-control select2bs4',
             'placeholder':'Candidato a sustituir',
-            'readonly':'readonly',
+            'disabled':'disabled',
             'required': False,
         })
 

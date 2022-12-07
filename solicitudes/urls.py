@@ -15,13 +15,18 @@ urlpatterns = [
     path('edit_candidatos/<int:pk>',views.CandidatosUpdate.as_view(), name="EditCandidatos"),
 
     path('entrevistas',views.entrevistasView, name="Entrevistas"),
+    
     path('create_entrevistas/<int:candidatos_id>',views.createEntrevistas, name="CreateEntrevistas"),
+    path('view_entrevistas/<int:candidatos_id>',views.viewEntrevista, name="ViewEntrevistas"),
     path('edit_entrevistas/<int:pk>',views.EntrevistasUpdate.as_view(), name="EditEntrevistas"),
 
     path('create_contratacion/<int:candidatos_id>',views.createContratacion, name="CreateContratacion"),
+    path('view_contratacion/<int:candidatos_id>',views.viewContratacion, name="ViewContratacion"),
     path('edit_contratacion/<int:pk>',views.ContratacionUpdate.as_view(), name="EditContratacion"),
 
     path('create_ingreso/<int:candidatos_id>',views.createIngreso, name="CreateIngreso"),
+    path('edit_ingreso/<int:candidatos_id>',views.editIngreso, name="EditIngreso"),
+
     path('rechazo_candidato/<int:candidatos_id>',views.createRechazo, name="RechazoCandidato"),
     
     path('staff_autorizado/<int:locaciones_id>/<int:puestos_operativos_id>',views.staffAutorizado, name="StaffAutorizado"),

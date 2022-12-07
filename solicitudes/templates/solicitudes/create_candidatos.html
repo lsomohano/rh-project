@@ -221,7 +221,7 @@
   $(document).ready(function() {
     var id_tipo_candidato = $('#id_tipo_candidato').val();
     var id_candidato_sustituye = $('#id_candidato_sustituye').val();
-    alert(id_candidato_sustituye)
+    //alert(id_candidato_sustituye)
     if(id_tipo_candidato=="normal"){
       $('#id_candidato_sustituye').removeAttr("required")
     }else{
@@ -232,16 +232,14 @@
   $("#id_tipo_candidato").change(function(){
     var id_tipo_candidato = $('#id_tipo_candidato').val();
     var id_candidato_sustituye = $('#id_candidato_sustituye').val();
-    alert(id_candidato_sustituye)
+    //alert(id_candidato_sustituye)
     if(id_tipo_candidato=="garantia"){
       $('#id_candidato_sustituye').removeAttr("disabled");
     }else{
-      //$('#id_candidato_sustituye option:not(:selected)');
-      //$('#id_candidato_sustituye option:selected').removeAttr("selected");
       $('#id_candidato_sustituye').attr({'disabled':'disabled'}).val("");
     }
-    
   });
+
 </script>
 
 {% endblock content %}

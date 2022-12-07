@@ -182,6 +182,32 @@ class Candidatos(models.Model):
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now=True)
 
+    def get_dias_garantia(self):
+        total_dias = 0
+        ingreso = Entrevistas.objects.get(candidatos_id=self.id, tipo_evento="Ingreso", asistio='Y')
+        if (ingreso):
+            hoy = datetime.datetime.now().date()
+            total_dias = hoy - ingreso.fecha_entrevista.date()
+
+        return total_dias.days
+
+    def get_estatus_actual(self):
+        estatus_actual = ""
+        ea= CandidatosEstatus.objects.get(candidatos_id=self.id,activo='Y')
+        if (ea):
+           estatus_actual = ea.estatus.estatus
+
+        return estatus_actual
+
+    def get_dias_estatus(self):
+        total_dias = 0
+        estatus = CandidatosEstatus.objects.get(candidatos_id=self.id,activo='Y')
+        if (estatus):
+            hoy = datetime.datetime.now().date()
+            total_dias = hoy - estatus.created.date()
+
+        return total_dias.days
+
     class Meta:
         db_table =  "candidatos"
         verbose_name = 'candidato'
