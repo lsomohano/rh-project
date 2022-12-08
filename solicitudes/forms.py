@@ -1,6 +1,6 @@
 from curses.ascii import SO
 from django import forms
-from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes, CandidatosEstatus
+from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes, CandidatosEstatus, SolicitudesEstatus, MotivosRechazos
 from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locaciones
 
 
@@ -319,26 +319,36 @@ class IngresoForm(forms.ModelForm):
         })
 
 
-class EstatusCandidatosForm(forms.ModelForm):    
+class EstatusCandidatosForm(forms.ModelForm):   
+
+    motivos_rechazos = forms.ModelChoiceField(queryset=MotivosRechazos.objects.filter(tipos='candidato'), empty_label="-- Elija un motivo --", to_field_name="id")
 
     class Meta:
         model = CandidatosEstatus
         fields = ['motivos_rechazos',]
-        widgets = {
-            'candidatos': forms.HiddenInput(),
-            'estatus': forms.HiddenInput(),
-        }
-        labels = {
-            "candidatos": "",
-            "estatus":""
-        }
-        
+              
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.fields['motivos_rechazos'].widget.attrs.update({
-            'class':'form-control',
+            'class':'form-control select2bs4',
+            'placeholder':'Motivos de Rechazo',
+        })
+
+class EstatusSolicitudesForm(forms.ModelForm):    
+    motivos_rechazos = forms.ModelChoiceField(queryset=MotivosRechazos.objects.filter(tipos='solicitud'), empty_label="-- Elija un motivo --", to_field_name="id")
+
+    class Meta:
+        model = SolicitudesEstatus
+        fields = ['motivos_rechazos',]
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['motivos_rechazos'].widget.attrs.update({
+            'class':'form-control select2bs4',
             'placeholder':'Motivos de Rechazo',
         })
         

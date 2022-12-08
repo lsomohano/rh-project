@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
 from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos, Contactos
-from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form, EstatusCandidatosForm, IngresoForm
+from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form, EstatusCandidatosForm, IngresoForm, EstatusSolicitudesForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -46,9 +46,9 @@ def createSolicitudes(request):
             solicitud = formulario.save()
 
             estatus = Estatus.objects.get(tipos='solicitud',estatus='Abierta')
-
             solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
             solicitud_estatus.save()
+
             return redirect('DetailsSolicitudes', id=solicitud.id)
     
     formulario = SolicitudesForm()
@@ -108,6 +108,48 @@ def detailsSolicitudes(request, id):
         "candidatos":candidatos,
     })
 
+
+@login_required(login_url="Log_In")
+def deleteSolicitudes(request, id):
+    """Vista que sirve para eliminar una solicitud, siempre y cuando su estatus sea 'Abierta' """
+    solicitud = SolicitudesVacantes.objects.get(id=id)
+    solicitud.activo='N'
+    solicitud.save()
+
+    SolicitudesEstatus.objects.filter(solicitudes_id=id).update(activo='N')
+    estatus = Estatus.objects.get(tipos='solicitud',estatus='Eliminada')
+    solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
+    solicitud_estatus.save()
+
+    return redirect('Solicitudes')
+
+
+def cancelSolicitudes(request, id):
+    """Vista que permite cambiar a rechazado un candidato"""
+    titles = {"title_page":'Solicitudes',"sub_title_page":'Cancelación de la solicitud.'}
+    
+    if request.method == "POST":
+        formulario = EstatusSolicitudesForm(request.POST or None)
+        if formulario.is_valid():
+            
+            SolicitudesEstatus.objects.filter(solicitudes_vacantes_id=id).update(activo='N')
+            solicitud = SolicitudesVacantes.objects.get(id=id)
+
+            solicitudestatus = formulario.save(commit=False)
+            solicitudestatus.solicitudes_vacantes = solicitud
+            solicitudestatus.estatus = Estatus.objects.get(tipos='solicitud',estatus='Cancelada')
+
+            solicitudestatus.save()
+
+            return redirect('DetailsSolicitudes', id=solicitudestatus.solicitudes_vacantes_id)
+        else:
+            return redirect('Home')
+
+
+    formulario = EstatusSolicitudesForm()    
+     
+    return render(request,"solicitudes/create_rechazo.html",{"titles":titles, "formulario":formulario})
+    
 
 
 """Catalogo de los estatus"""
@@ -279,6 +321,7 @@ WHERE d.activo='Y' """,(pk,))
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
 
 
+
 def createRechazo(request, candidatos_id):
     """Vista que permite cambiar a rechazado un candidato"""
     titles = {"title_page":'Solicitudes',"sub_title_page":'Rechazo del candidato.'}
@@ -299,7 +342,6 @@ def createRechazo(request, candidatos_id):
         else:
             return redirect('Home')
     formulario = EstatusCandidatosForm()    
-     
 
     return render(request,"solicitudes/create_rechazo.html",{"titles":titles, "formulario":formulario,"candidatos_id":candidatos_id})
 
@@ -315,6 +357,7 @@ def entrevistasView(request):
     hoy = datetime.datetime.now().date()
 
     return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas, "hoy":hoy})
+
 
 
 @login_required(login_url="Log_In")
@@ -552,7 +595,7 @@ WHERE d.activo='Y' """,(pk,))
             context['form4'] = self.fourth_form_class(instance=contratacion)
         
         context['candidato'] = candidato
-        
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -589,7 +632,6 @@ WHERE d.activo='Y' """,(pk,))
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()"""
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id)
-            #return redirect('Entrevistas')
         else:
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
 

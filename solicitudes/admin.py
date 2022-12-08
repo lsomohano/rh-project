@@ -9,7 +9,7 @@ class DocumentosAdmin(admin.ModelAdmin):
     list_display = ('documento', 'descripcion', 'activo','created')
 
 class MotivosRechazosAdmin(admin.ModelAdmin):
-    list_display = ('motivo_rechazo','activo','created','updated')
+    list_display = ('motivo_rechazo','tipos','activo','created','updated')
 
 
 admin.site.register(Estatus, EstatusAdmin)

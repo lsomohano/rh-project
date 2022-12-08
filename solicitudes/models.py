@@ -68,7 +68,22 @@ class Estatus(models.Model):
     def __str__(self):
         return self.estatus
 
+class MotivosRechazos(models.Model):
+    """Modelo que permite generar un catalogo de los motivos de rechazo"""
 
+    motivo_rechazo = models.CharField(max_length=100)
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='candidato')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table =  "motivos_rechazos"
+        verbose_name = 'motivo rechazo'
+        verbose_name_plural = 'motivos rechazos'
+
+    def __str__(self):
+        return self.motivo_rechazo
 
 class SolicitudesVacantes(models.Model):
     """El sistema gestionara las solicitudes de vacantes, cada gerente podra solicitar sus vancantes 
@@ -90,13 +105,23 @@ class SolicitudesVacantes(models.Model):
 
     def get_candidatos_contratados(self):
         candidatos_contratados = 0
-        candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=1).filter(candidatosestatus__estatus__estatus='Contratado').exclude(candidatosestatus__estatus__estatus='Rechazado').count()
+        candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=self.id).filter(candidatosestatus__estatus__estatus='Contratado').exclude(candidatosestatus__estatus__estatus='Rechazado').count()
         if (candidatos):
             candidatos_contratados = candidatos
 
         return candidatos_contratados
 
+    def get_candidatos_total(self):
+        candidatos_total = 0
+        candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=self.id).count()
+        if (candidatos):
+            candidatos_total = candidatos
 
+        return candidatos_total
+
+    def get_estatus(self):
+        estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=self.id, activo='Y')
+        return estatus
     class Meta:
         db_table =  "solicitudes_vacantes"
         verbose_name = 'solicitud vacante'
@@ -114,6 +139,7 @@ class SolicitudesEstatus(models.Model):
 
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitud')
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
+    motivos_rechazos = models.ForeignKey(MotivosRechazos, on_delete=models.CASCADE,null=True, blank=True, verbose_name='Motivo de Rechazo')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -226,24 +252,6 @@ class Candidatos(models.Model):
 
     def __str__(self):
         return self.personas.nombre + ' ' + self.personas.apellido_paterno + ' ' + self.personas.apellido_materno
-
-
-
-class MotivosRechazos(models.Model):
-    """Modelo que permite generar un catalogo de los motivos de rechazo"""
-
-    motivo_rechazo = models.CharField(max_length=100)
-    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table =  "motivos_rechazos"
-        verbose_name = 'motivo rechazo'
-        verbose_name_plural = 'motivos rechazos'
-
-    def __str__(self):
-        return self.motivo_rechazo
         
 
 class CandidatosEstatus(models.Model):

@@ -325,7 +325,7 @@
     timespiker("hora_programada")
 
     
-    if ('{{candidato.get_estatus_actual}}' == "Contratado" || '{{candidato.get_estatus_actual}}' == "Facturado"){
+    if ('{{candidato.get_estatus_actual}}' == "Contratado" || '{{candidato.get_estatus_actual}}' == "Facturado" || '{{candidato.get_estatus_actual}}' == "Rechazado"){
       $('#post_form input, select, textarea').attr('disabled', 'disabled');
       $('#guardar_candidato').attr('disabled', 'disabled');
     }
