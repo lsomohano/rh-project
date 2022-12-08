@@ -87,6 +87,16 @@ class SolicitudesVacantes(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+
+    def get_candidatos_contratados(self):
+        candidatos_contratados = 0
+        candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=1).filter(candidatosestatus__estatus__estatus='Contratado').exclude(candidatosestatus__estatus__estatus='Rechazado').count()
+        if (candidatos):
+            candidatos_contratados = candidatos
+
+        return candidatos_contratados
+
+
     class Meta:
         db_table =  "solicitudes_vacantes"
         verbose_name = 'solicitud vacante'

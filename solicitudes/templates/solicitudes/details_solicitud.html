@@ -22,7 +22,7 @@
             <div class="col-sm-3 invoice-col">
               Datos de la vancante
               <address>
-                <strong>Cantidad : {{solicitud.cantidad}}</strong><br>
+                <strong>Cantidad : {{solicitud.cantidad}} ({{solicitud.get_candidatos_contratados}})</strong><br>
                 Suledo : $ {{solicitud.sueldos}}<br>
                 Pago: {{solicitud.periodo_pago}}<br>
                 Comiciones: {{solicitud.comiciones}}<br>
@@ -73,7 +73,7 @@
               {% endif %}
 
               {% if request.user|has_group:"Proveedores" or request.user|has_group:"RH Admin" or request.user.is_superuser %}
-                <a href="{% url 'CreateCandidatos' solicitud.id %}" class="btn btn-primary btn-sm btn-block" >
+                <a href="{% url 'CreateCandidatos' solicitud.id %}" class="btn btn-primary btn-sm btn-block {% if solicitud.get_candidatos_contratados >= solicitud.cantidad  %} disabled {% endif %} "  >
                   <i class="fas fa-plus-circle"></i> Agregar Candidatos
                 </a>
               {% endif %}
