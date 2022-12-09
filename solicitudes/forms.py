@@ -351,4 +351,20 @@ class EstatusSolicitudesForm(forms.ModelForm):
             'class':'form-control select2bs4',
             'placeholder':'Motivos de Rechazo',
         })
+
+class AgendaForm(forms.ModelForm):    
+    #tipo_evento = forms.ModelChoiceField(queryset=MotivosRechazos.objects.filter(tipos='solicitud'), empty_label="-- Elija un motivo --", to_field_name="id")
+
+    class Meta:
+        model = Entrevistas
+        fields = ['tipo_evento',]
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['tipo_evento'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Motivos de Rechazo',
+        })
         

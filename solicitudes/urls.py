@@ -16,7 +16,7 @@ urlpatterns = [
     path('create_candidatos/<int:solicitudes_id>',views.CandidatosCreate.as_view(), name="CreateCandidatos"),
     path('edit_candidatos/<int:pk>',views.CandidatosUpdate.as_view(), name="EditCandidatos"),
 
-    path('entrevistas',views.entrevistasView, name="Entrevistas"),
+    path('entrevistas/<tipo_evento>',views.entrevistasView, name="Entrevistas"),
     
     path('create_entrevistas/<int:candidatos_id>',views.createEntrevistas, name="CreateEntrevistas"),
     path('view_entrevistas/<int:candidatos_id>',views.viewEntrevista, name="ViewEntrevistas"),

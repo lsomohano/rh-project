@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.views.generic import CreateView, UpdateView
 from .models import Candidatos, Entrevistas, Personas, SolicitudesVacantes, SolicitudesEstatus, Estatus, CandidatosEstatus, Documentos, CandidatosDocumentos
 from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPuestos, Contactos
-from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form, EstatusCandidatosForm, IngresoForm, EstatusSolicitudesForm
+from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form, EstatusCandidatosForm, IngresoForm, EstatusSolicitudesForm, AgendaForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -349,14 +349,23 @@ def createRechazo(request, candidatos_id):
 """ Gestion de entrevistas """
 
 @login_required(login_url="Log_In")
-def entrevistasView(request):
+def entrevistasView(request, tipo_evento):
     """Vista que muestra las entrevistas pendientes"""
     
-    titles = {"title_page":'Entrevistas',"sub_title_page":'Gestión de entrevistas.'}
-    entrevistas = Entrevistas.objects.filter(asistio__isnull='True', tipo_evento='entrevista')
-    hoy = datetime.datetime.now().date()
+    titles = {"title_page":'Agenda',"sub_title_page":'Gestión de entrevistas.'}
+    hoy = datetime.date.today()
+    
+    if request.method == "POST":
+        formulario = AgendaForm(request.POST or None)
+        
+        if formulario.is_valid():
+            entrevistas = Entrevistas.objects.filter(asistio__isnull='True', tipo_evento=request.POST['tipo_evento'])
+            return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas, "formulario":formulario})
 
-    return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas, "hoy":hoy})
+    formulario = AgendaForm()
+    entrevistas = Entrevistas.objects.filter(asistio__isnull='True', tipo_evento=tipo_evento)
+
+    return render(request,"solicitudes/entrevistas.html",{"titles":titles, "entrevistas":entrevistas, "formulario":formulario,"hoy":hoy})
 
 
 

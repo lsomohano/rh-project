@@ -362,7 +362,7 @@ CREATE TABLE IF NOT EXISTS `candidatos` (
   CONSTRAINT `candidatos_user_id_d2e3a668_fk_autenticacion_user_id` FOREIGN KEY (`user_id`) REFERENCES `autenticacion_user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.candidatos: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.candidatos: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `candidatos` DISABLE KEYS */;
 INSERT INTO `candidatos` (`id`, `reporte_entrevista`, `evaluacion_psicometrica`, `aceptado`, `created`, `personas_id`, `solicitudes_vacantes_id`, `user_id`, `cv_solicitud`, `referencias`, `tipo_candidato`, `candidato_sustituye_id`) VALUES
 	(1, 'candidatos/personas/2__FDe3NEi.pdf', 'candidatos/personas/1__m3ZnRWe.pdf', 'Y', '2022-11-01 16:02:12.254130', 1, 1, 1, 'candidatos/personas/cv/3__z7kU5rZ.pdf', 'candidatos/referencias/3_.pdf', 'normal', NULL),
@@ -392,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `candidatos_documentos` (
   CONSTRAINT `candidatos_documentos_documentos_id_6a740004_fk_documentos_id` FOREIGN KEY (`documentos_id`) REFERENCES `documentos` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.candidatos_documentos: ~101 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.candidatos_documentos: ~132 rows (aproximadamente)
 /*!40000 ALTER TABLE `candidatos_documentos` DISABLE KEYS */;
 INSERT INTO `candidatos_documentos` (`id`, `check_proveedor`, `check_locacion`, `candidatos_id`, `documentos_id`) VALUES
 	(1, 'Y', 'Y', 1, 1),
@@ -561,7 +561,7 @@ CREATE TABLE IF NOT EXISTS `candidatos_estatus` (
   CONSTRAINT `candidatos_estatus_motivos_rechazos_id_92ebef9e_fk_motivos_r` FOREIGN KEY (`motivos_rechazos_id`) REFERENCES `motivos_rechazos` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.candidatos_estatus: ~59 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.candidatos_estatus: ~72 rows (aproximadamente)
 /*!40000 ALTER TABLE `candidatos_estatus` DISABLE KEYS */;
 INSERT INTO `candidatos_estatus` (`id`, `activo`, `created`, `updated`, `candidatos_id`, `estatus_id`, `motivos_rechazos_id`) VALUES
 	(1, 'N', '2022-11-01 16:02:12.258358', '2022-11-01 16:02:12.258389', 1, 8, NULL),
@@ -649,12 +649,12 @@ CREATE TABLE IF NOT EXISTS `catalogos_estatus` (
   `created` datetime(6) NOT NULL,
   `updated` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.catalogos_estatus: ~13 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.catalogos_estatus: ~15 rows (aproximadamente)
 /*!40000 ALTER TABLE `catalogos_estatus` DISABLE KEYS */;
 INSERT INTO `catalogos_estatus` (`id`, `estatus`, `descripcion`, `activo`, `tipos`, `created`, `updated`) VALUES
-	(1, 'Abierta', 'Cuando se crea y no tiene candidatos cargados. X', 'Y', 'solicitud', '2022-10-14 16:26:04.928690', '2022-10-14 16:26:04.928755'),
+	(1, 'Abierta', 'Cuando se crea y no tiene candidatos cargados. X', 'Y', 'solicitud', '2022-10-14 16:26:04.928690', '2022-12-08 21:18:13.582970'),
 	(2, 'En proceso', 'Cuando se carga al primer candidato.', 'Y', 'solicitud', '2022-10-14 16:29:26.287719', '2022-10-14 16:29:26.287762'),
 	(3, 'Cubierta', 'Cuando se cubrieron todas las vacantes de la solicitud', 'N', 'solicitud', '2022-10-14 18:38:28.773754', '2022-10-14 18:38:28.773782'),
 	(4, 'En garantía', 'Cuando se contrata al candidato y esta en periodo garantía.', 'N', 'candidato', '2022-10-14 18:39:19.030780', '2022-10-14 18:39:19.030812'),
@@ -670,7 +670,9 @@ INSERT INTO `catalogos_estatus` (`id`, `estatus`, `descripcion`, `activo`, `tipo
 	(14, 'Contratado', 'El candidato fue contratado.', 'Y', 'candidato', '2022-11-07 21:02:52.563479', '2022-11-07 21:02:52.563510'),
 	(15, 'Facturación', 'El candidato fue ingresado a un reporte de facturación.', 'Y', 'candidato', '2022-11-07 21:05:06.183314', '2022-11-17 14:25:07.527059'),
 	(16, 'Facturado', 'El proveedor ingreso una factura al proceso de facturación don de fue agregado el candidato.', 'Y', 'candidato', '2022-11-17 14:22:02.953355', '2022-11-17 14:23:17.771093'),
-	(17, 'Ingreso', 'Confirma asistencia a su primer día de trabajo.', 'Y', 'candidato', '2022-12-07 19:33:09.813667', '2022-12-07 19:38:26.346367');
+	(17, 'Ingreso', 'Confirma asistencia a su primer día de trabajo.', 'Y', 'candidato', '2022-12-07 19:33:09.813667', '2022-12-07 19:38:26.346367'),
+	(18, 'Eliminada', 'La solicitud se elimino por que aun no tenia candidatos.', 'Y', 'solicitud', '2022-12-08 20:14:56.595963', '2022-12-08 20:14:56.596002'),
+	(19, 'Cancelada', 'La solicitud se puede cancelar desde que tenga un candidato. La cancelación debe tener un motivo', 'Y', 'solicitud', '2022-12-08 20:16:06.045255', '2022-12-08 20:16:06.045288');
 /*!40000 ALTER TABLE `catalogos_estatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.ciudades
@@ -757,9 +759,9 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk_autenticacion_user_id` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_autenticacion_user_id` FOREIGN KEY (`user_id`) REFERENCES `autenticacion_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=148 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.django_admin_log: ~127 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.django_admin_log: ~135 rows (aproximadamente)
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
 	(1, '2022-10-07 17:54:59.422622', '2', 'lsomohano20', 1, '[{"added": {}}]', 16, 1),
@@ -908,7 +910,15 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 	(144, '2022-12-02 23:13:59.941053', '7', 'No acepto el sueldo', 1, '[{"added": {}}]', 30, 1),
 	(145, '2022-12-07 19:33:09.815435', '17', 'Ingreso', 1, '[{"added": {}}]', 21, 1),
 	(146, '2022-12-07 19:38:26.348725', '17', 'Ingreso', 2, '[]', 21, 1),
-	(147, '2022-12-08 17:03:02.964849', '8', 'RFC', 2, '[{"changed": {"fields": ["Descripcion"]}}]', 22, 1);
+	(147, '2022-12-08 17:03:02.964849', '8', 'RFC', 2, '[{"changed": {"fields": ["Descripcion"]}}]', 22, 1),
+	(148, '2022-12-08 20:00:59.997139', '1', 'Auxiliar de Servicios', 2, '[{"changed": {"fields": ["Activo"]}}]', 9, 1),
+	(149, '2022-12-08 20:01:05.850510', '3', 'Auxiliar Administrativo', 2, '[{"changed": {"fields": ["Activo"]}}]', 9, 1),
+	(150, '2022-12-08 20:01:12.122210', '2', 'Auxiliar Administrativo', 2, '[{"changed": {"fields": ["Activo"]}}]', 9, 1),
+	(151, '2022-12-08 20:14:56.597406', '18', 'Eliminada', 1, '[{"added": {}}]', 21, 1),
+	(152, '2022-12-08 20:16:06.046127', '19', 'Cancelada', 1, '[{"added": {}}]', 21, 1),
+	(153, '2022-12-08 21:17:56.371324', '1', 'Abierta', 2, '[]', 21, 1),
+	(154, '2022-12-08 21:18:13.584098', '1', 'Abierta', 2, '[]', 21, 1),
+	(155, '2022-12-08 22:50:05.276976', '8', 'Por que no fue completada', 1, '[{"added": {}}]', 30, 1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.django_content_type
@@ -962,9 +972,9 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.django_migrations: ~41 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.django_migrations: ~42 rows (aproximadamente)
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(1, 'contenttypes', '0001_initial', '2022-10-07 17:33:37.502011'),
@@ -1014,7 +1024,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(45, 'solicitudes', '0014_auto_20221130_0619', '2022-11-30 22:46:00.936870'),
 	(46, 'solicitudes', '0015_auto_20221202_2244', '2022-12-02 22:44:31.106955'),
 	(47, 'solicitudes', '0016_alter_estatus_table', '2022-12-02 23:03:23.860036'),
-	(48, 'solicitudes', '0017_candidatos_candidato_sustituye', '2022-12-05 17:03:38.795559');
+	(48, 'solicitudes', '0017_candidatos_candidato_sustituye', '2022-12-05 17:03:38.795559'),
+	(49, 'solicitudes', '0018_auto_20221208_2235', '2022-12-08 22:35:37.287456');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.django_session
@@ -1108,7 +1119,7 @@ CREATE TABLE IF NOT EXISTS `entrevistas` (
   CONSTRAINT `entrevistas_candidatos_id_54ee1c16_fk_candidatos_id` FOREIGN KEY (`candidatos_id`) REFERENCES `candidatos` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.entrevistas: ~18 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.entrevistas: ~22 rows (aproximadamente)
 /*!40000 ALTER TABLE `entrevistas` DISABLE KEYS */;
 INSERT INTO `entrevistas` (`id`, `indicaciones`, `created`, `fecha_programada`, `hora_programada`, `fecha_entrevista`, `asistio`, `candidatos_id`, `tipo_evento`) VALUES
 	(2, 'T', '2022-11-03 15:21:52.000000', '2022-11-04', '15:22:01.000000', NULL, 'N', 1, 'entrevista'),
@@ -1279,19 +1290,21 @@ CREATE TABLE IF NOT EXISTS `motivos_rechazos` (
   `activo` varchar(1) NOT NULL,
   `created` datetime(6) NOT NULL,
   `updated` datetime(6) NOT NULL,
+  `tipos` varchar(9) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.motivos_rechazos: ~6 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.motivos_rechazos: ~8 rows (aproximadamente)
 /*!40000 ALTER TABLE `motivos_rechazos` DISABLE KEYS */;
-INSERT INTO `motivos_rechazos` (`id`, `motivo_rechazo`, `activo`, `created`, `updated`) VALUES
-	(1, 'No llega a entrevista', 'Y', '2022-12-02 23:11:49.991887', '2022-12-02 23:11:49.991926'),
-	(2, 'No cumple el perfil', 'Y', '2022-12-02 23:12:08.285217', '2022-12-02 23:12:08.285246'),
-	(3, 'Distancia hogar - lugar de trabajo', 'Y', '2022-12-02 23:12:40.456803', '2022-12-02 23:12:40.456835'),
-	(4, 'Cambio de condiciones laborales', 'Y', '2022-12-02 23:12:55.891262', '2022-12-02 23:12:55.891290'),
-	(5, 'Proceso de contratación largo', 'Y', '2022-12-02 23:13:18.787964', '2022-12-02 23:13:18.787992'),
-	(6, 'Mejor oferta laboral', 'Y', '2022-12-02 23:13:35.965411', '2022-12-02 23:13:35.965437'),
-	(7, 'No acepto el sueldo', 'Y', '2022-12-02 23:13:59.939232', '2022-12-02 23:13:59.939264');
+INSERT INTO `motivos_rechazos` (`id`, `motivo_rechazo`, `activo`, `created`, `updated`, `tipos`) VALUES
+	(1, 'No llega a entrevista', 'Y', '2022-12-02 23:11:49.991887', '2022-12-02 23:11:49.991926', 'candidato'),
+	(2, 'No cumple el perfil', 'Y', '2022-12-02 23:12:08.285217', '2022-12-02 23:12:08.285246', 'candidato'),
+	(3, 'Distancia hogar - lugar de trabajo', 'Y', '2022-12-02 23:12:40.456803', '2022-12-02 23:12:40.456835', 'candidato'),
+	(4, 'Cambio de condiciones laborales', 'Y', '2022-12-02 23:12:55.891262', '2022-12-02 23:12:55.891290', 'candidato'),
+	(5, 'Proceso de contratación largo', 'Y', '2022-12-02 23:13:18.787964', '2022-12-02 23:13:18.787992', 'candidato'),
+	(6, 'Mejor oferta laboral', 'Y', '2022-12-02 23:13:35.965411', '2022-12-02 23:13:35.965437', 'candidato'),
+	(7, 'No acepto el sueldo', 'Y', '2022-12-02 23:13:59.939232', '2022-12-02 23:13:59.939264', 'candidato'),
+	(8, 'Por que no fue completada', 'Y', '2022-12-08 22:50:05.274207', '2022-12-08 22:50:05.274240', 'solicitud');
 /*!40000 ALTER TABLE `motivos_rechazos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.personas
@@ -1312,7 +1325,7 @@ CREATE TABLE IF NOT EXISTS `personas` (
   UNIQUE KEY `rfc` (`rfc`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.personas: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.personas: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `personas` DISABLE KEYS */;
 INSERT INTO `personas` (`id`, `nombre`, `apellido_paterno`, `apellido_materno`, `rfc`, `fecha_nacimiento`, `email`, `telefono`, `activo`, `created`, `updated`, `genero`) VALUES
 	(1, 'Leonel', 'Somohano', 'Carmona', 'SOCL850309JD8', '2022-10-05', 'lsomohano20@gmail.com', '9982140871', 'Y', '2022-11-01 16:02:12.202437', '2022-11-01 16:02:12.202466', 'M'),
@@ -1364,9 +1377,9 @@ CREATE TABLE IF NOT EXISTS `puestos_nominas` (
 -- Volcando datos para la tabla rhdb_dev.puestos_nominas: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `puestos_nominas` DISABLE KEYS */;
 INSERT INTO `puestos_nominas` (`id`, `puesto_nomina`, `activo`, `created`, `updated`) VALUES
-	(1, 'Auxiliar de Servicios', 'Y', '2022-10-07 23:21:10.700172', '2022-10-07 23:21:10.700206'),
-	(2, 'Auxiliar Administrativo', 'N', '2022-10-07 23:22:59.135218', '2022-12-08 16:56:50.786586'),
-	(3, 'Auxiliar Administrativo', 'N', '2022-10-07 23:23:55.141232', '2022-10-07 23:23:55.141270');
+	(1, 'Auxiliar de Servicios', 'Y', '2022-10-07 23:21:10.700172', '2022-12-08 20:00:59.995778'),
+	(2, 'Auxiliar Administrativo', 'Y', '2022-10-07 23:22:59.135218', '2022-12-08 20:01:12.120724'),
+	(3, 'Auxiliar Administrativo', 'Y', '2022-10-07 23:23:55.141232', '2022-12-08 20:01:05.849355');
 /*!40000 ALTER TABLE `puestos_nominas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.puestos_operativos
@@ -1502,23 +1515,29 @@ CREATE TABLE IF NOT EXISTS `solicitudes_estatus` (
   `updated` datetime(6) NOT NULL,
   `estatus_id` bigint(20) NOT NULL,
   `solicitudes_vacantes_id` bigint(20) NOT NULL,
+  `motivos_rechazos_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `solicitudes_estatus_estatus_id_37e03d68_fk_calogos_estatus_id` (`estatus_id`),
   KEY `solicitudes_estatus_solicitudes_vacantes_f4bdb182_fk_solicitud` (`solicitudes_vacantes_id`),
+  KEY `solicitudes_estatus_motivos_rechazos_id_9d4bf81d_fk_motivos_r` (`motivos_rechazos_id`),
   CONSTRAINT `solicitudes_estatus_estatus_id_37e03d68_fk_calogos_estatus_id` FOREIGN KEY (`estatus_id`) REFERENCES `catalogos_estatus` (`id`),
+  CONSTRAINT `solicitudes_estatus_motivos_rechazos_id_9d4bf81d_fk_motivos_r` FOREIGN KEY (`motivos_rechazos_id`) REFERENCES `motivos_rechazos` (`id`),
   CONSTRAINT `solicitudes_estatus_solicitudes_vacantes_f4bdb182_fk_solicitud` FOREIGN KEY (`solicitudes_vacantes_id`) REFERENCES `solicitudes_vacantes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.solicitudes_estatus: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.solicitudes_estatus: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `solicitudes_estatus` DISABLE KEYS */;
-INSERT INTO `solicitudes_estatus` (`id`, `activo`, `created`, `updated`, `estatus_id`, `solicitudes_vacantes_id`) VALUES
-	(1, 'N', '2022-10-14 21:33:16.116937', '2022-10-14 21:33:16.116973', 1, 1),
-	(2, 'N', '2022-10-18 18:15:33.751059', '2022-10-18 18:15:33.751090', 1, 2),
-	(3, 'Y', '2022-10-21 22:44:52.813549', '2022-10-21 22:44:52.813579', 1, 3),
-	(4, 'Y', '2022-11-01 16:02:12.314339', '2022-11-01 16:02:12.314372', 2, 1),
-	(5, 'N', '2022-11-09 15:47:07.482161', '2022-11-09 15:47:07.482228', 1, 4),
-	(6, 'Y', '2022-11-15 15:47:55.027747', '2022-11-15 15:47:55.027778', 2, 2),
-	(7, 'Y', '2022-11-23 22:05:53.601552', '2022-11-23 22:05:53.602930', 2, 4);
+INSERT INTO `solicitudes_estatus` (`id`, `activo`, `created`, `updated`, `estatus_id`, `solicitudes_vacantes_id`, `motivos_rechazos_id`) VALUES
+	(1, 'N', '2022-10-14 21:33:16.116937', '2022-10-14 21:33:16.116973', 1, 1, NULL),
+	(2, 'N', '2022-10-18 18:15:33.751059', '2022-10-18 18:15:33.751090', 1, 2, NULL),
+	(3, 'Y', '2022-10-21 22:44:52.813549', '2022-10-21 22:44:52.813579', 1, 3, NULL),
+	(4, 'Y', '2022-11-01 16:02:12.314339', '2022-11-01 16:02:12.314372', 2, 1, NULL),
+	(5, 'N', '2022-11-09 15:47:07.482161', '2022-11-09 15:47:07.482228', 1, 4, NULL),
+	(6, 'N', '2022-11-15 15:47:55.027747', '2022-11-15 15:47:55.027778', 2, 2, NULL),
+	(7, 'N', '2022-11-23 22:05:53.601552', '2022-11-23 22:05:53.602930', 2, 4, NULL),
+	(8, 'Y', '2022-12-08 22:12:04.793867', '2022-12-08 22:12:04.797132', 18, 3, NULL),
+	(10, 'Y', '2022-12-08 23:05:27.353451', '2022-12-08 23:05:27.353487', 19, 2, 8),
+	(11, 'Y', '2022-12-08 23:07:28.304872', '2022-12-08 23:07:28.304904', 19, 4, 8);
 /*!40000 ALTER TABLE `solicitudes_estatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.solicitudes_vacantes
@@ -1548,9 +1567,9 @@ CREATE TABLE IF NOT EXISTS `solicitudes_vacantes` (
 -- Volcando datos para la tabla rhdb_dev.solicitudes_vacantes: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `solicitudes_vacantes` DISABLE KEYS */;
 INSERT INTO `solicitudes_vacantes` (`id`, `sueldos`, `comiciones`, `bono`, `garantia`, `activo`, `created`, `updated`, `locaciones_id`, `user_id`, `cantidad`, `periodo_pago`, `puestos_operativos_id`) VALUES
-	(1, 1200.00, 'N', 'Y', 'Y', 'Y', '2022-10-14 21:33:16.107760', '2022-10-14 21:33:16.107796', 2, 3, 3, 'quincenal', 2),
+	(1, 1200.00, 'N', 'Y', 'Y', 'Y', '2022-10-14 21:33:16.107760', '2022-12-08 22:42:35.506618', 2, 3, 3, 'quincenal', 2),
 	(2, 333333.00, 'Y', 'Y', 'Y', 'Y', '2022-10-18 18:15:33.738351', '2022-10-18 18:15:33.738383', 1, 3, 1, 'quincenal', 3),
-	(3, 12000.00, 'Y', 'Y', 'Y', 'Y', '2022-10-21 22:44:52.805657', '2022-10-21 22:44:52.805688', 1, 3, 2, 'quincenal', 1),
+	(3, 12000.00, 'Y', 'Y', 'Y', 'N', '2022-10-21 22:44:52.805657', '2022-12-08 22:12:04.779339', 1, 3, 2, 'quincenal', 1),
 	(4, 12220.00, 'Y', 'Y', 'Y', 'Y', '2022-11-09 15:47:07.472449', '2022-11-09 15:47:07.472482', 3, 3, 1, 'quincenal', 3);
 /*!40000 ALTER TABLE `solicitudes_vacantes` ENABLE KEYS */;
 
