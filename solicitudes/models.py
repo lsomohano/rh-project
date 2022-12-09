@@ -80,7 +80,7 @@ class MotivosRechazos(models.Model):
     class Meta:
         db_table =  "motivos_rechazos"
         verbose_name = 'motivo rechazo'
-        verbose_name_plural = 'motivos rechazos'
+        verbose_name_plural = 'catalogo motivos rechazos'
 
     def __str__(self):
         return self.motivo_rechazo
@@ -178,7 +178,7 @@ class Personas(models.Model):
         ordering = ["-nombre"]
 
     def __str__(self):
-        return self.nombre
+        return self.nombre + ' ' + self.apellido_paterno + ' ' + self.apellido_materno
 
 
 
@@ -195,7 +195,7 @@ class Documentos(models.Model):
     class Meta:
         db_table =  "documentos"
         verbose_name = 'documento'
-        verbose_name_plural = 'documentos'
+        verbose_name_plural = 'Catalogo documentos'
         ordering = ["created"]
 
     def __str__(self):

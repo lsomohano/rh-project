@@ -23,7 +23,7 @@ class LocacionesPuestosInline(admin.StackedInline):
 
 class LocacionesAdmin(admin.ModelAdmin):
     inlines = [ContactosInline,LocacionesPuestosInline]
-    readonly_fields = ('created','updated','created')
+    readonly_fields = ('created','updated')
     list_display = ('locacion','locacion_name','ciudades','zona_ciudad','codigo_postal','created')
 
 
