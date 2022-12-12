@@ -28,6 +28,7 @@ urlpatterns = [
     path('autenticacion/',include('autenticacion.urls')),
     path('solicitudes/',include('solicitudes.urls')),
     path('facturacion/',include('facturacion.urls')),
+    path('microsoft_authentication/', include('microsoft_authentication.urls'))
 ]
 
 urlpatterns+=static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
