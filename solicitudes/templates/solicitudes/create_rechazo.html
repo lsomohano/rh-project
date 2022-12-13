@@ -1,0 +1,46 @@
+{% load static %}
+<div class="modal-content">
+    <!--<div class="overlay">
+        <i class="fas fa-2x fa-sync fa-spin"></i>
+    </div>-->
+    <div class="modal-header">
+      <h4 class="modal-title">{{titles.title_page}} | <small>{{titles.sub_title_page}}</small></h4>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
+      <div class="modal-body">
+        {% if form.errors %}
+          <p style="color: red;">Valida la información capturada</p>
+        {% endif %}
+        
+        {% for field in formulario %}
+          
+          <div class="form-group row justify-content-md-center">
+            <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
+            <div class="col-md-6 col-sm-6 ">
+              {{field}}
+            </div>
+            {{field.errors}}
+          </div>
+          
+        {% endfor %}
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-danger rechazar" data-title="Rechazar candidato" data-content="Esta rechazando un candidato, ¿Desea continuar? ">Aceptar</button>
+      </div>
+    </form>
+  </div>
+  <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
+  <script>
+    $(function () {
+      $('a.rechazar').confirm({
+        //content: "¿Estas seguro de querer eliminar este registro?",
+        icon: 'fas fa-exclamation-triangle',
+        closeIcon: true,
+        closeIconClass: 'fas fa-times',
+      });
+    });
+  </script>

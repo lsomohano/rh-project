@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-1$g&v4bjx9l18_jcdayvu6h%%mu(8=sj8%+dh4awlbje(@d31k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['13.59.117.17','localhost',]
 
 
 # Application definition
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sitetree',
     'solicitudes',
     'facturacion',
+    'microsoft_authentication',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -153,3 +154,16 @@ MESSAGE_TAGS = {
 }
 
 AUTH_USER_MODEL = 'autenticacion.User'
+
+MICROSOFT = {
+    "app_id": "cc51d761-8be9-4e6c-8173-081ceb5dda67",
+    "app_secret": "iiP8Q~5mH2wvlsltmfd8x2WWW3XQgDFqzAZdqb2Q",
+    "redirect": "http://localhost:8000/microsoft_authentication/callback",
+    "scopes": ["user.read"],
+    "authority": "https://login.microsoftonline.com/common",  # or using tenant "https://login.microsoftonline.com/{tenant}",
+    "valid_email_domains": ["avasa.com.mx",],
+    "logout_uri": "http://localhost:8000/autenticacion/log_out"
+}
+
+LOGIN_URL = "/microsoft_authentication/login"
+LOGIN_REDIRECT_URL = "/"  # optional and can be changed to any other url

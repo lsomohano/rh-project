@@ -192,7 +192,15 @@ def deletePuestosOperativos(request, id):
 @login_required(login_url="Log_In")
 def locacionesView(request):
     titles = {"title_page":'Locaciones',"sub_title_page":'Gestión de las locaciones.'}
+
     locaciones = Locaciones.objects.filter(activo='Y')
+    #Se comprueba si el ususario no pertenece al grupo RH Gerentes
+    for group in request.user.groups.all():
+        #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
+        if group.name == 'RH Gerentes':
+            locaciones = locaciones.filter(contactos__user_id=request.user.id)
+            #Locaciones.objects.filter(Q(activo='Y') & Q(contactos__user_id=request.user.id))
+
     return render(request,"configuraciones/locaciones.html",{"titles":titles, "locaciones":locaciones})
 
 

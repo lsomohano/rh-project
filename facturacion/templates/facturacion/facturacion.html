@@ -1,12 +1,15 @@
 {% extends "reclutamiento/base_adminlte.html" %}
 {% load static %}
+{% load user_tags %}
 {% block content %}  
 <div class="card">
   <div class="card-header">
     <!--<h3 class="card-title">Title</h3>-->
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateFacturacion' %}', 'myModal')" >
-      <i class="fas fa-plus-circle"></i> Nueva Facturación
-    </button>
+    {% if request.user|has_group:"RH Admin" or request.user.is_superuser %}
+      <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'CreateFacturacion' %}', 'myModal')" >
+        <i class="fas fa-plus-circle"></i> Nueva Facturación
+      </button>
+    {% endif %}
     <div class="card-tools">
       <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
         <i class="fas fa-minus"></i>

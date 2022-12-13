@@ -60,7 +60,7 @@ class Estatus(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table =  "calogos_estatus"
+        db_table =  "catalogos_estatus"
         verbose_name = 'catalogo estatus'
         verbose_name_plural = 'catalogos estatus'
         ordering = ["created"]
@@ -68,7 +68,22 @@ class Estatus(models.Model):
     def __str__(self):
         return self.estatus
 
+class MotivosRechazos(models.Model):
+    """Modelo que permite generar un catalogo de los motivos de rechazo"""
 
+    motivo_rechazo = models.CharField(max_length=100)
+    activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
+    tipos = models.CharField(max_length=9, choices=[(tag.name, tag.value) for tag in TiposEstatus], default='candidato')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table =  "motivos_rechazos"
+        verbose_name = 'motivo rechazo'
+        verbose_name_plural = 'catalogo motivos rechazos'
+
+    def __str__(self):
+        return self.motivo_rechazo
 
 class SolicitudesVacantes(models.Model):
     """El sistema gestionara las solicitudes de vacantes, cada gerente podra solicitar sus vancantes 
@@ -87,6 +102,26 @@ class SolicitudesVacantes(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+
+    def get_candidatos_contratados(self):
+        candidatos_contratados = 0
+        candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=self.id).filter(candidatosestatus__estatus__estatus='Contratado').exclude(candidatosestatus__estatus__estatus='Rechazado').count()
+        if (candidatos):
+            candidatos_contratados = candidatos
+
+        return candidatos_contratados
+
+    def get_candidatos_total(self):
+        candidatos_total = 0
+        candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=self.id).count()
+        if (candidatos):
+            candidatos_total = candidatos
+
+        return candidatos_total
+
+    def get_estatus(self):
+        estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=self.id, activo='Y')
+        return estatus
     class Meta:
         db_table =  "solicitudes_vacantes"
         verbose_name = 'solicitud vacante'
@@ -104,6 +139,7 @@ class SolicitudesEstatus(models.Model):
 
     solicitudes_vacantes = models.ForeignKey(SolicitudesVacantes, on_delete=models.CASCADE, verbose_name='Solicitud')
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
+    motivos_rechazos = models.ForeignKey(MotivosRechazos, on_delete=models.CASCADE,null=True, blank=True, verbose_name='Motivo de Rechazo')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -142,7 +178,7 @@ class Personas(models.Model):
         ordering = ["-nombre"]
 
     def __str__(self):
-        return self.nombre
+        return self.nombre + ' ' + self.apellido_paterno + ' ' + self.apellido_materno
 
 
 
@@ -159,7 +195,7 @@ class Documentos(models.Model):
     class Meta:
         db_table =  "documentos"
         verbose_name = 'documento'
-        verbose_name_plural = 'documentos'
+        verbose_name_plural = 'Catalogo documentos'
         ordering = ["created"]
 
     def __str__(self):
@@ -178,8 +214,35 @@ class Candidatos(models.Model):
     evaluacion_psicometrica = models.FileField(upload_to='candidatos/personas/',null=True,blank=True)
     referencias = models.FileField(upload_to='candidatos/referencias/',null=True,blank=True, verbose_name='Referencias Laborales')
     tipo_candidato = models.CharField(max_length=8, choices=[(tag.name, tag.value) for tag in TiposCandidatos], default='normal')
+    candidato_sustituye = models.ForeignKey('self', on_delete=models.CASCADE, verbose_name='Candidato Sustituye', null=True, blank=True)
     aceptado = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now=True)
+
+    def get_dias_garantia(self):
+        total_dias = 0
+        ingreso = Entrevistas.objects.get(candidatos_id=self.id, tipo_evento="Ingreso", asistio='Y')
+        if (ingreso):
+            hoy = datetime.datetime.now().date()
+            total_dias = hoy - ingreso.fecha_entrevista.date()
+
+        return total_dias.days
+
+    def get_estatus_actual(self):
+        estatus_actual = ""
+        ea= CandidatosEstatus.objects.get(candidatos_id=self.id,activo='Y')
+        if (ea):
+           estatus_actual = ea.estatus.estatus
+
+        return estatus_actual
+
+    def get_dias_estatus(self):
+        total_dias = 0
+        estatus = CandidatosEstatus.objects.get(candidatos_id=self.id,activo='Y')
+        if (estatus):
+            hoy = datetime.datetime.now().date()
+            total_dias = hoy - estatus.created.date()
+
+        return total_dias.days
 
     class Meta:
         db_table =  "candidatos"
@@ -189,8 +252,7 @@ class Candidatos(models.Model):
 
     def __str__(self):
         return self.personas.nombre + ' ' + self.personas.apellido_paterno + ' ' + self.personas.apellido_materno
-
-
+        
 
 class CandidatosEstatus(models.Model):
     """Esta model gestionara los cambios de estatus de los candidatos, 
@@ -198,6 +260,7 @@ class CandidatosEstatus(models.Model):
 
     candidatos = models.ForeignKey(Candidatos, on_delete=models.CASCADE, verbose_name='Candidatos')
     estatus = models.ForeignKey(Estatus, on_delete=models.CASCADE, verbose_name='Estatus')
+    motivos_rechazos = models.ForeignKey(MotivosRechazos, on_delete=models.CASCADE,null=True, blank=True, verbose_name='Motivo de Rechazo')
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in Activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -249,3 +312,4 @@ class Entrevistas(models.Model):
 
     def __str__(self):
         return self.tipo_evento
+

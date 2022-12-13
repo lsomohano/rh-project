@@ -9,7 +9,7 @@
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <form action="{{request.path}}" method="POST" class="form-horizontal">{% csrf_token %}
+    <form action="{{request.path}}" method="POST" class="form-horizontal" id="form_entrevistas" > {% csrf_token %}
     <div class="modal-body">
         {% if form.errors %}
           <p style="color: red;">Valida la información capturada</p>
@@ -67,7 +67,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="submit" class="btn btn-primary" id="guardar_entrevista" onclick="clickEnviar(this)">Guardar</button>
       </div>
     </div>
     </form>
@@ -75,11 +75,13 @@
   <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
   <script>
     $(document).ready(function() {
-        /*$('#'+input_id).datetimepicker({
-            format: 'YYYY-MM-DD'
-        });*/
 
         calendar("fecha_programada");
         timespiker("hora_programada");
+        
+        if ('{{ request.user.groups.all.0.name }}' == "Proveedores"){
+            $('#form_entrevistas input, select, textarea').attr('disabled', 'disabled');
+            $('#guardar_entrevista').attr('disabled', 'disabled');
+        }
     })
   </script>

@@ -48,7 +48,7 @@
           <a href="#" class="dropdown-item">
             <!-- Message Start -->
             <div class="media">
-              {% if  user.image.url%}
+              {% if user.image %}
                 <img src="{{user.image.url}}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
               {% else %}
                 <img src=" {% static 'reclutamiento/AdminLTE/dist/img/user2-160x160.jpg' %}" alt="User Avatar" class="img-size-50 mr-3 img-circle">
@@ -68,7 +68,7 @@
             <!-- Message End -->
           </a>          
           <div class="dropdown-divider"></div>
-          <a href="{% url 'Log_Out' %}" class="dropdown-item dropdown-footer"><i class="fas fa-sign-out-alt"></i> Cerrar session</a>
+          <a href="/microsoft_authentication/logout" class="dropdown-item dropdown-footer"><i class="fas fa-sign-out-alt"></i> Cerrar session</a>
         </div>
       </li>
       {% else %}

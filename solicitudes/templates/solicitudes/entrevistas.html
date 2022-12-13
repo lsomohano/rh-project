@@ -5,16 +5,28 @@
 <link rel="stylesheet" href="{% static 'reclutamiento/AdminLTE/plugins/fullcalendar/main.css' %}">
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">{{hoy}}</h3>
-
-    <div class="card-tools">
+    <h3 class="card-title"></h3>
+    <form action="{{request.path}}" method="POST" class="form-horizontal" id="post_form">{% csrf_token %}
+        {% for field in formulario %}
+          <div class="form-group row justify-content-md-right">
+            <label class="col-form-label col-md-1 col-sm-1" for="{{ field.id_for_label }}">{{field.label}}</label>
+            <div class="col-md-3 col-sm-3 ">
+              {{field}}
+            </div>
+            {{field.errors}}
+          </div>
+        {% endfor %}
+    </form>
+    {{hoy}}
+    <!--<div class="card-tools">
+      
       <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
         <i class="fas fa-minus"></i>
       </button>
       <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
         <i class="fas fa-times"></i>
       </button>
-    </div>
+    </div>-->
   </div>
   <div class="card-body p-0" >
     <div class="row justify-content-md-center">
@@ -34,7 +46,11 @@
 <!-- fullCalendar -->
 <script src="{% static 'reclutamiento/AdminLTE/plugins/fullcalendar/main.js' %}"></script>
 <script src="{% static 'reclutamiento/AdminLTE/plugins/fullcalendar/locales/es-us.js' %}"></script>
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
+  $("#id_tipo_evento").change(function(){
+    $('#post_form').submit();
+  })
     $(function () {
 
         /* initialize the external events

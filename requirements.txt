@@ -4,3 +4,4 @@ django-mysql==4.7.1
 django-crispy-forms
 django-sitetree==1.17.3
 Pillow
+msal>=1.9.0

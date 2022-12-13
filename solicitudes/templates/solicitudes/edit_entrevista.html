@@ -8,7 +8,7 @@
 
 <div class="card">
   <div class="card-header">
-    <h3 class="card-title">Información del Candidato</h3>
+    <h3 class="card-title">{{candidato}} - {{candidato.personas.rfc}} - {{candidato.get_estatus_actual}}</h3>
 
     <div class="card-tools">
       <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
@@ -305,7 +305,7 @@
                 <i class="fas fa-times"></i> Cancelar
               </a>
               <a href="#" class="btn btn-info btn-sm" onclick="stepper.previous()"><i class="fas fa-step-backward"></i> Previous</a>
-              <button type="submit" class="btn btn-primary btn-sm pull-right"><i class="fas fa-save"></i> Guardar</button>
+              <button type="submit" class="btn btn-primary btn-sm pull-right" id="guardar_candidato"><i class="fas fa-save"></i> Guardar</button>
             </div>
           {% endif %}
 
@@ -318,10 +318,17 @@
   <!-- /.card-footer-->
 </div>
 <script src="{% static 'reclutamiento/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js' %}"></script>
+<script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
   $(function () {
     calendar("fecha_nacimiento")
-    timepicker("hora_programada")
+    timespiker("hora_programada")
+
+    
+    if ('{{candidato.get_estatus_actual}}' == "Contratado" || '{{candidato.get_estatus_actual}}' == "Facturado" || '{{candidato.get_estatus_actual}}' == "Rechazado"){
+      $('#post_form input, select, textarea').attr('disabled', 'disabled');
+      $('#guardar_candidato').attr('disabled', 'disabled');
+    }
   })
 
   $(function () {

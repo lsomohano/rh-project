@@ -1,7 +1,7 @@
 {% extends "reclutamiento/base_adminlte.html" %}
 {% load static %}
+{% load user_tags %}
 {% block content %} 
-
 <div class="container-fluid">
     <div class="row">
       <div class="col-12">
@@ -58,11 +58,12 @@
             </div>
             <!-- /.col -->
             <div class="col-sm-2 invoice-col">
-              {% if fc <= 0 %}          
-                <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddCandidatos' facturacion.proveedores.id facturacion.id facturacion.fecha_ini facturacion.fecha_fin %}', 'myModal')" >
-                  <i class="fas fa-edit"></i> Agregar Candidatos
-                </button>
-
+              {% if fc <= 0 %}       
+                {% if request.user|has_group:"RH Admin" or request.user.is_superuser %}   
+                  <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddCandidatos' facturacion.proveedores.id facturacion.id facturacion.fecha_ini facturacion.fecha_fin %}', 'myModal')" >
+                    <i class="fas fa-edit"></i> Agregar Candidatos
+                  </button>
+                {% endif %}
               {% elif not facturacion.pre_factura_pdf  %}
                 <button class="btn btn-primary btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" onclick="cargaModal('{% url 'AddPrefactura' facturacion.id %}', 'myModal')" >
                   <i class="fas fa-edit"></i> Agregar Pre Factura
@@ -72,9 +73,11 @@
                   <i class="fas fa-edit"></i> Agregar Factura
                 </button>
               {% elif facturacion.pagado == 'N' %}
-                <a href="{% url 'PaymentFactura' facturacion.id %}" class="btn btn-danger btn-xs confirmar_pago" data-title="Confirmación del pago" data-content="Esta por confirmar el pago de una factura, ¿Desea continuar? " >
-                  <i class="fas fa-check"></i> Confirmar Pago
-                </a>
+                {% if request.user|has_group:"RH Admin" or request.user.is_superuser %}
+                  <a href="{% url 'PaymentFactura' facturacion.id %}" class="btn btn-danger btn-xs confirmar_pago" data-title="Confirmación del pago" data-content="Esta por confirmar el pago de una factura, ¿Desea continuar? " >
+                    <i class="fas fa-check"></i> Confirmar Pago
+                  </a>
+                {% endif %}
               {% else %}
                 <button class="btn btn-success btn-sm btn-block"  >
                   <i class="fas fa-check-double"></i> Pagado
@@ -98,7 +101,7 @@
                         <th>Locación</th>
                         <th>Puesto</th>
                         <th>Estatus</th>
-                        <th>Acciones</th>
+                        <!--<th>Acciones</th>-->
                       </tr>
                     </thead>
                     <tbody>
@@ -115,11 +118,11 @@
                               <i class="fas fa-thumbs-up"></i> {{candidato.estatus}}
                             </button>
                           </td>
-                          <td>
+                          <!--<td>
                             <a href="#" class="btn btn-danger btn-xs " data-title="Rechazar candidato" data-content="Esta descartando al candidato {{candidato}}, ¿Desea continuar? " >
                               <i class="fas fa-thumbs-up"></i> Pagado
                             </a>
-                          </td>
+                          </td>-->
                         </tr>
                       {% endfor %}
                     </tbody>

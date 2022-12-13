@@ -41,13 +41,35 @@
   </div>
   <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
   <script>
+    $(document).ready(function() {
+      var id_locaciones = $('#id_locaciones').val();
+      var id_puestos_operativos = $('#id_puestos_operativos').val();
+      var id_cantidad = $('#id_cantidad').val();
+
+      if (id_cantidad != "" && id_puestos_operativos != ""){
+        $.ajax({
+            type: "GET",
+            url:  "/solicitudes/staff_autorizado/"+ id_locaciones +"/" + id_puestos_operativos,
+            dataType: 'json',
+            success: function(data) {
+                alert(data[0])
+                if (typeof data[0]!== 'undefined' && id_cantidad <= data[0]["fields"]["staf_autorizado"]){
+                  $('#id_cantidad').attr({'max':data[0]["fields"]["staf_autorizado"]});
+                }else{
+                  $('#id_cantidad').attr({'max':id_cantidad});
+                }
+            }
+        });
+      }
+    })
 
     $("#id_puestos_operativos").change(function(){
+
       var id_locaciones = $('#id_locaciones').val();
       var id_puestos_operativos = $('#id_puestos_operativos').val();
       $.ajax({
           type: "GET",
-          url:  "staff_autorizado/"+ id_locaciones +"/" + id_puestos_operativos  ,
+          url:  "/solicitudes/staff_autorizado/"+ id_locaciones +"/" + id_puestos_operativos  ,
           dataType: 'json',
           success: function(data) {
               //alert
@@ -60,6 +82,6 @@
               }
           }
       });
-      //$('#id_staf_autorizado').attr({'max': calcula_max()})
+      
     });
   </script>

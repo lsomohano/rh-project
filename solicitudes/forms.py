@@ -1,6 +1,6 @@
 from curses.ascii import SO
 from django import forms
-from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes
+from .models import Candidatos, Entrevistas, Estatus, Personas, SolicitudesVacantes, CandidatosEstatus, SolicitudesEstatus, MotivosRechazos
 from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locaciones
 
 
@@ -16,6 +16,7 @@ class SolicitudesForm(forms.ModelForm):
         widgets = {
             'user': forms.HiddenInput(),
         }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -121,14 +122,17 @@ class PersonasForm(forms.ModelForm):
         
         
 
-class CandidatosForm(forms.ModelForm):  
+class CandidatosForm(forms.ModelForm):
+
+    candidato_sustituye = forms.ModelChoiceField(queryset=Candidatos.objects.all(), empty_label="-- Candidato a sustituir --", to_field_name="id")
 
     class Meta:
         model = Candidatos
-        fields = ['tipo_candidato','cv_solicitud','reporte_entrevista','evaluacion_psicometrica','referencias','solicitudes_vacantes','user']
+        fields = ['tipo_candidato','cv_solicitud','reporte_entrevista','evaluacion_psicometrica','referencias','solicitudes_vacantes','candidato_sustituye','user']
         
+
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(CandidatosForm, self).__init__(*args, **kwargs)
 
         self.fields['tipo_candidato'].widget.attrs.update({
             'class':'form-control select2bs4',
@@ -145,11 +149,21 @@ class CandidatosForm(forms.ModelForm):
         self.fields['evaluacion_psicometrica'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'evaluacion_psicometrica',
+            'required': False,
         })
         self.fields['referencias'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'referencias',
+            'required': False,
         })
+        self.fields['candidato_sustituye'].required = False
+        self.fields['candidato_sustituye'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Candidato a sustituir',
+            'disabled':'disabled',
+            'required': False,
+        })
+
 
 class EntrevistasForm(forms.ModelForm):  
 
@@ -303,3 +317,54 @@ class IngresoForm(forms.ModelForm):
             'class':'form-control',
             'placeholder':'Asistio',
         })
+
+
+class EstatusCandidatosForm(forms.ModelForm):   
+
+    motivos_rechazos = forms.ModelChoiceField(queryset=MotivosRechazos.objects.filter(tipos='candidato'), empty_label="-- Elija un motivo --", to_field_name="id")
+
+    class Meta:
+        model = CandidatosEstatus
+        fields = ['motivos_rechazos',]
+              
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['motivos_rechazos'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Motivos de Rechazo',
+        })
+
+class EstatusSolicitudesForm(forms.ModelForm):    
+    motivos_rechazos = forms.ModelChoiceField(queryset=MotivosRechazos.objects.filter(tipos='solicitud'), empty_label="-- Elija un motivo --", to_field_name="id")
+
+    class Meta:
+        model = SolicitudesEstatus
+        fields = ['motivos_rechazos',]
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['motivos_rechazos'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Motivos de Rechazo',
+        })
+
+class AgendaForm(forms.ModelForm):    
+    #tipo_evento = forms.ModelChoiceField(queryset=MotivosRechazos.objects.filter(tipos='solicitud'), empty_label="-- Elija un motivo --", to_field_name="id")
+
+    class Meta:
+        model = Entrevistas
+        fields = ['tipo_evento',]
+       
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['tipo_evento'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Motivos de Rechazo',
+        })
+        

@@ -36,11 +36,11 @@ CREATE TABLE IF NOT EXISTS `autenticacion_user` (
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.autenticacion_user: ~4 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.autenticacion_user: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `autenticacion_user` DISABLE KEYS */;
 INSERT INTO `autenticacion_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`, `phone`, `image`) VALUES
-	(1, 'pbkdf2_sha256$260000$zChegL9Py9mD5sYor5an6L$4VpnRU3Y8OzM6jebJ8ED5OurwJjDIuZucIHMMdSVxPQ=', '2022-11-23 22:00:53.589559', 1, 'lsomohano', 'Leonel', 'Somohano Carmona', 'lsomohano20@hotmail.com', 1, 1, '2022-10-07 17:35:44.000000', NULL, 'users/219983.png'),
-	(2, 'pbkdf2_sha256$260000$d3f2AFIk5gCVmf6keiNzOS$ddSlf/TG6G/QBBNLYqbzKwiMhHZUkfCwNmVlPNSb4vc=', '2022-10-18 18:29:54.077752', 0, 'lsomohano20', 'Gerente', 'Ciudad', 'lsomohano20@gmail.com', 0, 1, '2022-10-07 17:54:59.000000', '985471245', 'users/img.jpg'),
+	(1, 'pbkdf2_sha256$260000$zChegL9Py9mD5sYor5an6L$4VpnRU3Y8OzM6jebJ8ED5OurwJjDIuZucIHMMdSVxPQ=', '2022-12-02 23:06:21.143524', 1, 'lsomohano', 'Leonel', 'Somohano Carmona', 'lsomohano20@hotmail.com', 1, 1, '2022-10-07 17:35:44.000000', NULL, 'users/219983.png'),
+	(2, 'pbkdf2_sha256$260000$kW5j5pJ1SAM09GvRfjvwzq$/DAvN9pqu3+0WRZBDzsOuAF2O+usbpj4+sGbozBB3kk=', '2022-12-06 17:05:11.864496', 0, 'lsomohano20', 'Proveedor', 'Veracruz', 'lsomohano20@gmail.com', 0, 1, '2022-10-07 17:54:59.000000', '985471245', 'users/img.jpg'),
 	(3, 'pbkdf2_sha256$260000$lDnXtUM4SllivZapSyTpKw$xhcOm+1v9d4uG9yOcQU0izAMYVWdbAuwWC88mpdaUgc=', '2022-11-28 16:36:54.000000', 0, 'gerente.ver', 'Gerente', 'Veracruz', 'gveracruz@mail.com', 0, 1, '2022-10-13 21:25:08.000000', '741258963', 'users/img_dF0xm2b.jpg'),
 	(4, 'pbkdf2_sha256$260000$DLbQdn3aMH9ScCkB32XwBQ$Zq8zybYXJn3AfhDGrmWcZdx5oeRLkD7b1hN4n4KliSI=', '2022-11-28 22:10:44.000000', 0, 'corporativo.rh', 'RH', 'Corporativo', 'corporativo@avasa.com.mx', 0, 1, '2022-11-28 22:03:40.000000', '748547842', 'users/QR.jpg');
 /*!40000 ALTER TABLE `autenticacion_user` ENABLE KEYS */;
@@ -55,11 +55,12 @@ CREATE TABLE IF NOT EXISTS `autenticacion_user_groups` (
   KEY `autenticacion_user_groups_group_id_ae33056f_fk_auth_group_id` (`group_id`),
   CONSTRAINT `autenticacion_user_g_user_id_8ed1f908_fk_autentica` FOREIGN KEY (`user_id`) REFERENCES `autenticacion_user` (`id`),
   CONSTRAINT `autenticacion_user_groups_group_id_ae33056f_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.autenticacion_user_groups: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.autenticacion_user_groups: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `autenticacion_user_groups` DISABLE KEYS */;
 INSERT INTO `autenticacion_user_groups` (`id`, `user_id`, `group_id`) VALUES
+	(3, 2, 2),
 	(1, 3, 1),
 	(2, 4, 3);
 /*!40000 ALTER TABLE `autenticacion_user_groups` ENABLE KEYS */;
@@ -106,9 +107,9 @@ CREATE TABLE IF NOT EXISTS `auth_group_permissions` (
   KEY `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` (`permission_id`),
   CONSTRAINT `auth_group_permissio_permission_id_84c5c92e_fk_auth_perm` FOREIGN KEY (`permission_id`) REFERENCES `auth_permission` (`id`),
   CONSTRAINT `auth_group_permissions_group_id_b120cbf9_fk_auth_group_id` FOREIGN KEY (`group_id`) REFERENCES `auth_group` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.auth_group_permissions: ~86 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.auth_group_permissions: ~83 rows (aproximadamente)
 /*!40000 ALTER TABLE `auth_group_permissions` DISABLE KEYS */;
 INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES
 	(87, 1, 32),
@@ -117,10 +118,11 @@ INSERT INTO `auth_group_permissions` (`id`, `group_id`, `permission_id`) VALUES
 	(84, 1, 104),
 	(85, 1, 108),
 	(4, 2, 89),
-	(5, 2, 90),
+	(90, 2, 90),
 	(6, 2, 93),
 	(7, 2, 94),
 	(3, 2, 104),
+	(92, 2, 112),
 	(8, 3, 21),
 	(9, 3, 22),
 	(10, 3, 23),
@@ -208,9 +210,9 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=117 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.auth_permission: ~116 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.auth_permission: ~104 rows (aproximadamente)
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
 INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
 	(1, 'Can add log entry', 1, 'add_logentry'),
@@ -328,41 +330,12 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 	(113, 'Can add candidatos', 29, 'add_facturascandidatos'),
 	(114, 'Can change candidatos', 29, 'change_facturascandidatos'),
 	(115, 'Can delete candidatos', 29, 'delete_facturascandidatos'),
-	(116, 'Can view candidatos', 29, 'view_facturascandidatos');
+	(116, 'Can view candidatos', 29, 'view_facturascandidatos'),
+	(117, 'Can add motivo rechazo', 30, 'add_motivosrechazos'),
+	(118, 'Can change motivo rechazo', 30, 'change_motivosrechazos'),
+	(119, 'Can delete motivo rechazo', 30, 'delete_motivosrechazos'),
+	(120, 'Can view motivo rechazo', 30, 'view_motivosrechazos');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
-
--- Volcando estructura para tabla rhdb_dev.calogos_estatus
-CREATE TABLE IF NOT EXISTS `calogos_estatus` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `estatus` varchar(50) NOT NULL,
-  `descripcion` longtext NOT NULL,
-  `activo` varchar(1) NOT NULL,
-  `tipos` varchar(9) NOT NULL,
-  `created` datetime(6) NOT NULL,
-  `updated` datetime(6) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
-
--- Volcando datos para la tabla rhdb_dev.calogos_estatus: ~16 rows (aproximadamente)
-/*!40000 ALTER TABLE `calogos_estatus` DISABLE KEYS */;
-INSERT INTO `calogos_estatus` (`id`, `estatus`, `descripcion`, `activo`, `tipos`, `created`, `updated`) VALUES
-	(1, 'Abierta', 'Cuando se crea y no tiene candidatos cargados. X', 'Y', 'solicitud', '2022-10-14 16:26:04.928690', '2022-10-14 16:26:04.928755'),
-	(2, 'En proceso', 'Cuando se carga al primer candidato.', 'Y', 'solicitud', '2022-10-14 16:29:26.287719', '2022-10-14 16:29:26.287762'),
-	(3, 'Cubierta', 'Cuando se cubrieron todas las vacantes de la solicitud', 'N', 'solicitud', '2022-10-14 18:38:28.773754', '2022-10-14 18:38:28.773782'),
-	(4, 'En garantía', 'Cuando se contrata al candidato y esta en periodo garantía.', 'N', 'candidato', '2022-10-14 18:39:19.030780', '2022-10-14 18:39:19.030812'),
-	(5, 'Facturado', 'Cuando el candidato cumple el periodo de garantía y se paga la factura.', 'N', 'solicitud', '2022-10-14 18:39:47.568093', '2022-10-14 18:39:47.568122'),
-	(6, 'No cubierta', 'Cuando el proveedor no cumplió con el cubrimiento.', 'N', 'solicitud', '2022-10-14 18:40:13.850368', '2022-10-14 18:40:13.850395'),
-	(7, 'No garantía', 'Cuando ya se utilizo la garantia correspondiente a la vacante a cubrir', 'N', 'solicitud', '2022-10-14 18:40:32.932262', '2022-10-14 18:40:32.932297'),
-	(8, 'Postulado', 'El candidato a agregado al proceso', 'Y', 'candidato', '2022-10-21 17:21:01.319993', '2022-10-21 17:21:01.320025'),
-	(9, 'Programado', 'El candidato fue programado para entrevista', 'Y', 'candidato', '2022-10-21 17:22:13.267249', '2022-10-21 17:22:13.267283'),
-	(10, 'Entrevistado', 'El candidato fue entrevistado', 'Y', 'candidato', '2022-10-21 17:23:12.487657', '2022-10-21 17:23:12.487691'),
-	(11, 'Aceptado', 'El candidato fue aceptado para cubrir la posición', 'Y', 'candidato', '2022-11-07 20:59:51.953431', '2022-11-07 20:59:51.953467'),
-	(12, 'Rechazado', 'El candidato fue rechazado del proceso.', 'Y', 'candidato', '2022-11-07 21:00:52.199968', '2022-11-07 21:00:52.200002'),
-	(13, 'Contratación', 'El candidato esta en proceso de contratación', 'Y', 'candidato', '2022-11-07 21:01:46.241432', '2022-11-07 21:01:46.241468'),
-	(14, 'Contratado', 'El candidato fue contratado.', 'Y', 'candidato', '2022-11-07 21:02:52.563479', '2022-11-07 21:02:52.563510'),
-	(15, 'Facturación', 'El candidato fue ingresado a un reporte de facturación.', 'Y', 'candidato', '2022-11-07 21:05:06.183314', '2022-11-17 14:25:07.527059'),
-	(16, 'Facturado', 'El proveedor ingreso una factura al proceso de facturación don de fue agregado el candidato.', 'Y', 'candidato', '2022-11-17 14:22:02.953355', '2022-11-17 14:23:17.771093');
-/*!40000 ALTER TABLE `calogos_estatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.candidatos
 CREATE TABLE IF NOT EXISTS `candidatos` (
@@ -376,25 +349,33 @@ CREATE TABLE IF NOT EXISTS `candidatos` (
   `user_id` bigint(20) NOT NULL,
   `cv_solicitud` varchar(100) DEFAULT NULL,
   `referencias` varchar(100) DEFAULT NULL,
+  `tipo_candidato` varchar(8) NOT NULL,
+  `candidato_sustituye_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `candidatos_personas_id_fb5da2ac_fk_personas_id` (`personas_id`),
   KEY `candidatos_solicitudes_vacantes_792afa3a_fk_solicitud` (`solicitudes_vacantes_id`),
   KEY `candidatos_user_id_d2e3a668_fk_autenticacion_user_id` (`user_id`),
+  KEY `candidatos_candidato_sustituye_id_832cb114_fk_candidatos_id` (`candidato_sustituye_id`),
+  CONSTRAINT `candidatos_candidato_sustituye_id_832cb114_fk_candidatos_id` FOREIGN KEY (`candidato_sustituye_id`) REFERENCES `candidatos` (`id`),
   CONSTRAINT `candidatos_personas_id_fb5da2ac_fk_personas_id` FOREIGN KEY (`personas_id`) REFERENCES `personas` (`id`),
   CONSTRAINT `candidatos_solicitudes_vacantes_792afa3a_fk_solicitud` FOREIGN KEY (`solicitudes_vacantes_id`) REFERENCES `solicitudes_vacantes` (`id`),
   CONSTRAINT `candidatos_user_id_d2e3a668_fk_autenticacion_user_id` FOREIGN KEY (`user_id`) REFERENCES `autenticacion_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.candidatos: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.candidatos: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `candidatos` DISABLE KEYS */;
-INSERT INTO `candidatos` (`id`, `reporte_entrevista`, `evaluacion_psicometrica`, `aceptado`, `created`, `personas_id`, `solicitudes_vacantes_id`, `user_id`, `cv_solicitud`, `referencias`) VALUES
-	(1, 'candidatos/personas/2__FDe3NEi.pdf', 'candidatos/personas/1__m3ZnRWe.pdf', 'Y', '2022-11-01 16:02:12.254130', 1, 1, 1, 'candidatos/personas/cv/3__z7kU5rZ.pdf', 'candidatos/referencias/3_.pdf'),
-	(2, 'candidatos/personas/2__9s1BSuj.pdf', 'candidatos/personas/1__Tcc1dOp.pdf', 'Y', '2022-11-09 23:26:22.466820', 2, 1, 1, 'candidatos/personas/cv/carta.pdf', 'candidatos/referencias/3__rG6oUSF.pdf'),
-	(3, 'candidatos/personas/3__uchQv8v.pdf', 'candidatos/personas/1__CBBx7DE.pdf', 'Y', '2022-11-09 23:27:57.427084', 3, 1, 1, 'candidatos/personas/cv/2_.pdf', 'candidatos/referencias/carta.pdf'),
-	(4, 'candidatos/personas/3__ZZCPDjo.pdf', 'candidatos/personas/2__ZpKFAQx.pdf', 'Y', '2022-11-20 00:34:27.464960', 4, 1, 1, 'candidatos/personas/cv/1__EmNBpXq.pdf', 'candidatos/referencias/carta_JACbvH7.pdf'),
-	(5, 'candidatos/personas/3__is9Sg0b.pdf', 'candidatos/personas/2__fK2H3V4.pdf', 'Y', '2022-11-23 22:29:51.349844', 5, 2, 1, 'candidatos/personas/cv/1__YijSJkb.pdf', 'candidatos/referencias/carta_9vNlDqe.pdf'),
-	(6, 'candidatos/personas/2__Gx52ImX.pdf', 'candidatos/personas/3__El0ILAR.pdf', 'Y', '2022-11-23 22:18:07.043417', 6, 4, 1, 'candidatos/personas/cv/1__Hx4Em0c.pdf', 'candidatos/referencias/carta_sCJBOl1.pdf'),
-	(7, 'candidatos/personas/3__i33fCeN.pdf', 'candidatos/personas/carta.pdf', 'Y', '2022-11-28 15:49:27.461931', 7, 1, 1, 'candidatos/personas/cv/1__ud3ryLQ.pdf', 'candidatos/referencias/3__saAghO1.pdf');
+INSERT INTO `candidatos` (`id`, `reporte_entrevista`, `evaluacion_psicometrica`, `aceptado`, `created`, `personas_id`, `solicitudes_vacantes_id`, `user_id`, `cv_solicitud`, `referencias`, `tipo_candidato`, `candidato_sustituye_id`) VALUES
+	(1, 'candidatos/personas/2__FDe3NEi.pdf', 'candidatos/personas/1__m3ZnRWe.pdf', 'Y', '2022-11-01 16:02:12.254130', 1, 1, 1, 'candidatos/personas/cv/3__z7kU5rZ.pdf', 'candidatos/referencias/3_.pdf', 'normal', NULL),
+	(2, 'candidatos/personas/2__9s1BSuj.pdf', 'candidatos/personas/1__Tcc1dOp.pdf', 'Y', '2022-11-09 23:26:22.466820', 2, 1, 1, 'candidatos/personas/cv/carta.pdf', 'candidatos/referencias/3__rG6oUSF.pdf', 'normal', NULL),
+	(3, 'candidatos/personas/3__uchQv8v.pdf', 'candidatos/personas/1__CBBx7DE.pdf', 'Y', '2022-11-09 23:27:57.427084', 3, 1, 1, 'candidatos/personas/cv/2_.pdf', 'candidatos/referencias/carta.pdf', 'normal', NULL),
+	(4, 'candidatos/personas/3__ZZCPDjo.pdf', 'candidatos/personas/2__ZpKFAQx.pdf', 'Y', '2022-11-20 00:34:27.464960', 4, 1, 1, 'candidatos/personas/cv/1__EmNBpXq.pdf', 'candidatos/referencias/carta_JACbvH7.pdf', 'normal', NULL),
+	(5, 'candidatos/personas/3__is9Sg0b.pdf', 'candidatos/personas/2__fK2H3V4.pdf', 'Y', '2022-11-23 22:29:51.349844', 5, 2, 1, 'candidatos/personas/cv/1__YijSJkb.pdf', 'candidatos/referencias/carta_9vNlDqe.pdf', 'normal', NULL),
+	(6, 'candidatos/personas/2__Gx52ImX.pdf', 'candidatos/personas/3__El0ILAR.pdf', 'Y', '2022-11-23 22:18:07.043417', 6, 4, 1, 'candidatos/personas/cv/1__Hx4Em0c.pdf', 'candidatos/referencias/carta_sCJBOl1.pdf', 'normal', NULL),
+	(7, 'candidatos/personas/3__i33fCeN.pdf', 'candidatos/personas/carta.pdf', 'Y', '2022-11-29 18:31:52.622400', 7, 1, 1, 'candidatos/personas/cv/1__ud3ryLQ.pdf', 'candidatos/referencias/3__saAghO1.pdf', 'normal', NULL),
+	(8, 'candidatos/personas/2__31tgcUl.pdf', 'candidatos/personas/1__RPfaMCW.pdf', 'Y', '2022-12-06 17:45:14.149559', 8, 1, 2, 'candidatos/personas/cv/1__GyzEcEB.pdf', 'candidatos/referencias/carta_kHtyAaK.pdf', 'normal', 3),
+	(9, '', '', 'Y', '2022-12-07 17:02:19.793374', 9, 1, 1, '', '', 'garantia', NULL),
+	(10, '', '', 'Y', '2022-12-07 18:47:52.406628', 10, 1, 1, '', '', 'normal', NULL),
+	(11, '', '', 'Y', '2022-12-07 19:14:46.497131', 11, 1, 1, '', '', 'normal', NULL);
 /*!40000 ALTER TABLE `candidatos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.candidatos_documentos
@@ -409,9 +390,9 @@ CREATE TABLE IF NOT EXISTS `candidatos_documentos` (
   KEY `candidatos_documentos_documentos_id_6a740004_fk_documentos_id` (`documentos_id`),
   CONSTRAINT `candidatos_documentos_candidatos_id_14bb9dec_fk_candidatos_id` FOREIGN KEY (`candidatos_id`) REFERENCES `candidatos` (`id`),
   CONSTRAINT `candidatos_documentos_documentos_id_6a740004_fk_documentos_id` FOREIGN KEY (`documentos_id`) REFERENCES `documentos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=147 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.candidatos_documentos: ~90 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.candidatos_documentos: ~132 rows (aproximadamente)
 /*!40000 ALTER TABLE `candidatos_documentos` DISABLE KEYS */;
 INSERT INTO `candidatos_documentos` (`id`, `check_proveedor`, `check_locacion`, `candidatos_id`, `documentos_id`) VALUES
 	(1, 'Y', 'Y', 1, 1),
@@ -490,20 +471,76 @@ INSERT INTO `candidatos_documentos` (`id`, `check_proveedor`, `check_locacion`, 
 	(74, 'Y', 'Y', 6, 16),
 	(75, 'N', 'Y', 6, 6),
 	(76, 'N', 'Y', 6, 17),
-	(77, 'Y', 'N', 7, 1),
-	(78, 'Y', 'N', 7, 2),
-	(79, 'Y', 'N', 7, 3),
-	(80, 'Y', 'N', 7, 4),
-	(81, 'Y', 'N', 7, 5),
-	(82, 'Y', 'N', 7, 8),
-	(83, 'Y', 'N', 7, 9),
-	(84, 'Y', 'N', 7, 10),
-	(85, 'Y', 'N', 7, 11),
-	(86, 'Y', 'N', 7, 12),
-	(87, 'Y', 'N', 7, 13),
-	(88, 'Y', 'N', 7, 14),
-	(89, 'Y', 'N', 7, 15),
-	(90, 'Y', 'N', 7, 16);
+	(77, 'Y', 'Y', 7, 1),
+	(78, 'Y', 'Y', 7, 2),
+	(79, 'Y', 'Y', 7, 3),
+	(80, 'Y', 'Y', 7, 4),
+	(81, 'Y', 'Y', 7, 5),
+	(82, 'Y', 'Y', 7, 8),
+	(83, 'Y', 'Y', 7, 9),
+	(84, 'Y', 'Y', 7, 10),
+	(85, 'Y', 'Y', 7, 11),
+	(86, 'Y', 'Y', 7, 12),
+	(87, 'Y', 'Y', 7, 13),
+	(88, 'Y', 'Y', 7, 14),
+	(89, 'Y', 'Y', 7, 15),
+	(90, 'Y', 'Y', 7, 16),
+	(91, 'Y', 'Y', 8, 1),
+	(92, 'Y', 'Y', 8, 2),
+	(93, 'Y', 'Y', 8, 3),
+	(94, 'Y', 'Y', 8, 4),
+	(95, 'Y', 'Y', 8, 5),
+	(96, 'Y', 'Y', 8, 8),
+	(97, 'Y', 'Y', 8, 9),
+	(98, 'Y', 'Y', 8, 10),
+	(99, 'Y', 'Y', 8, 11),
+	(100, 'Y', 'Y', 8, 12),
+	(101, 'Y', 'Y', 8, 13),
+	(102, 'Y', 'Y', 8, 14),
+	(103, 'Y', 'Y', 8, 15),
+	(104, 'Y', 'Y', 8, 16),
+	(105, 'Y', 'N', 9, 1),
+	(106, 'Y', 'N', 9, 2),
+	(107, 'Y', 'N', 9, 3),
+	(108, 'Y', 'N', 9, 4),
+	(109, 'Y', 'N', 9, 5),
+	(110, 'Y', 'N', 9, 8),
+	(111, 'Y', 'N', 9, 9),
+	(112, 'Y', 'N', 9, 10),
+	(113, 'Y', 'N', 9, 11),
+	(114, 'Y', 'N', 9, 12),
+	(115, 'Y', 'N', 9, 13),
+	(116, 'Y', 'N', 9, 14),
+	(117, 'Y', 'N', 9, 15),
+	(118, 'Y', 'N', 9, 16),
+	(119, 'Y', 'N', 10, 1),
+	(120, 'Y', 'N', 10, 2),
+	(121, 'Y', 'N', 10, 3),
+	(122, 'Y', 'N', 10, 4),
+	(123, 'Y', 'N', 10, 5),
+	(124, 'Y', 'N', 10, 8),
+	(125, 'Y', 'N', 10, 9),
+	(126, 'Y', 'N', 10, 10),
+	(127, 'Y', 'N', 10, 11),
+	(128, 'Y', 'N', 10, 12),
+	(129, 'Y', 'N', 10, 13),
+	(130, 'Y', 'N', 10, 14),
+	(131, 'Y', 'N', 10, 15),
+	(132, 'Y', 'N', 10, 16),
+	(133, 'Y', 'N', 11, 1),
+	(134, 'Y', 'N', 11, 2),
+	(135, 'Y', 'N', 11, 3),
+	(136, 'Y', 'N', 11, 4),
+	(137, 'Y', 'N', 11, 5),
+	(138, 'Y', 'N', 11, 8),
+	(139, 'Y', 'N', 11, 9),
+	(140, 'Y', 'N', 11, 10),
+	(141, 'Y', 'N', 11, 11),
+	(142, 'Y', 'N', 11, 12),
+	(143, 'Y', 'N', 11, 13),
+	(144, 'Y', 'N', 11, 14),
+	(145, 'Y', 'N', 11, 15),
+	(146, 'Y', 'N', 11, 16);
 /*!40000 ALTER TABLE `candidatos_documentos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.candidatos_estatus
@@ -514,60 +551,129 @@ CREATE TABLE IF NOT EXISTS `candidatos_estatus` (
   `updated` datetime(6) NOT NULL,
   `candidatos_id` bigint(20) NOT NULL,
   `estatus_id` bigint(20) NOT NULL,
+  `motivos_rechazos_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `candidatos_estatus_candidatos_id_bc6832ac_fk_candidatos_id` (`candidatos_id`),
   KEY `candidatos_estatus_estatus_id_c4dbeaf3_fk_calogos_estatus_id` (`estatus_id`),
+  KEY `candidatos_estatus_motivos_rechazos_id_92ebef9e_fk_motivos_r` (`motivos_rechazos_id`),
   CONSTRAINT `candidatos_estatus_candidatos_id_bc6832ac_fk_candidatos_id` FOREIGN KEY (`candidatos_id`) REFERENCES `candidatos` (`id`),
-  CONSTRAINT `candidatos_estatus_estatus_id_c4dbeaf3_fk_calogos_estatus_id` FOREIGN KEY (`estatus_id`) REFERENCES `calogos_estatus` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
+  CONSTRAINT `candidatos_estatus_estatus_id_c4dbeaf3_fk_calogos_estatus_id` FOREIGN KEY (`estatus_id`) REFERENCES `catalogos_estatus` (`id`),
+  CONSTRAINT `candidatos_estatus_motivos_rechazos_id_92ebef9e_fk_motivos_r` FOREIGN KEY (`motivos_rechazos_id`) REFERENCES `motivos_rechazos` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.candidatos_estatus: ~43 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.candidatos_estatus: ~72 rows (aproximadamente)
 /*!40000 ALTER TABLE `candidatos_estatus` DISABLE KEYS */;
-INSERT INTO `candidatos_estatus` (`id`, `activo`, `created`, `updated`, `candidatos_id`, `estatus_id`) VALUES
-	(1, 'N', '2022-11-01 16:02:12.258358', '2022-11-01 16:02:12.258389', 1, 8),
-	(2, 'N', '2022-11-03 12:37:08.000000', '2022-11-03 12:37:09.000000', 1, 9),
-	(3, 'N', '2022-11-08 21:19:34.025104', '2022-11-08 21:19:34.025135', 1, 8),
-	(4, 'N', '2022-11-08 21:27:26.425652', '2022-11-08 21:27:26.425714', 1, 10),
-	(5, 'N', '2022-11-08 21:54:35.282959', '2022-11-08 21:54:35.282991', 1, 10),
-	(6, 'N', '2022-11-09 16:10:17.746718', '2022-11-09 16:10:17.746748', 1, 10),
-	(7, 'N', '2022-11-09 22:40:19.269988', '2022-11-09 22:40:19.270021', 1, 10),
-	(8, 'N', '2022-11-09 23:03:39.738592', '2022-11-09 23:03:39.738624', 1, 10),
-	(9, 'N', '2022-11-09 23:27:57.430723', '2022-11-09 23:27:57.430757', 3, 8),
-	(10, 'N', '2022-11-14 16:57:15.729488', '2022-11-14 16:57:15.729677', 3, 10),
-	(11, 'N', '2022-11-14 17:05:36.159634', '2022-11-14 17:05:36.159666', 3, 10),
-	(12, 'N', '2022-11-14 17:11:21.172910', '2022-11-14 17:11:21.172942', 4, 8),
-	(13, 'N', '2022-11-14 17:34:12.194683', '2022-11-14 17:34:12.194712', 4, 9),
-	(14, 'N', '2022-11-15 15:47:54.963402', '2022-11-15 15:47:54.963433', 5, 8),
-	(15, 'N', '2022-11-15 15:48:41.348173', '2022-11-15 15:48:41.348200', 5, 9),
-	(16, 'N', '2022-11-15 16:06:08.261614', '2022-11-15 16:06:08.261645', 1, 13),
-	(17, 'N', '2022-11-15 16:20:40.864004', '2022-11-15 16:20:40.864034', 3, 10),
-	(18, 'N', '2022-11-15 17:40:12.737155', '2022-11-15 17:40:12.737191', 1, 14),
-	(19, 'N', '2022-11-18 19:17:34.368750', '2022-11-18 19:17:34.370493', 3, 13),
-	(20, 'N', '2022-11-18 19:17:55.521333', '2022-11-18 19:17:55.522596', 3, 14),
-	(21, 'N', '2022-11-18 21:10:03.181807', '2022-11-18 21:10:03.183374', 4, 8),
-	(22, 'N', '2022-11-19 17:48:11.873358', '2022-11-19 17:48:11.876569', 1, 15),
-	(23, 'N', '2022-11-19 17:48:11.884831', '2022-11-19 17:48:11.886801', 3, 15),
-	(24, 'N', '2022-11-20 00:34:14.718868', '2022-11-20 00:34:14.720617', 4, 9),
-	(25, 'N', '2022-11-20 00:34:27.570860', '2022-11-20 00:34:27.572456', 4, 10),
-	(26, 'N', '2022-11-20 00:34:47.699741', '2022-11-20 00:34:47.701386', 4, 13),
-	(27, 'N', '2022-11-20 00:35:08.064287', '2022-11-20 00:35:08.066383', 4, 14),
-	(28, 'Y', '2022-11-20 00:35:22.299207', '2022-11-20 00:35:22.300993', 4, 15),
-	(29, 'Y', '2022-11-21 17:07:11.865509', '2022-11-21 17:07:11.868016', 1, 16),
-	(30, 'Y', '2022-11-21 17:07:11.872854', '2022-11-21 17:07:11.874386', 3, 16),
-	(31, 'N', '2022-11-23 22:05:53.540300', '2022-11-23 22:05:53.542509', 6, 8),
-	(32, 'N', '2022-11-23 22:13:54.058715', '2022-11-23 22:13:54.060395', 6, 9),
-	(33, 'N', '2022-11-23 22:18:07.145254', '2022-11-23 22:18:07.146485', 6, 10),
-	(34, 'N', '2022-11-23 22:20:03.741058', '2022-11-23 22:20:03.743044', 6, 13),
-	(35, 'N', '2022-11-23 22:20:53.920345', '2022-11-23 22:20:53.921820', 6, 14),
-	(36, 'N', '2022-11-23 22:29:51.434817', '2022-11-23 22:29:51.436043', 5, 10),
-	(37, 'N', '2022-11-23 22:30:29.766266', '2022-11-23 22:30:29.767539', 5, 13),
-	(38, 'N', '2022-11-23 22:33:56.965042', '2022-11-23 22:33:56.966611', 5, 14),
-	(39, 'N', '2022-11-23 22:53:43.120916', '2022-11-23 22:53:43.122634', 5, 15),
-	(40, 'N', '2022-11-23 22:53:43.136631', '2022-11-23 22:53:43.138195', 6, 15),
-	(41, 'Y', '2022-11-23 22:55:42.624071', '2022-11-23 22:55:42.625381', 5, 16),
-	(42, 'Y', '2022-11-23 22:55:42.629778', '2022-11-23 22:55:42.631026', 6, 16),
-	(43, 'Y', '2022-11-28 15:49:27.467734', '2022-11-28 15:49:27.470373', 7, 8);
+INSERT INTO `candidatos_estatus` (`id`, `activo`, `created`, `updated`, `candidatos_id`, `estatus_id`, `motivos_rechazos_id`) VALUES
+	(1, 'N', '2022-11-01 16:02:12.258358', '2022-11-01 16:02:12.258389', 1, 8, NULL),
+	(2, 'N', '2022-11-03 12:37:08.000000', '2022-11-03 12:37:09.000000', 1, 9, NULL),
+	(3, 'N', '2022-11-08 21:19:34.025104', '2022-11-08 21:19:34.025135', 1, 8, NULL),
+	(4, 'N', '2022-11-08 21:27:26.425652', '2022-11-08 21:27:26.425714', 1, 10, NULL),
+	(5, 'N', '2022-11-08 21:54:35.282959', '2022-11-08 21:54:35.282991', 1, 10, NULL),
+	(6, 'N', '2022-11-09 16:10:17.746718', '2022-11-09 16:10:17.746748', 1, 10, NULL),
+	(7, 'N', '2022-11-09 22:40:19.269988', '2022-11-09 22:40:19.270021', 1, 10, NULL),
+	(8, 'N', '2022-11-09 23:03:39.738592', '2022-11-09 23:03:39.738624', 1, 10, NULL),
+	(9, 'N', '2022-11-09 23:27:57.430723', '2022-11-09 23:27:57.430757', 3, 8, NULL),
+	(10, 'N', '2022-11-14 16:57:15.729488', '2022-11-14 16:57:15.729677', 3, 10, NULL),
+	(11, 'N', '2022-11-14 17:05:36.159634', '2022-11-14 17:05:36.159666', 3, 10, NULL),
+	(12, 'N', '2022-11-14 17:11:21.172910', '2022-11-14 17:11:21.172942', 4, 8, NULL),
+	(13, 'N', '2022-11-14 17:34:12.194683', '2022-11-14 17:34:12.194712', 4, 9, NULL),
+	(14, 'N', '2022-11-15 15:47:54.963402', '2022-11-15 15:47:54.963433', 5, 8, NULL),
+	(15, 'N', '2022-11-15 15:48:41.348173', '2022-11-15 15:48:41.348200', 5, 9, NULL),
+	(16, 'N', '2022-11-15 16:06:08.261614', '2022-11-15 16:06:08.261645', 1, 13, NULL),
+	(17, 'N', '2022-11-15 16:20:40.864004', '2022-11-15 16:20:40.864034', 3, 10, NULL),
+	(18, 'N', '2022-11-15 17:40:12.737155', '2022-11-15 17:40:12.737191', 1, 14, NULL),
+	(19, 'N', '2022-11-18 19:17:34.368750', '2022-11-18 19:17:34.370493', 3, 13, NULL),
+	(20, 'N', '2022-11-18 19:17:55.521333', '2022-11-18 19:17:55.522596', 3, 14, NULL),
+	(21, 'N', '2022-11-18 21:10:03.181807', '2022-11-18 21:10:03.183374', 4, 8, NULL),
+	(22, 'N', '2022-11-19 17:48:11.873358', '2022-11-19 17:48:11.876569', 1, 15, NULL),
+	(23, 'N', '2022-11-19 17:48:11.884831', '2022-11-19 17:48:11.886801', 3, 15, NULL),
+	(24, 'N', '2022-11-20 00:34:14.718868', '2022-11-20 00:34:14.720617', 4, 9, NULL),
+	(25, 'N', '2022-11-20 00:34:27.570860', '2022-11-20 00:34:27.572456', 4, 10, NULL),
+	(26, 'N', '2022-11-20 00:34:47.699741', '2022-11-20 00:34:47.701386', 4, 13, NULL),
+	(27, 'N', '2022-11-20 00:35:08.064287', '2022-11-20 00:35:08.066383', 4, 14, NULL),
+	(28, 'N', '2022-11-20 00:35:22.299207', '2022-11-20 00:35:22.300993', 4, 15, NULL),
+	(29, 'Y', '2022-11-21 17:07:11.865509', '2022-11-21 17:07:11.868016', 1, 16, NULL),
+	(30, 'Y', '2022-11-21 17:07:11.872854', '2022-11-21 17:07:11.874386', 3, 16, NULL),
+	(31, 'N', '2022-11-23 22:05:53.540300', '2022-11-23 22:05:53.542509', 6, 8, NULL),
+	(32, 'N', '2022-11-23 22:13:54.058715', '2022-11-23 22:13:54.060395', 6, 9, NULL),
+	(33, 'N', '2022-11-23 22:18:07.145254', '2022-11-23 22:18:07.146485', 6, 10, NULL),
+	(34, 'N', '2022-11-23 22:20:03.741058', '2022-11-23 22:20:03.743044', 6, 13, NULL),
+	(35, 'N', '2022-11-23 22:20:53.920345', '2022-11-23 22:20:53.921820', 6, 14, NULL),
+	(36, 'N', '2022-11-23 22:29:51.434817', '2022-11-23 22:29:51.436043', 5, 10, NULL),
+	(37, 'N', '2022-11-23 22:30:29.766266', '2022-11-23 22:30:29.767539', 5, 13, NULL),
+	(38, 'N', '2022-11-23 22:33:56.965042', '2022-11-23 22:33:56.966611', 5, 14, NULL),
+	(39, 'N', '2022-11-23 22:53:43.120916', '2022-11-23 22:53:43.122634', 5, 15, NULL),
+	(40, 'N', '2022-11-23 22:53:43.136631', '2022-11-23 22:53:43.138195', 6, 15, NULL),
+	(41, 'N', '2022-11-23 22:55:42.624071', '2022-11-23 22:55:42.625381', 5, 16, NULL),
+	(42, 'N', '2022-11-23 22:55:42.629778', '2022-11-23 22:55:42.631026', 6, 16, NULL),
+	(43, 'N', '2022-11-28 15:49:27.467734', '2022-11-28 15:49:27.470373', 7, 8, NULL),
+	(44, 'N', '2022-11-29 18:14:58.938480', '2022-11-29 18:14:58.945076', 7, 9, NULL),
+	(45, 'N', '2022-11-29 18:31:52.725184', '2022-11-29 18:31:52.727187', 7, 10, NULL),
+	(46, 'N', '2022-11-29 20:37:19.992937', '2022-11-29 20:37:19.994798', 7, 13, NULL),
+	(47, 'Y', '2022-11-29 22:00:58.944594', '2022-11-29 22:00:58.947409', 7, 14, NULL),
+	(48, 'N', '2022-12-03 04:18:56.821493', '2022-12-03 04:18:56.821530', 6, 12, 1),
+	(49, 'N', '2022-12-03 04:33:49.016471', '2022-12-03 04:33:49.016508', 6, 12, 1),
+	(50, 'N', '2022-12-03 04:39:07.472260', '2022-12-03 04:39:07.472350', 6, 12, 1),
+	(51, 'Y', '2022-12-03 17:19:37.112873', '2022-12-03 17:19:37.112905', 4, 12, 2),
+	(52, 'Y', '2022-12-03 17:36:31.631130', '2022-12-03 17:36:31.631161', 6, 12, 2),
+	(53, 'N', '2022-12-06 17:33:59.548568', '2022-12-06 17:33:59.552935', 8, 8, NULL),
+	(54, 'N', '2022-12-06 17:43:32.822067', '2022-12-06 17:43:32.823894', 8, 9, NULL),
+	(55, 'N', '2022-12-06 17:45:14.263026', '2022-12-06 17:45:14.264539', 8, 10, NULL),
+	(56, 'N', '2022-12-06 17:56:11.845679', '2022-12-06 17:56:11.847479', 8, 13, NULL),
+	(57, 'N', '2022-12-06 17:56:38.030673', '2022-12-06 17:56:38.032803', 8, 14, NULL),
+	(58, 'N', '2022-12-06 18:04:51.193288', '2022-12-06 18:04:51.195063', 8, 15, NULL),
+	(59, 'Y', '2022-12-06 18:05:40.327354', '2022-12-06 18:05:40.329223', 8, 16, NULL),
+	(60, 'N', '2022-12-07 15:26:20.049200', '2022-12-07 15:26:20.051013', 9, 8, NULL),
+	(61, 'N', '2022-12-07 15:46:25.081525', '2022-12-07 15:46:25.084105', 10, 8, NULL),
+	(62, 'N', '2022-12-07 16:36:09.124769', '2022-12-07 16:36:09.126487', 9, 9, NULL),
+	(63, 'N', '2022-12-07 17:02:19.806783', '2022-12-07 17:02:19.808376', 9, 10, NULL),
+	(64, 'N', '2022-12-07 17:17:50.683730', '2022-12-07 17:17:50.685628', 10, 9, NULL),
+	(65, 'N', '2022-12-07 18:14:51.202169', '2022-12-07 18:14:51.204486', 11, 8, NULL),
+	(68, 'N', '2022-12-07 18:47:52.415960', '2022-12-07 18:47:52.417376', 10, 10, NULL),
+	(69, 'N', '2022-12-07 18:48:21.610571', '2022-12-07 18:48:21.612488', 10, 13, NULL),
+	(70, 'Y', '2022-12-07 19:15:46.399978', '2022-12-07 19:15:46.401640', 11, 9, NULL),
+	(71, 'Y', '2022-12-07 19:19:47.633484', '2022-12-07 19:19:47.635380', 10, 14, NULL),
+	(72, 'N', '2022-12-07 19:36:44.815138', '2022-12-07 19:36:44.816981', 7, 17, NULL),
+	(73, 'N', '2022-12-07 19:38:38.630420', '2022-12-07 19:38:38.632366', 7, 17, NULL),
+	(74, 'N', '2022-12-08 16:46:43.711417', '2022-12-08 16:46:43.713528', 10, 17, NULL),
+	(75, 'Y', '2022-12-08 16:56:11.970646', '2022-12-08 16:56:11.970678', 5, 12, 6);
 /*!40000 ALTER TABLE `candidatos_estatus` ENABLE KEYS */;
+
+-- Volcando estructura para tabla rhdb_dev.catalogos_estatus
+CREATE TABLE IF NOT EXISTS `catalogos_estatus` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `estatus` varchar(50) NOT NULL,
+  `descripcion` longtext NOT NULL,
+  `activo` varchar(1) NOT NULL,
+  `tipos` varchar(9) NOT NULL,
+  `created` datetime(6) NOT NULL,
+  `updated` datetime(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla rhdb_dev.catalogos_estatus: ~15 rows (aproximadamente)
+/*!40000 ALTER TABLE `catalogos_estatus` DISABLE KEYS */;
+INSERT INTO `catalogos_estatus` (`id`, `estatus`, `descripcion`, `activo`, `tipos`, `created`, `updated`) VALUES
+	(1, 'Abierta', 'Cuando se crea y no tiene candidatos cargados. X', 'Y', 'solicitud', '2022-10-14 16:26:04.928690', '2022-12-08 21:18:13.582970'),
+	(2, 'En proceso', 'Cuando se carga al primer candidato.', 'Y', 'solicitud', '2022-10-14 16:29:26.287719', '2022-10-14 16:29:26.287762'),
+	(3, 'Cubierta', 'Cuando se cubrieron todas las vacantes de la solicitud', 'N', 'solicitud', '2022-10-14 18:38:28.773754', '2022-10-14 18:38:28.773782'),
+	(4, 'En garantía', 'Cuando se contrata al candidato y esta en periodo garantía.', 'N', 'candidato', '2022-10-14 18:39:19.030780', '2022-10-14 18:39:19.030812'),
+	(5, 'Facturado', 'Cuando el candidato cumple el periodo de garantía y se paga la factura.', 'N', 'solicitud', '2022-10-14 18:39:47.568093', '2022-10-14 18:39:47.568122'),
+	(6, 'No cubierta', 'Cuando el proveedor no cumplió con el cubrimiento.', 'N', 'solicitud', '2022-10-14 18:40:13.850368', '2022-10-14 18:40:13.850395'),
+	(7, 'No garantía', 'Cuando ya se utilizo la garantia correspondiente a la vacante a cubrir', 'N', 'solicitud', '2022-10-14 18:40:32.932262', '2022-10-14 18:40:32.932297'),
+	(8, 'Postulado', 'El candidato a agregado al proceso', 'Y', 'candidato', '2022-10-21 17:21:01.319993', '2022-10-21 17:21:01.320025'),
+	(9, 'Programado', 'El candidato fue programado para entrevista', 'Y', 'candidato', '2022-10-21 17:22:13.267249', '2022-10-21 17:22:13.267283'),
+	(10, 'Entrevistado', 'El candidato fue entrevistado', 'Y', 'candidato', '2022-10-21 17:23:12.487657', '2022-10-21 17:23:12.487691'),
+	(11, 'Aceptado', 'El candidato fue aceptado para cubrir la posición', 'Y', 'candidato', '2022-11-07 20:59:51.953431', '2022-11-07 20:59:51.953467'),
+	(12, 'Rechazado', 'El candidato fue rechazado del proceso.', 'Y', 'candidato', '2022-11-07 21:00:52.199968', '2022-11-07 21:00:52.200002'),
+	(13, 'Contratación', 'El candidato esta en proceso de contratación', 'Y', 'candidato', '2022-11-07 21:01:46.241432', '2022-11-07 21:01:46.241468'),
+	(14, 'Contratado', 'El candidato fue contratado.', 'Y', 'candidato', '2022-11-07 21:02:52.563479', '2022-11-07 21:02:52.563510'),
+	(15, 'Facturación', 'El candidato fue ingresado a un reporte de facturación.', 'Y', 'candidato', '2022-11-07 21:05:06.183314', '2022-11-17 14:25:07.527059'),
+	(16, 'Facturado', 'El proveedor ingreso una factura al proceso de facturación don de fue agregado el candidato.', 'Y', 'candidato', '2022-11-17 14:22:02.953355', '2022-11-17 14:23:17.771093'),
+	(17, 'Ingreso', 'Confirma asistencia a su primer día de trabajo.', 'Y', 'candidato', '2022-12-07 19:33:09.813667', '2022-12-07 19:38:26.346367'),
+	(18, 'Eliminada', 'La solicitud se elimino por que aun no tenia candidatos.', 'Y', 'solicitud', '2022-12-08 20:14:56.595963', '2022-12-08 20:14:56.596002'),
+	(19, 'Cancelada', 'La solicitud se puede cancelar desde que tenga un candidato. La cancelación debe tener un motivo', 'Y', 'solicitud', '2022-12-08 20:16:06.045255', '2022-12-08 20:16:06.045288');
+/*!40000 ALTER TABLE `catalogos_estatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.ciudades
 CREATE TABLE IF NOT EXISTS `ciudades` (
@@ -582,7 +688,7 @@ CREATE TABLE IF NOT EXISTS `ciudades` (
   CONSTRAINT `ciudades_entidades_id_3fda99ad_fk_entidades_id` FOREIGN KEY (`entidades_id`) REFERENCES `entidades` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.ciudades: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.ciudades: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `ciudades` DISABLE KEYS */;
 INSERT INTO `ciudades` (`id`, `ciudad`, `activo`, `created`, `updated`, `entidades_id`) VALUES
 	(1, 'Cancún', 'Y', '2022-10-07 23:18:51.063139', '2022-10-07 23:18:51.063177', 1),
@@ -629,12 +735,13 @@ CREATE TABLE IF NOT EXISTS `contactos_proveedores` (
   KEY `contactos_proveedores_proveedores_id_961ac1ae_fk_proveedores_id` (`proveedores_id`),
   CONSTRAINT `contactos_proveedores_proveedores_id_961ac1ae_fk_proveedores_id` FOREIGN KEY (`proveedores_id`) REFERENCES `proveedores` (`id`),
   CONSTRAINT `contactos_proveedores_user_id_11e97a89_fk_autenticacion_user_id` FOREIGN KEY (`user_id`) REFERENCES `autenticacion_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.contactos_proveedores: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.contactos_proveedores: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `contactos_proveedores` DISABLE KEYS */;
 INSERT INTO `contactos_proveedores` (`id`, `tipo_contacto`, `activo`, `created`, `updated`, `proveedores_id`, `user_id`) VALUES
-	(1, 'P', 'Y', '2022-11-09 15:45:35.246359', '2022-11-09 15:45:35.246398', 1, 1);
+	(1, 'P', 'N', '2022-11-09 15:45:35.246359', '2022-12-01 16:22:14.186599', 1, 1),
+	(2, 'P', 'Y', '2022-12-01 16:22:24.283575', '2022-12-01 16:22:24.283611', 1, 2);
 /*!40000 ALTER TABLE `contactos_proveedores` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.django_admin_log
@@ -652,9 +759,9 @@ CREATE TABLE IF NOT EXISTS `django_admin_log` (
   KEY `django_admin_log_user_id_c564eba6_fk_autenticacion_user_id` (`user_id`),
   CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   CONSTRAINT `django_admin_log_user_id_c564eba6_fk_autenticacion_user_id` FOREIGN KEY (`user_id`) REFERENCES `autenticacion_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=121 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=156 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.django_admin_log: ~120 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.django_admin_log: ~135 rows (aproximadamente)
 /*!40000 ALTER TABLE `django_admin_log` DISABLE KEYS */;
 INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`, `action_flag`, `change_message`, `content_type_id`, `user_id`) VALUES
 	(1, '2022-10-07 17:54:59.422622', '2', 'lsomohano20', 1, '[{"added": {}}]', 16, 1),
@@ -776,7 +883,42 @@ INSERT INTO `django_admin_log` (`id`, `action_time`, `object_id`, `object_repr`,
 	(117, '2022-11-28 21:13:56.374046', '1', 'RH Gerentes', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
 	(118, '2022-11-28 22:03:40.595914', '4', 'corporativo.rh', 1, '[{"added": {}}]', 16, 1),
 	(119, '2022-11-28 22:04:22.509365', '4', 'corporativo.rh', 2, '[{"changed": {"fields": ["First name", "Last name", "Email address", "Phone", "Groups"]}}]', 16, 1),
-	(120, '2022-11-28 22:11:46.494644', '4', 'corporativo.rh', 2, '[{"changed": {"fields": ["Image"]}}]', 16, 1);
+	(120, '2022-11-28 22:11:46.494644', '4', 'corporativo.rh', 2, '[{"changed": {"fields": ["Image"]}}]', 16, 1),
+	(121, '2022-11-29 15:13:43.062066', '2', 'lsomohano20', 2, '[{"changed": {"fields": ["First name", "Last name", "Groups"]}}]', 16, 1),
+	(122, '2022-11-29 15:14:33.567039', '2', 'lsomohano20', 2, '[{"changed": {"fields": ["password"]}}]', 16, 1),
+	(123, '2022-11-29 16:17:44.846510', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(124, '2022-11-29 16:22:59.914518', '2', 'Proveedores', 2, '[]', 3, 1),
+	(125, '2022-11-29 16:45:37.440046', '2', 'lsomohano20', 2, '[]', 16, 1),
+	(126, '2022-11-29 17:22:22.157701', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(127, '2022-11-29 17:29:36.813030', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(128, '2022-11-29 17:31:54.741543', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(129, '2022-11-29 17:40:41.266677', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(130, '2022-11-29 17:41:13.356622', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(131, '2022-12-01 18:22:49.259698', '2', 'VER50', 2, '[{"changed": {"fields": ["Latitud"]}}]', 8, 1),
+	(132, '2022-12-01 18:27:42.273600', '2', 'VER50', 2, '[{"changed": {"fields": ["Latitud", "Longitud"]}}]', 8, 1),
+	(133, '2022-12-01 20:11:56.699031', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(134, '2022-12-01 20:20:09.854530', '11', 'Facturación', 2, '[]', 18, 1),
+	(135, '2022-12-01 20:23:56.558384', '2', 'Proveedores', 2, '[]', 3, 1),
+	(136, '2022-12-01 20:24:51.960483', '2', 'Proveedores', 2, '[{"changed": {"fields": ["Permissions"]}}]', 3, 1),
+	(137, '2022-12-02 23:06:25.082902', '2', 'Proveedores', 2, '[]', 3, 1),
+	(138, '2022-12-02 23:11:49.995303', '1', 'No llega a entrevista', 1, '[{"added": {}}]', 30, 1),
+	(139, '2022-12-02 23:12:08.286870', '2', 'No cumple el perfil', 1, '[{"added": {}}]', 30, 1),
+	(140, '2022-12-02 23:12:40.458825', '3', 'Distancia hogar - lugar de trabajo', 1, '[{"added": {}}]', 30, 1),
+	(141, '2022-12-02 23:12:55.893233', '4', 'Cambio de condiciones laborales', 1, '[{"added": {}}]', 30, 1),
+	(142, '2022-12-02 23:13:18.788500', '5', 'Proceso de contratación largo', 1, '[{"added": {}}]', 30, 1),
+	(143, '2022-12-02 23:13:35.965975', '6', 'Mejor oferta laboral', 1, '[{"added": {}}]', 30, 1),
+	(144, '2022-12-02 23:13:59.941053', '7', 'No acepto el sueldo', 1, '[{"added": {}}]', 30, 1),
+	(145, '2022-12-07 19:33:09.815435', '17', 'Ingreso', 1, '[{"added": {}}]', 21, 1),
+	(146, '2022-12-07 19:38:26.348725', '17', 'Ingreso', 2, '[]', 21, 1),
+	(147, '2022-12-08 17:03:02.964849', '8', 'RFC', 2, '[{"changed": {"fields": ["Descripcion"]}}]', 22, 1),
+	(148, '2022-12-08 20:00:59.997139', '1', 'Auxiliar de Servicios', 2, '[{"changed": {"fields": ["Activo"]}}]', 9, 1),
+	(149, '2022-12-08 20:01:05.850510', '3', 'Auxiliar Administrativo', 2, '[{"changed": {"fields": ["Activo"]}}]', 9, 1),
+	(150, '2022-12-08 20:01:12.122210', '2', 'Auxiliar Administrativo', 2, '[{"changed": {"fields": ["Activo"]}}]', 9, 1),
+	(151, '2022-12-08 20:14:56.597406', '18', 'Eliminada', 1, '[{"added": {}}]', 21, 1),
+	(152, '2022-12-08 20:16:06.046127', '19', 'Cancelada', 1, '[{"added": {}}]', 21, 1),
+	(153, '2022-12-08 21:17:56.371324', '1', 'Abierta', 2, '[]', 21, 1),
+	(154, '2022-12-08 21:18:13.584098', '1', 'Abierta', 2, '[]', 21, 1),
+	(155, '2022-12-08 22:50:05.276976', '8', 'Por que no fue completada', 1, '[{"added": {}}]', 30, 1);
 /*!40000 ALTER TABLE `django_admin_log` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.django_content_type
@@ -786,9 +928,9 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.django_content_type: ~29 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.django_content_type: ~26 rows (aproximadamente)
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
 INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(1, 'admin', 'logentry'),
@@ -817,6 +959,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(22, 'solicitudes', 'documentos'),
 	(27, 'solicitudes', 'entrevistas'),
 	(21, 'solicitudes', 'estatus'),
+	(30, 'solicitudes', 'motivosrechazos'),
 	(24, 'solicitudes', 'personas'),
 	(25, 'solicitudes', 'solicitudesestatus'),
 	(26, 'solicitudes', 'solicitudesvacantes');
@@ -829,9 +972,9 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.django_migrations: ~44 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.django_migrations: ~42 rows (aproximadamente)
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(1, 'contenttypes', '0001_initial', '2022-10-07 17:33:37.502011'),
@@ -877,7 +1020,12 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(41, 'proveedores', '0003_auto_20221116_1629', '2022-11-16 16:29:39.102693'),
 	(42, 'facturacion', '0001_initial', '2022-11-16 16:29:39.754546'),
 	(43, 'configuraciones', '0005_auto_20221124_1634', '2022-11-24 16:35:15.651609'),
-	(44, 'facturacion', '0002_alter_facturas_pagado', '2022-11-24 16:35:15.708216');
+	(44, 'facturacion', '0002_alter_facturas_pagado', '2022-11-24 16:35:15.708216'),
+	(45, 'solicitudes', '0014_auto_20221130_0619', '2022-11-30 22:46:00.936870'),
+	(46, 'solicitudes', '0015_auto_20221202_2244', '2022-12-02 22:44:31.106955'),
+	(47, 'solicitudes', '0016_alter_estatus_table', '2022-12-02 23:03:23.860036'),
+	(48, 'solicitudes', '0017_candidatos_candidato_sustituye', '2022-12-05 17:03:38.795559'),
+	(49, 'solicitudes', '0018_auto_20221208_2235', '2022-12-08 22:35:37.287456');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.django_session
@@ -889,15 +1037,17 @@ CREATE TABLE IF NOT EXISTS `django_session` (
   KEY `django_session_expire_date_a5c62663` (`expire_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.django_session: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.django_session: ~9 rows (aproximadamente)
 /*!40000 ALTER TABLE `django_session` DISABLE KEYS */;
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
 	('7cebbb32utsyjng2kzcudolas8to2b4w', '.eJxVjMsOwiAQRf-FtSFDh_Jw6d5vIAOMUjWQlHZl_HfbpAvd3nPOfYtA61LC2nkOUxZnocXpd4uUnlx3kB9U702mVpd5inJX5EG7vLbMr8vh_h0U6mWrgW7eGyYdMznvB1SjIvKODEVEGIFZAdvN0uiSyVYpFa1DBgQzYBKfL-T7N2U:1ozmKq:RgONb2BUjRA0ZbO_BV70tqKtcrFcssWpiVaEX5n9eHQ', '2022-12-12 22:10:44.566029'),
+	('7um1min40zmu3uu4bn84bvh8xxnrexcc', '.eJxVjDsOwjAQBe_iGll44xCbkj5nsN6ubRxAjpRPhbg7iZQC2pl5760C1qWEdU5TGKK6KlKnX8aQZ6q7iA_U-6hlrMs0sN4TfdhZ92NMr9vR_h0UzGVbS2eILtZEn01uOdvUJDpbRNOy9dwm14GdkJARNOTBcLB-gzDIEPX5AuwfONQ:1p2bNX:2RJ-EHpm71NieDTLUuBKOPuWglaSMdqegrkSyrV0pNk', '2022-12-20 17:05:11.868390'),
 	('f31oxn8v9j8mm5cvycu9vkuf1k00kq6p', '.eJxVjEEOwiAQRe_C2pBOCwO4dO8ZyDAMUjVtUtqV8e7apAvd_vfef6lI21rj1mSJY1ZnNajT75aIHzLtIN9pus2a52ldxqR3RR-06euc5Xk53L-DSq1-a8JUOA3QkREfLPRi0LDtnGTGTKb0GKRY78AVCIA-gQj7QGgHBGL1_gDxYjgP:1oxc1N:85BJWv9v07LCdBpKYB3DoUvGRPISoqUWqETxXv6_Ll0', '2022-12-06 22:45:41.985094'),
-	('jbcnqxolxi5xq1lxspms2pxnid32sanr', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1oxxnZ:Z-XSi9-J7WG8ftJ2Bo8MRatE2DEOQm_9jkZYe4XxadY', '2022-12-07 22:00:53.593105'),
+	('ksdo46h04z35a2pfi3frqkjzq92trutw', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1p1F6r:gLz8wQp-IESU74VWgQyCwWAPfdI4iFOxnECdcUmYH0A', '2022-12-16 23:06:21.146400'),
 	('l28td9nhbr9lbryyy4hlogqnr4nim6fg', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1or0vc:R3FzPExs0ZykkEJkE8jl4v3fC57etVf4j92_s6lGvwg', '2022-11-18 17:56:28.329250'),
 	('q2el5h3kq38uigv7dsknhh63mjx7f0ov', '.eJxVjEEOwiAQRe_C2pBOCwO4dO8ZyDAMUjVtUtqV8e7apAvd_vfef6lI21rj1mSJY1ZnNajT75aIHzLtIN9pus2a52ldxqR3RR-06euc5Xk53L-DSq1-a8JUOA3QkREfLPRi0LDtnGTGTKb0GKRY78AVCIA-gQj7QGgHBGL1_gDxYjgP:1ozh7m:Hv5v4LBNLaAJHFuyPKi4qOpAbdHl4ivjxQsn8LyNDz0', '2022-12-12 16:36:54.118733'),
 	('wy40p1m887jdob5wpnxq4kb27fz0n248', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1oxbaA:NL830LNwW8kDB2WN1G-PWuomkcKNAcx6XTYodvoRh64', '2022-12-06 22:17:34.823102'),
+	('x0n8rgnkf34fyqws7mwk1nvb2w21whsu', '.eJxVjDsOwjAQBe_iGll44xCbkj5nsN6ubRxAjpRPhbg7iZQC2pl5760C1qWEdU5TGKK6KlKnX8aQZ6q7iA_U-6hlrMs0sN4TfdhZ92NMr9vR_h0UzGVbS2eILtZEn01uOdvUJDpbRNOy9dwm14GdkJARNOTBcLB-gzDIEPX5AuwfONQ:1p02Jo:x0ocfqtm7b249ZxJPFpo5gJXT6V_qeMG-xViLO3r6pY', '2022-12-13 15:14:44.980886'),
 	('xba4hjcs04vgceva028pd1unl96iuqic', '.eJxVjEEOwiAQRe_C2hCYBpi6dO8ZyAwDUjU0Ke3KeHdt0oVu_3vvv1Skba1x63mJk6izsur0uzGlR247kDu126zT3NZlYr0r-qBdX2fJz8vh_h1U6vVbE3gnPhBJBmGHwYC1ib3F0SMSEQOTCQ7NWFhyMQEKORgQvSQ3iHp_AO1eOCs:1olvft:K1SxnHKWM6kJikoQUt1A6JOul-DZJtHP2yqHdgo3wcY', '2022-11-04 17:19:13.062763');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
 
@@ -923,7 +1073,7 @@ INSERT INTO `documentos` (`id`, `documento`, `descripcion`, `activo`, `created`,
 	(5, 'Comprobante de Domicilio', '(Preferente recibo de CFE), no mayor a tres meses', 'Y', '2022-10-28 21:50:17.169486', '2022-10-28 21:50:17.169521', 'requerido'),
 	(6, 'Aviso de retenciones Infonavit', '*', 'Y', '2022-10-28 21:51:21.587773', '2022-10-28 21:51:21.587816', 'opcional'),
 	(7, 'Estado de cuenta FONACOT', 'En caso de tener crédito vigente', 'Y', '2022-10-28 21:52:07.021169', '2022-10-28 21:52:07.021201', 'opcional'),
-	(8, 'RFC', 'Situación fiscal sueldos y salarios e ingresos asimilados a salarios (2 hojas SAT)', 'Y', '2022-10-28 21:53:30.651606', '2022-10-28 21:53:30.651667', 'requerido'),
+	(8, 'RFC', 'Prueba', 'Y', '2022-10-28 21:53:30.651606', '2022-12-08 17:03:02.962611', 'requerido'),
 	(9, 'Curriculum Vitae', '*', 'Y', '2022-10-28 21:54:12.645440', '2022-10-28 21:54:12.645472', 'requerido'),
 	(10, 'Solicitud de empleo', '*', 'Y', '2022-10-28 21:54:35.345591', '2022-10-28 21:54:35.345622', 'requerido'),
 	(11, 'Licencia de conducir', 'Vigente', 'Y', '2022-10-28 21:54:53.958624', '2022-10-28 21:54:53.958655', 'requerido'),
@@ -967,9 +1117,9 @@ CREATE TABLE IF NOT EXISTS `entrevistas` (
   PRIMARY KEY (`id`),
   KEY `entrevistas_candidatos_id_54ee1c16_fk_candidatos_id` (`candidatos_id`),
   CONSTRAINT `entrevistas_candidatos_id_54ee1c16_fk_candidatos_id` FOREIGN KEY (`candidatos_id`) REFERENCES `candidatos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.entrevistas: ~12 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.entrevistas: ~22 rows (aproximadamente)
 /*!40000 ALTER TABLE `entrevistas` DISABLE KEYS */;
 INSERT INTO `entrevistas` (`id`, `indicaciones`, `created`, `fecha_programada`, `hora_programada`, `fecha_entrevista`, `asistio`, `candidatos_id`, `tipo_evento`) VALUES
 	(2, 'T', '2022-11-03 15:21:52.000000', '2022-11-04', '15:22:01.000000', NULL, 'N', 1, 'entrevista'),
@@ -983,7 +1133,18 @@ INSERT INTO `entrevistas` (`id`, `indicaciones`, `created`, `fecha_programada`, 
 	(11, 'f', '2022-11-20 00:34:47.692813', '2022-11-19', '11:21:00.000000', '2022-11-20 00:35:08.055629', 'Y', 4, 'contratacion'),
 	(12, 'se va en transporte de la empresa', '2022-11-23 22:13:54.048705', '2022-11-24', '11:51:00.000000', '2022-11-23 22:18:07.047153', 'Y', 6, 'entrevista'),
 	(13, 'rewiriryr', '2022-11-23 22:20:03.727240', '2022-11-25', '09:19:00.000000', '2022-11-23 22:20:53.913605', 'Y', 6, 'contratacion'),
-	(14, 'ccc', '2022-11-23 22:30:29.759967', '2022-11-25', '17:30:00.000000', '2022-11-23 22:33:56.955550', 'Y', 5, 'contratacion');
+	(14, 'ccc', '2022-11-23 22:30:29.759967', '2022-11-25', '17:30:00.000000', '2022-11-23 22:33:56.955550', 'Y', 5, 'contratacion'),
+	(15, 'ok', '2022-11-29 18:14:58.912753', '2022-11-30', '13:14:00.000000', '2022-11-29 18:31:52.628247', 'Y', 7, 'entrevista'),
+	(16, 'ok', '2022-11-29 20:37:19.978404', '2022-12-03', '14:04:00.000000', '2022-11-29 22:00:58.929843', 'Y', 7, 'contratacion'),
+	(17, 'd', '2022-11-29 22:18:55.462652', '2020-11-20', '17:18:00.000000', '2022-12-07 16:20:31.000000', 'Y', 7, 'ingreso'),
+	(18, 'ok', '2022-12-06 17:43:32.817075', '2022-12-09', '11:51:00.000000', '2022-12-06 17:45:14.159085', 'Y', 8, 'entrevista'),
+	(19, 'ok', '2022-12-06 17:56:11.835372', '2022-12-23', '11:51:00.000000', '2022-12-06 17:56:38.023117', 'Y', 8, 'contratacion'),
+	(20, 'ok', '2022-12-06 17:57:14.317076', '2022-11-24', '11:51:00.000000', NULL, NULL, 8, 'ingreso'),
+	(21, 'ok', '2022-12-07 16:36:09.118048', '2022-12-14', '11:35:00.000000', '2022-12-07 17:02:19.801219', 'Y', 9, 'entrevista'),
+	(22, '', '2022-12-07 17:17:50.677673', '2022-12-16', '12:17:00.000000', '2022-12-07 18:47:52.411153', 'Y', 10, 'entrevista'),
+	(25, 'ok', '2022-12-07 18:48:21.599683', '2022-12-10', '13:48:00.000000', '2022-12-07 19:19:47.624179', 'Y', 10, 'contratacion'),
+	(26, 'esta es una prueba de agendar a entrevista a un candidato.', '2022-12-07 19:15:46.392893', '2022-12-16', '14:15:00.000000', NULL, NULL, 11, 'entrevista'),
+	(27, 'ok', '2022-12-08 16:46:32.788241', '2008-12-20', '13:32:00.000000', '2022-12-08 16:46:43.702001', 'Y', 10, 'ingreso');
 /*!40000 ALTER TABLE `entrevistas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.facturas
@@ -1004,14 +1165,15 @@ CREATE TABLE IF NOT EXISTS `facturas` (
   PRIMARY KEY (`id`),
   KEY `facturas_proveedores_id_b77b84de_fk_proveedores_id` (`proveedores_id`),
   CONSTRAINT `facturas_proveedores_id_b77b84de_fk_proveedores_id` FOREIGN KEY (`proveedores_id`) REFERENCES `proveedores` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.facturas: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.facturas: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `facturas` DISABLE KEYS */;
 INSERT INTO `facturas` (`id`, `fecha_ini`, `fecha_fin`, `pre_factura_pdf`, `pre_factura_xml`, `factura_pdf`, `factura_xml`, `total_facturado`, `activo`, `pagado`, `created`, `updated`, `proveedores_id`) VALUES
 	(1, '2020-11-20', '2020-11-20', 'prefacturas/pdf/3_.pdf', 'prefacturas/xml/2_.pdf', 'facturas/pdf/2_.pdf', 'facturas/xml/2__dmtHDNe.pdf', 10000000.00, 'Y', 'Y', '2022-11-16 21:32:08.633531', '2022-11-22 19:15:52.906938', 1),
 	(2, '2020-11-20', '2020-11-20', 'prefacturas/pdf/3__H0nZ6Ri.pdf', 'prefacturas/xml/1__zMssBEg.pdf', 'facturas/pdf/1_.pdf', 'facturas/xml/carta.pdf', 20000.00, 'Y', 'N', '2022-11-19 22:42:53.957776', '2022-11-20 00:42:31.337185', 1),
-	(3, '2020-11-20', '2020-11-20', 'prefacturas/pdf/1_.pdf', 'prefacturas/xml/3_.pdf', 'facturas/pdf/3__M23Lecy.pdf', 'facturas/xml/2__1diOgmv.pdf', 70000.00, 'Y', 'Y', '2022-11-23 22:52:46.141310', '2022-11-23 22:55:54.731717', 1);
+	(3, '2020-11-20', '2020-11-20', 'prefacturas/pdf/1_.pdf', 'prefacturas/xml/3_.pdf', 'facturas/pdf/3__M23Lecy.pdf', 'facturas/xml/2__1diOgmv.pdf', 70000.00, 'Y', 'Y', '2022-11-23 22:52:46.141310', '2022-11-23 22:55:54.731717', 1),
+	(4, '2020-12-20', '2020-12-20', 'prefacturas/pdf/1__QrlnkU9.pdf', 'prefacturas/xml/1__lmSng60.pdf', 'facturas/pdf/2__uFJ0gcV.pdf', 'facturas/xml/2__QT3CajD.pdf', 748547.00, 'Y', 'N', '2022-12-06 18:00:53.013492', '2022-12-06 18:05:40.315323', 1);
 /*!40000 ALTER TABLE `facturas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.facturas_candidatos
@@ -1027,7 +1189,7 @@ CREATE TABLE IF NOT EXISTS `facturas_candidatos` (
   KEY `facturas_candidatos_facturas_id_62fd8eb3_fk_facturas_id` (`facturas_id`),
   CONSTRAINT `facturas_candidatos_candidatos_id_4fb6bbc4_fk_candidatos_id` FOREIGN KEY (`candidatos_id`) REFERENCES `candidatos` (`id`),
   CONSTRAINT `facturas_candidatos_facturas_id_62fd8eb3_fk_facturas_id` FOREIGN KEY (`facturas_id`) REFERENCES `facturas` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 -- Volcando datos para la tabla rhdb_dev.facturas_candidatos: ~5 rows (aproximadamente)
 /*!40000 ALTER TABLE `facturas_candidatos` DISABLE KEYS */;
@@ -1036,7 +1198,8 @@ INSERT INTO `facturas_candidatos` (`id`, `activo`, `created`, `updated`, `candid
 	(2, 'Y', '2022-11-18 22:06:56.011675', '2022-11-18 22:06:56.013719', 3, 1),
 	(3, 'Y', '2022-11-20 00:35:22.288459', '2022-11-20 00:35:22.293295', 4, 2),
 	(4, 'Y', '2022-11-23 22:53:43.112744', '2022-11-23 22:53:43.115892', 5, 3),
-	(5, 'Y', '2022-11-23 22:53:43.127223', '2022-11-23 22:53:43.129875', 6, 3);
+	(5, 'Y', '2022-11-23 22:53:43.127223', '2022-11-23 22:53:43.129875', 6, 3),
+	(6, 'Y', '2022-12-06 18:04:51.184490', '2022-12-06 18:04:51.186797', 8, 4);
 /*!40000 ALTER TABLE `facturas_candidatos` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.locaciones
@@ -1064,11 +1227,11 @@ CREATE TABLE IF NOT EXISTS `locaciones` (
   CONSTRAINT `locaciones_ciudades_id_c43c2383_fk_ciudades_id` FOREIGN KEY (`ciudades_id`) REFERENCES `ciudades` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.locaciones: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.locaciones: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `locaciones` DISABLE KEYS */;
 INSERT INTO `locaciones` (`id`, `locacion`, `locacion_name`, `direccion`, `codigo_postal`, `telefono`, `email`, `latitud`, `longitud`, `horario_apertura`, `horario_cierre`, `dias_operativos`, `zona_ciudad`, `activo`, `created`, `updated`, `ciudades_id`, `indicaciones_entrevista`) VALUES
 	(1, 'CAN50', 'HERTZ CANCUN AEOROPUERTO', 'x', '74589', '7412536895', 'prueba@email.com', '21.040796', '-99.2050712', '06:00:00.000000', '18:00:00.000000', 'lun,Mar,Mie,Jue,Vie', 'aeropuerto', 'Y', '2022-10-07 23:20:30.190991', '2022-10-07 23:20:30.191019', 1, 'locaciones/indicaciones/3_.pdf'),
-	(2, 'VER50', 'Hertz Veracruz Aeropuerto', 'x', '74859', '478512369', 'email@email.com', '19.4388173', '-99.2050712', '06:00:00.000000', '18:00:00.000000', 'lun,Mar,Mie,Jue,Vie', 'aeropuerto', 'Y', '2022-10-13 15:01:53.983834', '2022-10-13 15:01:53.983860', 3, 'locaciones/indicaciones/2_.pdf'),
+	(2, 'VER50', 'Hertz Veracruz Aeropuerto', 'x', '74859', '478512369', 'email@email.com', '19.142470', '-96.181238', '06:00:00.000000', '18:00:00.000000', 'lun,Mar,Mie,Jue,Vie', 'aeropuerto', 'Y', '2022-10-13 15:01:53.983834', '2022-12-01 18:27:42.271149', 3, 'locaciones/indicaciones/2_.pdf'),
 	(3, 'PDC50', 'HERTZ PLAYA DEL CARMEN', 'stree 80 m 26 l2', '77528', '9982140871', 'lsomohano20@gmail.com', '21.040796', '-99.2050712', '06:00:00.000000', '17:00:00.000000', 'lun,Mar,Mie,Jue,Vie', 'ciudad', 'Y', '2022-11-04 17:40:22.077136', '2022-11-04 17:40:22.077166', 2, 'locaciones/indicaciones/1_.pdf');
 /*!40000 ALTER TABLE `locaciones` ENABLE KEYS */;
 
@@ -1087,7 +1250,7 @@ CREATE TABLE IF NOT EXISTS `locaciones_proveedores` (
   CONSTRAINT `locaciones_proveedores_proveedores_id_cbc69730_fk_proveedores_id` FOREIGN KEY (`proveedores_id`) REFERENCES `proveedores` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.locaciones_proveedores: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.locaciones_proveedores: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `locaciones_proveedores` DISABLE KEYS */;
 INSERT INTO `locaciones_proveedores` (`id`, `activo`, `created`, `updated`, `locaciones_id`, `proveedores_id`) VALUES
 	(1, 'Y', '2022-11-09 15:45:53.162346', '2022-11-09 15:45:53.162381', 2, 1);
@@ -1120,6 +1283,30 @@ INSERT INTO `locaciones_puestos` (`id`, `staf_requerido`, `staf_contratado`, `ac
 	(4, 2, 1, 'Y', '2022-11-09 15:44:10.102461', '2022-11-24 17:41:48.960671', 1, 1, 1);
 /*!40000 ALTER TABLE `locaciones_puestos` ENABLE KEYS */;
 
+-- Volcando estructura para tabla rhdb_dev.motivos_rechazos
+CREATE TABLE IF NOT EXISTS `motivos_rechazos` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `motivo_rechazo` varchar(100) NOT NULL,
+  `activo` varchar(1) NOT NULL,
+  `created` datetime(6) NOT NULL,
+  `updated` datetime(6) NOT NULL,
+  `tipos` varchar(9) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+
+-- Volcando datos para la tabla rhdb_dev.motivos_rechazos: ~8 rows (aproximadamente)
+/*!40000 ALTER TABLE `motivos_rechazos` DISABLE KEYS */;
+INSERT INTO `motivos_rechazos` (`id`, `motivo_rechazo`, `activo`, `created`, `updated`, `tipos`) VALUES
+	(1, 'No llega a entrevista', 'Y', '2022-12-02 23:11:49.991887', '2022-12-02 23:11:49.991926', 'candidato'),
+	(2, 'No cumple el perfil', 'Y', '2022-12-02 23:12:08.285217', '2022-12-02 23:12:08.285246', 'candidato'),
+	(3, 'Distancia hogar - lugar de trabajo', 'Y', '2022-12-02 23:12:40.456803', '2022-12-02 23:12:40.456835', 'candidato'),
+	(4, 'Cambio de condiciones laborales', 'Y', '2022-12-02 23:12:55.891262', '2022-12-02 23:12:55.891290', 'candidato'),
+	(5, 'Proceso de contratación largo', 'Y', '2022-12-02 23:13:18.787964', '2022-12-02 23:13:18.787992', 'candidato'),
+	(6, 'Mejor oferta laboral', 'Y', '2022-12-02 23:13:35.965411', '2022-12-02 23:13:35.965437', 'candidato'),
+	(7, 'No acepto el sueldo', 'Y', '2022-12-02 23:13:59.939232', '2022-12-02 23:13:59.939264', 'candidato'),
+	(8, 'Por que no fue completada', 'Y', '2022-12-08 22:50:05.274207', '2022-12-08 22:50:05.274240', 'solicitud');
+/*!40000 ALTER TABLE `motivos_rechazos` ENABLE KEYS */;
+
 -- Volcando estructura para tabla rhdb_dev.personas
 CREATE TABLE IF NOT EXISTS `personas` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -1136,9 +1323,9 @@ CREATE TABLE IF NOT EXISTS `personas` (
   `genero` varchar(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `rfc` (`rfc`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.personas: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.personas: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `personas` DISABLE KEYS */;
 INSERT INTO `personas` (`id`, `nombre`, `apellido_paterno`, `apellido_materno`, `rfc`, `fecha_nacimiento`, `email`, `telefono`, `activo`, `created`, `updated`, `genero`) VALUES
 	(1, 'Leonel', 'Somohano', 'Carmona', 'SOCL850309JD8', '2022-10-05', 'lsomohano20@gmail.com', '9982140871', 'Y', '2022-11-01 16:02:12.202437', '2022-11-01 16:02:12.202466', 'M'),
@@ -1147,7 +1334,11 @@ INSERT INTO `personas` (`id`, `nombre`, `apellido_paterno`, `apellido_materno`, 
 	(4, 'Ruben', 'Sanchez', 'Sambrano', 'XEXX010101014', '2020-11-20', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-14 17:11:21.080302', '2022-11-20 00:34:27.470555', 'M'),
 	(5, 'Leonel', 'Somohano', 'Carmona', 'XEXX010101005', '2017-02-19', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-15 15:47:54.870857', '2022-11-23 22:29:51.353915', 'M'),
 	(6, 'Marcos', 'Sambrano', 'Ochoa', 'XEXX010101058', '2005-05-19', 'email@email.com', '74581236', 'Y', '2022-11-23 22:05:53.469374', '2022-11-23 22:18:07.045344', 'M'),
-	(7, 'Leonel', 'Somohano', 'Carmona', 'XEXX010101016', '2022-11-15', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-28 15:49:27.396129', '2022-11-28 15:49:27.396157', 'M');
+	(7, 'Leonel', 'Somohano', 'Carmona', 'XEXX010101016', '2022-11-15', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-11-28 15:49:27.396129', '2022-11-29 18:31:52.624975', 'M'),
+	(8, 'Leonel', 'Somohano', 'Carmona', 'SOCL850309JT9', '2016-02-11', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-12-06 17:33:59.458129', '2022-12-06 17:45:14.156713', 'M'),
+	(9, 'Daniel', 'Corro', 'Sanchez', 'XEXX0101010784', '1999-01-12', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-12-07 15:26:20.039147', '2022-12-07 17:02:19.798951', 'M'),
+	(10, 'Leonel', 'Somohano', 'Somohano Carmona', 'XEXX010101008', '2019-09-20', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-12-07 15:46:25.074745', '2022-12-07 18:47:52.409369', 'M'),
+	(11, 'Manuel', 'Santos', 'Perez', 'XEXX010101037', '2019-02-20', 'lsomohano20@gmail.com', '+529982140871', 'Y', '2022-12-07 18:14:51.193188', '2022-12-07 19:14:46.499331', 'M');
 /*!40000 ALTER TABLE `personas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.proveedores
@@ -1164,12 +1355,13 @@ CREATE TABLE IF NOT EXISTS `proveedores` (
   `created` datetime(6) NOT NULL,
   `updated` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.proveedores: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.proveedores: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `proveedores` DISABLE KEYS */;
 INSERT INTO `proveedores` (`id`, `proveedor`, `rfc`, `razon_social`, `direccion`, `codigo_postal`, `telefono`, `email`, `activo`, `created`, `updated`) VALUES
-	(1, 'Proveedor Veracruz', 'SOCL850309JD8', 'Proveedor de prueba SA de CVk', 'stree 80 m 26 l2', '77528', '9982140871', 'lsomohano20@gmail.com', 'Y', '2022-11-09 15:45:09.093690', '2022-11-16 18:40:32.226214');
+	(1, 'Proveedor Veracruz', 'SOCL850309JD8', 'Proveedor de prueba SA de CVk', 'stree 80 m 26 l2', '77528', '9982140871', 'lsomohano20@gmail.com', 'Y', '2022-11-09 15:45:09.093690', '2022-11-16 18:40:32.226214'),
+	(2, 'Proveedor Cancun', 'XEXX010101000', 'Proveedor de Cancún SA de CV', 'stree 80 m 26 l2', '77528', '9982140871', 'proveedorCan50@gmail.com', 'Y', '2022-12-01 20:40:01.874904', '2022-12-01 20:40:01.874936');
 /*!40000 ALTER TABLE `proveedores` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.puestos_nominas
@@ -1182,12 +1374,12 @@ CREATE TABLE IF NOT EXISTS `puestos_nominas` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.puestos_nominas: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.puestos_nominas: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `puestos_nominas` DISABLE KEYS */;
 INSERT INTO `puestos_nominas` (`id`, `puesto_nomina`, `activo`, `created`, `updated`) VALUES
-	(1, 'Auxiliar de Servicios', 'Y', '2022-10-07 23:21:10.700172', '2022-10-07 23:21:10.700206'),
-	(2, 'Auxiliar Administrativo', 'N', '2022-10-07 23:22:59.135218', '2022-11-22 22:18:37.149955'),
-	(3, 'Auxiliar Administrativo', 'N', '2022-10-07 23:23:55.141232', '2022-10-07 23:23:55.141270');
+	(1, 'Auxiliar de Servicios', 'Y', '2022-10-07 23:21:10.700172', '2022-12-08 20:00:59.995778'),
+	(2, 'Auxiliar Administrativo', 'Y', '2022-10-07 23:22:59.135218', '2022-12-08 20:01:12.120724'),
+	(3, 'Auxiliar Administrativo', 'Y', '2022-10-07 23:23:55.141232', '2022-12-08 20:01:05.849355');
 /*!40000 ALTER TABLE `puestos_nominas` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.puestos_operativos
@@ -1204,7 +1396,7 @@ CREATE TABLE IF NOT EXISTS `puestos_operativos` (
   CONSTRAINT `puestos_operativos_puestos_nominas_id_317591f8_fk_puestos_n` FOREIGN KEY (`puestos_nominas_id`) REFERENCES `puestos_nominas` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.puestos_operativos: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.puestos_operativos: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `puestos_operativos` DISABLE KEYS */;
 INSERT INTO `puestos_operativos` (`id`, `puesto_operativo`, `canal_reclutamiento`, `activo`, `created`, `updated`, `puestos_nominas_id`) VALUES
 	(1, 'Soporte técnico TI', 'externo', 'N', '2022-10-07 23:24:19.449335', '2022-11-22 22:18:24.600274', 2),
@@ -1221,7 +1413,7 @@ CREATE TABLE IF NOT EXISTS `sitetree_tree` (
   UNIQUE KEY `alias` (`alias`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.sitetree_tree: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.sitetree_tree: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `sitetree_tree` DISABLE KEYS */;
 INSERT INTO `sitetree_tree` (`id`, `title`, `alias`) VALUES
 	(1, 'Avasa RH', 'AvasaRH');
@@ -1293,7 +1485,7 @@ CREATE TABLE IF NOT EXISTS `sitetree_treeitem_access_permissions` (
   CONSTRAINT `sitetree_treeitem_ac_treeitem_id_aedb7367_fk_sitetree_` FOREIGN KEY (`treeitem_id`) REFERENCES `sitetree_treeitem` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.sitetree_treeitem_access_permissions: ~17 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.sitetree_treeitem_access_permissions: ~15 rows (aproximadamente)
 /*!40000 ALTER TABLE `sitetree_treeitem_access_permissions` DISABLE KEYS */;
 INSERT INTO `sitetree_treeitem_access_permissions` (`id`, `treeitem_id`, `permission_id`) VALUES
 	(4, 2, 56),
@@ -1323,23 +1515,29 @@ CREATE TABLE IF NOT EXISTS `solicitudes_estatus` (
   `updated` datetime(6) NOT NULL,
   `estatus_id` bigint(20) NOT NULL,
   `solicitudes_vacantes_id` bigint(20) NOT NULL,
+  `motivos_rechazos_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `solicitudes_estatus_estatus_id_37e03d68_fk_calogos_estatus_id` (`estatus_id`),
   KEY `solicitudes_estatus_solicitudes_vacantes_f4bdb182_fk_solicitud` (`solicitudes_vacantes_id`),
-  CONSTRAINT `solicitudes_estatus_estatus_id_37e03d68_fk_calogos_estatus_id` FOREIGN KEY (`estatus_id`) REFERENCES `calogos_estatus` (`id`),
+  KEY `solicitudes_estatus_motivos_rechazos_id_9d4bf81d_fk_motivos_r` (`motivos_rechazos_id`),
+  CONSTRAINT `solicitudes_estatus_estatus_id_37e03d68_fk_calogos_estatus_id` FOREIGN KEY (`estatus_id`) REFERENCES `catalogos_estatus` (`id`),
+  CONSTRAINT `solicitudes_estatus_motivos_rechazos_id_9d4bf81d_fk_motivos_r` FOREIGN KEY (`motivos_rechazos_id`) REFERENCES `motivos_rechazos` (`id`),
   CONSTRAINT `solicitudes_estatus_solicitudes_vacantes_f4bdb182_fk_solicitud` FOREIGN KEY (`solicitudes_vacantes_id`) REFERENCES `solicitudes_vacantes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Volcando datos para la tabla rhdb_dev.solicitudes_estatus: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla rhdb_dev.solicitudes_estatus: ~10 rows (aproximadamente)
 /*!40000 ALTER TABLE `solicitudes_estatus` DISABLE KEYS */;
-INSERT INTO `solicitudes_estatus` (`id`, `activo`, `created`, `updated`, `estatus_id`, `solicitudes_vacantes_id`) VALUES
-	(1, 'N', '2022-10-14 21:33:16.116937', '2022-10-14 21:33:16.116973', 1, 1),
-	(2, 'N', '2022-10-18 18:15:33.751059', '2022-10-18 18:15:33.751090', 1, 2),
-	(3, 'Y', '2022-10-21 22:44:52.813549', '2022-10-21 22:44:52.813579', 1, 3),
-	(4, 'Y', '2022-11-01 16:02:12.314339', '2022-11-01 16:02:12.314372', 2, 1),
-	(5, 'N', '2022-11-09 15:47:07.482161', '2022-11-09 15:47:07.482228', 1, 4),
-	(6, 'Y', '2022-11-15 15:47:55.027747', '2022-11-15 15:47:55.027778', 2, 2),
-	(7, 'Y', '2022-11-23 22:05:53.601552', '2022-11-23 22:05:53.602930', 2, 4);
+INSERT INTO `solicitudes_estatus` (`id`, `activo`, `created`, `updated`, `estatus_id`, `solicitudes_vacantes_id`, `motivos_rechazos_id`) VALUES
+	(1, 'N', '2022-10-14 21:33:16.116937', '2022-10-14 21:33:16.116973', 1, 1, NULL),
+	(2, 'N', '2022-10-18 18:15:33.751059', '2022-10-18 18:15:33.751090', 1, 2, NULL),
+	(3, 'Y', '2022-10-21 22:44:52.813549', '2022-10-21 22:44:52.813579', 1, 3, NULL),
+	(4, 'Y', '2022-11-01 16:02:12.314339', '2022-11-01 16:02:12.314372', 2, 1, NULL),
+	(5, 'N', '2022-11-09 15:47:07.482161', '2022-11-09 15:47:07.482228', 1, 4, NULL),
+	(6, 'N', '2022-11-15 15:47:55.027747', '2022-11-15 15:47:55.027778', 2, 2, NULL),
+	(7, 'N', '2022-11-23 22:05:53.601552', '2022-11-23 22:05:53.602930', 2, 4, NULL),
+	(8, 'Y', '2022-12-08 22:12:04.793867', '2022-12-08 22:12:04.797132', 18, 3, NULL),
+	(10, 'Y', '2022-12-08 23:05:27.353451', '2022-12-08 23:05:27.353487', 19, 2, 8),
+	(11, 'Y', '2022-12-08 23:07:28.304872', '2022-12-08 23:07:28.304904', 19, 4, 8);
 /*!40000 ALTER TABLE `solicitudes_estatus` ENABLE KEYS */;
 
 -- Volcando estructura para tabla rhdb_dev.solicitudes_vacantes
@@ -1369,10 +1567,10 @@ CREATE TABLE IF NOT EXISTS `solicitudes_vacantes` (
 -- Volcando datos para la tabla rhdb_dev.solicitudes_vacantes: ~4 rows (aproximadamente)
 /*!40000 ALTER TABLE `solicitudes_vacantes` DISABLE KEYS */;
 INSERT INTO `solicitudes_vacantes` (`id`, `sueldos`, `comiciones`, `bono`, `garantia`, `activo`, `created`, `updated`, `locaciones_id`, `user_id`, `cantidad`, `periodo_pago`, `puestos_operativos_id`) VALUES
-	(1, 1200.00, 'N', 'Y', 'Y', 'Y', '2022-10-14 21:33:16.107760', '2022-10-14 21:33:16.107796', 2, 3, 3, 'quincenal', 2),
-	(2, 333333.00, 'Y', 'Y', 'Y', 'Y', '2022-10-18 18:15:33.738351', '2022-10-18 18:15:33.738383', 1, 1, 1, 'quincenal', 3),
-	(3, 12000.00, 'Y', 'Y', 'Y', 'Y', '2022-10-21 22:44:52.805657', '2022-10-21 22:44:52.805688', 1, 1, 2, 'quincenal', 1),
-	(4, 12220.00, 'Y', 'Y', 'Y', 'Y', '2022-11-09 15:47:07.472449', '2022-11-09 15:47:07.472482', 3, 1, 1, 'quincenal', 3);
+	(1, 1200.00, 'N', 'Y', 'Y', 'Y', '2022-10-14 21:33:16.107760', '2022-12-08 22:42:35.506618', 2, 3, 3, 'quincenal', 2),
+	(2, 333333.00, 'Y', 'Y', 'Y', 'Y', '2022-10-18 18:15:33.738351', '2022-10-18 18:15:33.738383', 1, 3, 1, 'quincenal', 3),
+	(3, 12000.00, 'Y', 'Y', 'Y', 'N', '2022-10-21 22:44:52.805657', '2022-12-08 22:12:04.779339', 1, 3, 2, 'quincenal', 1),
+	(4, 12220.00, 'Y', 'Y', 'Y', 'Y', '2022-11-09 15:47:07.472449', '2022-11-09 15:47:07.472482', 3, 3, 1, 'quincenal', 3);
 /*!40000 ALTER TABLE `solicitudes_vacantes` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
