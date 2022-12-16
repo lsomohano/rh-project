@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from microsoft_authentication.auth.auth_decorators import microsoft_login_required
 
 # Create your views here.
-#@microsoft_login_required()
+
 @login_required(login_url="Log_In")
 def home(request):
     titles = {"title_page":'Dashboard',"sub_title_page":'Pagina principal.'}
