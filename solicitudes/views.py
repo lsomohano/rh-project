@@ -92,7 +92,6 @@ def detailsSolicitudes(request, id):
     solicitud = SolicitudesVacantes.objects.get(id=id)
     estatus = SolicitudesEstatus.objects.get(solicitudes_vacantes_id=id, activo='Y')
     contacto = Contactos.objects.get(user__id=solicitud.user_id, locaciones__id=solicitud.locaciones_id)
-    contacto = User
     #candidatos = Candidatos.objects.filter(solicitudes_vacantes_id=id).select_related('personas').prefetch_related('id__candidatos_estatus')
     candidatos = Candidatos.objects.raw("""SELECT c.id, c.created, c.aceptado, c.personas_id, c.tipo_candidato, p.nombre, p.apellido_paterno,p.apellido_materno, p.rfc, p.fecha_nacimiento, p.email, p.genero, ce.created AS fecha_estatus, e.estatus, e.descripcion, en.tipo_evento, en.fecha_entrevista, en.asistio 
                                             FROM candidatos c
