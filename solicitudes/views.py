@@ -119,7 +119,7 @@ def deleteSolicitudes(request, id):
     solicitud.activo='N'
     solicitud.save()
 
-    SolicitudesEstatus.objects.filter(solicitudes_id=id).update(activo='N')
+    SolicitudesEstatus.objects.filter(solicitudes_vacantes_id=id).update(activo='N')
     estatus = Estatus.objects.get(tipos='solicitud',estatus='Eliminada')
     solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
     solicitud_estatus.save()
