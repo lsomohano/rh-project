@@ -27,7 +27,8 @@
       <thead>
         <tr>
           <th>Id</th>
-          <th>Usuario</th>
+          <th>Solicitante</th>
+          <th>Proveedor</th>
           <th>Locación</th>
           <th>Puesto</th>
           <th>Fecha Solicitud</th>
@@ -39,7 +40,8 @@
         {% for solicitud in solicitudes %}
         <tr>
           <td>{{solicitud.id}}</td>
-          <td>{{solicitud.user}}</td>
+          <td>{{solicitud.user.first_name}} {{solicitud.user.last_name}}</td>
+          <td>{{solicitud.proveedores}}</td>
           <td>{{solicitud.locaciones}}</td>
           <td>{{solicitud.puestos_operativos}}</td>
           <td>{{solicitud.created}}</td>

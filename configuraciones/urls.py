@@ -37,6 +37,7 @@ urlpatterns = [
     path('create_locaciones/',views.createLocaciones, name="CreateLocaciones"),
     path('edit_locaciones/<int:id>',views.editLocaciones, name="EditLocaciones"),
     path('details_locaciones/<int:id>',views.detailsLocaciones, name="DetailsLocaciones"),
+    path('delete_locaciones/<int:id>',views.deleteLocaciones, name="DeleteLocaciones"),
 
     path('create_contacto_loc/<int:locaciones_id>',views.createContacto, name="CreateContactoLoc"),
     path('edit_contacto_loc/<int:id>',views.editContacto, name="EditContactoLoc"),
@@ -44,4 +45,5 @@ urlpatterns = [
 
     path('create_puesto_loc/<int:locaciones_id>',views.createLocacinesPuestos, name="CreatePuestoLoc"),
     path('edit_puesto_loc/<int:id>',views.editLocacinesPuestos, name="EditPuestoLoc"),
+    path('delete_puesto_loc/<int:id>',views.deletePuesto, name="DeletePuestoLoc"),
 ]

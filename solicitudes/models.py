@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from configuraciones.models import Locaciones, PuestosOperativos
+from proveedores.models import Proveedores
 from enum import Enum
 import datetime
 # Create your models here.
@@ -90,6 +91,7 @@ class SolicitudesVacantes(models.Model):
     y el proveedor podra dar seguimiento a estas solicitudes """
 
     user=models.ForeignKey(User, on_delete=models.CASCADE)
+    proveedores = models.ForeignKey(Proveedores, on_delete=models.CASCADE, verbose_name='Proveedores', null=True, blank=True)
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE, verbose_name='Locaciones')
     puestos_operativos = models.ForeignKey(PuestosOperativos, on_delete=models.CASCADE, verbose_name='Puestos', null=True, blank=True)
     sueldos = models.DecimalField(max_digits=20, decimal_places=2)

@@ -21,8 +21,16 @@ def createView(request):
         formulario = ProveedoresCreation(request.POST or None)
         if formulario.is_valid():
             proveedor= formulario.save()
+            messages.add_message(request=request,level=messages.SUCCESS, message="Proveedor registrado con éxito.")
             return redirect('Details',id=proveedor.id)
-    
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El proveedor no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+            return redirect('Proveedores')
+
     formulario = ProveedoresCreation()
        
     return render(request,"proveedores/create.html",{"titles":titles, "formulario":formulario})
@@ -37,7 +45,15 @@ def editView(request, id):
         formulario = ProveedoresCreation(request.POST or None, instance=proveedor)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Details',id=id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="Los datos se actualizarón correctamente.")
+            #return redirect('Details',id=id)
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="Los datos No se actualizarón correctamente.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('Details',id=id)
     else:
         formulario = ProveedoresCreation(instance=proveedor)
 
@@ -65,6 +81,7 @@ def deleteView(request, id):
     proveedor = Proveedores.objects.get(id=id)
     proveedor.activo='N'
     proveedor.save()
+    messages.add_message(request=request,level=messages.SUCCESS, message="El proveedor se eliminó correctamente.")
 
     return redirect('Proveedores')
 
@@ -83,8 +100,15 @@ def createContactosView(request,proveedores_id):
         
         if formulario.is_valid():
             formulario.save()
-            return redirect('Details',id=proveedores_id)
-    
+            messages.add_message(request=request,level=messages.SUCCESS, message="El contacto se agregó correctamente.") 
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El contacto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('Details',id=proveedores_id)
+
     formulario = ContactosProveedoresCreation()
     return render(request,"proveedores/create_contacto.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
 
@@ -97,9 +121,16 @@ def editContactosView(request, id):
     if request.method == "POST":
         formulario = ContactosProveedoresCreation(request.POST or None, instance=contacto)
         if formulario.is_valid():
-            proveedores_id = formulario['proveedores'].value()
             formulario.save()
-            return redirect('Details',id=proveedores_id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="El contacto se actualizó correctamente.")
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El contacto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('Details',id=formulario['proveedores'].value())
+            
     else:
         formulario = ContactosProveedoresCreation(instance=contacto)
 
@@ -115,7 +146,10 @@ def DeleteContactosView(request, id):
     contacto.activo='N'
     contacto.save()
 
+    messages.add_message(request=request,level=messages.SUCCESS, message="El contacto se eliminó correctamente.")
+
     return redirect('Details',id=proveedores_id)
+
 
 """Sección de gestion de las locaciones asignadas"""
 
@@ -126,8 +160,18 @@ def createLocacionesViews(request, proveedores_id):
         formulario = LocacionesProveedoresCreation(request.POST or None)
         if formulario.is_valid():
             formulario.save()
+
+            messages.add_message(request=request,level=messages.SUCCESS, message="La locación se agregó correctamente.")
+
             return redirect('Details',id=proveedores_id)
-    
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La locación no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+            return redirect('Details',id=proveedores_id)
+
     formulario = LocacionesProveedoresCreation()
 
     return render(request,"proveedores/create_locacion.html", {"titles":titles, "formulario":formulario,"proveedores_id":proveedores_id})
@@ -141,5 +185,7 @@ def DeleteLocacionesView(request, id):
     proveedores_id = locacion.proveedores_id
     locacion.activo='N'
     locacion.save()
+
+    messages.add_message(request=request,level=messages.WARNING, message="La locación se eliminó correctamente.")
 
     return redirect('Details',id=proveedores_id)

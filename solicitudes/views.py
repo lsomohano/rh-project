@@ -6,9 +6,7 @@ from configuraciones.models import Locaciones, PuestosOperativos, LocacionesPues
 from .forms import CandidatosForm, EntrevistasForm, PersonasForm, SolicitudesForm, EstatusForm, Entrevistas2Form, Entrevistas3Form, EstatusCandidatosForm, IngresoForm, EstatusSolicitudesForm, AgendaForm
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.core.serializers import serialize
-from autenticacion.models import User
 
 from django.utils import timezone
 import datetime
@@ -28,7 +26,7 @@ def solicitudesView(request):
     for group in request.user.groups.all():
         #Si pertenece al grupo RH Gerentes se cambia los fiels locaciones y puestos operativos con los elementos que pueden ver.
         if group.name == 'Proveedores':
-            solicitudes = solicitudes.filter(locaciones__locacionesproveedores__proveedores__contactosproveedores__user_id=request.user.id)
+            solicitudes = solicitudes.filter(proveedores__contactosproveedores__user_id=request.user.id)
         if group.name == 'RH Gerentes':
             solicitudes = solicitudes.filter(locaciones__contactos__user_id=request.user.id)
             
@@ -51,8 +49,16 @@ def createSolicitudes(request):
             solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
             solicitud_estatus.save()
 
+            messages.add_message(request=request,level=messages.SUCCESS, message="La solicitud fue enviada con éxito.")
             return redirect('DetailsSolicitudes', id=solicitud.id)
-    
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La solicitud no pudo ser guardada.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+            return redirect('Solicitudes')
+
     formulario = SolicitudesForm()
 
     #Se comprueba si el ususario no pertenece al grupo RH Gerentes
@@ -76,7 +82,15 @@ def editSolicitudes(request, id):
         formulario = SolicitudesForm(request.POST or None, instance=solicitudes)
         if formulario.is_valid():
             formulario.save()
-            return redirect('DetailsSolicitudes',id=id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="La solicitud fue editada con éxito.")
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La solicitud no pudo ser modificada.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsSolicitudes',id=id)
+
     else:
         formulario = SolicitudesForm(instance=solicitudes)
 
@@ -123,6 +137,8 @@ def deleteSolicitudes(request, id):
     solicitud_estatus = SolicitudesEstatus.objects.create(solicitudes_vacantes=solicitud,estatus=estatus)
     solicitud_estatus.save()
 
+    messages.add_message(request=request,level=messages.WARNING, message="La solicitud fue eliminada con éxito.")
+
     return redirect('Solicitudes')
 
 
@@ -142,7 +158,7 @@ def cancelSolicitudes(request, id):
             solicitudestatus.estatus = Estatus.objects.get(tipos='solicitud',estatus='Cancelada')
 
             solicitudestatus.save()
-
+            messages.add_message(request=request,level=messages.WARNING, message="La solicitud fue cancelada con éxito.")
             return redirect('DetailsSolicitudes', id=solicitudestatus.solicitudes_vacantes_id)
         else:
             return redirect('Home')
@@ -258,9 +274,19 @@ class CandidatosCreate(CreateView):
                     solicitudes_vacantes_id=candidato.solicitudes_vacantes_id,
                     estatus=estatus)
                 solicitud_estatus.save()
-
+            
+            messages.add_message(request=request,level=messages.SUCCESS, message="El candidato fue agregado con éxito.")
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
+            messages.add_message(request=request,level=messages.ERROR, message="El proveedor no se pudo agregar.")
+            for field, items in form.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+            for field, items in form2.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
 
 
@@ -318,8 +344,18 @@ WHERE d.activo='Y' """,(pk,))
                         doc = CandidatosDocumentos.objects.create(check_proveedor='Y', candidatos=candidato, documentos_id=documento)
                         doc.save()
 
+            messages.add_message(request=request,level=messages.SUCCESS, message="El candidato fue editado con éxito.")
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
+            messages.add_message(request=request,level=messages.ERROR, message="El candidato no se pudo editar.")
+            for field, items in form.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+            for field, items in form2.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
             return self.render_to_response(self.get_context_data(form=form, form2=form2))
 
 
@@ -330,19 +366,25 @@ def createRechazo(request, candidatos_id):
     
     if request.method == "POST":
         formulario = EstatusCandidatosForm(request.POST or None)
+        candidato = Candidatos.objects.get(id=candidatos_id)
         if formulario.is_valid():
-            
             CandidatosEstatus.objects.filter(candidatos_id=candidatos_id).update(activo='N')
-            candidato = Candidatos.objects.get(id=candidatos_id)
 
             candidatoestatus = formulario.save(commit=False)
             candidatoestatus.candidatos = candidato
             candidatoestatus.estatus = Estatus.objects.get(tipos='candidato',estatus='Rechazado')
-
             candidatoestatus.save()
-            return redirect('DetailsSolicitudes', id=candidato.solicitudes_vacantes_id)
+
+            messages.add_message(request=request,level=messages.SUCCESS, message="El candidato fue rechazado con éxito.")
+
         else:
-            return redirect('Home')
+            messages.add_message(request=request,level=messages.ERROR, message="El candidato no se pudo rechazar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('DetailsSolicitudes', id=candidato.solicitudes_vacantes_id)
+
     formulario = EstatusCandidatosForm()    
 
     return render(request,"solicitudes/create_rechazo.html",{"titles":titles, "formulario":formulario,"candidatos_id":candidatos_id})
@@ -380,18 +422,26 @@ def createEntrevistas(request, candidatos_id):
         formulario = EntrevistasForm(request.POST or None)
         candidato = Candidatos.objects.get(id=candidatos_id)
         if formulario.is_valid():
-            entrevista = formulario.save(commit=False)
-            entrevista.candidatos = candidato
-            entrevista.save()
-            
-            CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
-            estatus = Estatus.objects.get(tipos='candidato', estatus='Programado')
-            ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
-            ce.save()
-
-            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+            if Entrevistas.objects.filter(Q(candidatos_id=candidatos_id), Q(tipo_evento='entrevista'), Q(asistio__isnull='True')).exists():
+                messages.add_message(request=request,level=messages.INFO, message="El candidato ya tiene agendada una entrevista.")
+            else:
+                entrevista = formulario.save(commit=False)
+                entrevista.candidatos = candidato
+                entrevista.save()
+                
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+                estatus = Estatus.objects.get(tipos='candidato', estatus='Programado')
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+                ce.save()
+                messages.add_message(request=request,level=messages.SUCCESS, message="La entrevista fue agendada con éxito.")
+        
         else:
-            return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
+            messages.add_message(request=request,level=messages.ERROR, message="No se pudo agendar la entrevista, inténtelo de nuevo.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+        
+        return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
     
     candidato = Candidatos.objects.get(id=candidatos_id)
     formulario = EntrevistasForm()
@@ -501,15 +551,30 @@ WHERE d.activo='Y' """,(pk,))
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Entrevistado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
+                messages.add_message(request=request,level=messages.SUCCESS, message="Se confirmó la asistencia del candidato a la entrevista.")
             else:
                 CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
+                messages.add_message(request=request,level=messages.WARNING, message="Se confirmó la Inasistencia del candidato a la entrevista.")
 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
             #return redirect('Entrevistas')
         else:
+            messages.add_message(request=request,level=messages.ERROR, message="La información del candidato no se pudo actualizar.")
+            for field, items in form.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+            for field, items in form2.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+            for field, items in form3.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+        
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
 
 
@@ -524,25 +589,32 @@ def createContratacion(request, candidatos_id):
         formulario = EntrevistasForm(request.POST or None)
         candidato = Candidatos.objects.get(id=candidatos_id)
         if formulario.is_valid():
-            entrevista = formulario.save(commit=False)
-            entrevista.candidatos = candidato
-            entrevista.tipo_evento = 'contratacion'
-            entrevista.save()
+            if Entrevistas.objects.filter(Q(candidatos_id=candidatos_id), Q(tipo_evento='contratacion'), Q(asistio__isnull='True')).exists():
+                messages.add_message(request=request,level=messages.INFO, message="El candidato ya tiene agendada la contratación.")
+            else:
+                entrevista = formulario.save(commit=False)
+                entrevista.candidatos = candidato
+                entrevista.tipo_evento = 'contratacion'
+                entrevista.save()
+                
+                CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
+                estatus = Estatus.objects.get(tipos='candidato', estatus='Contratación')
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
+                ce.save()
+                messages.add_message(request=request,level=messages.SUCCESS, message="Se agendó el candidato a firmar contrato.")
             
-            CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
-            estatus = Estatus.objects.get(tipos='candidato', estatus='Contratación')
-            ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
-            ce.save()
-
-            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
         else:
-            return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
+            messages.add_message(request=request,level=messages.ERROR, message="No se pudo agendar la contratación, inténtelo de nuevo.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
     
+        return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+
     candidato = Candidatos.objects.get(id=candidatos_id)
     formulario = EntrevistasForm()
        
     return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidato":candidato})
-
 
 
 @login_required(login_url="Log_In")
@@ -630,20 +702,36 @@ WHERE d.activo='Y' """,(pk,))
                 contratacion.fecha_entrevista = timezone.now()
             contratacion.save()
                         
-            #Se procesa el estus
+            #Se procesa el estatus
             if contratacion.asistio == 'Y':
                 CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Contratado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
+                messages.add_message(request=request,level=messages.SUCCESS, message="Se confirmó la contratación del candidato.")
             else:
                 CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
                 CandidatosEstatus.objects.filter(candidatos_id=candidato.id, estatus='Entrevistado').update(activo='Y')
                 """estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()"""
+                messages.add_message(request=request,level=messages.WARNING, message="El candidato no fue contratado.")
+                
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id)
         else:
+            messages.add_message(request=request,level=messages.ERROR, message="La información del candidato no se pudo actualizar.")
+            for field, items in form.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+            for field, items in form2.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+            for field, items in form3.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
             return self.render_to_response(self.get_context_data(form=form, form2=form2, form3=form3))
 
 
@@ -658,14 +746,21 @@ def createIngreso(request, candidatos_id):
         formulario = EntrevistasForm(request.POST or None)
         candidato = Candidatos.objects.get(id=candidatos_id)
         if formulario.is_valid():
-            entrevista = formulario.save(commit=False)
-            entrevista.candidatos = candidato
-            entrevista.tipo_evento = 'ingreso'
-            entrevista.save()
-
-            return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
+            if Entrevistas.objects.filter(Q(candidatos_id=candidatos_id), Q(tipo_evento='contratacion'), Q(asistio__isnull='True')).exists():
+                messages.add_message(request=request,level=messages.INFO, message="El candidato ya tiene agendada su ingreso laboral.")
+            else:
+                entrevista = formulario.save(commit=False)
+                entrevista.candidatos = candidato
+                entrevista.tipo_evento = 'ingreso'
+                entrevista.save()
+                messages.add_message(request=request,level=messages.SUCCESS, message="Se agendó el candidato a su primer día de trabajo.")
         else:
-            return render(request,"solicitudes/create_entrevistas.html",{"titles":titles, "formulario":formulario, "candidatos_id":candidatos_id})
+            messages.add_message(request=request,level=messages.ERROR, message="No se pudo agendar el primer día de trabajo del candidato.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id) 
     
     candidato = Candidatos.objects.get(id=candidatos_id)
     formulario = EntrevistasForm()
@@ -688,10 +783,14 @@ def editIngreso(request, candidatos_id):
                 ingreso.fecha_entrevista = timezone.now()
             ingreso.save()
            
-            #CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
-            estatus = Estatus.objects.get(tipos='candidato', estatus='Ingreso')
-            ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id, activo='N')
-            ce.save()
+            #Se procesa el estatus
+            if ingreso.asistio == 'Y':
+                estatus = Estatus.objects.get(tipos='candidato', estatus='Ingreso')
+                ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id, activo='N')
+                ce.save()
+                messages.add_message(request=request,level=messages.SUCCESS, message="El candidato se presento a laborar, inicia dias de garantia.")
+            else:
+                messages.add_message(request=request,level=messages.WARNING, message="El candidato no se presento a laborar.")
 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id)
     else:

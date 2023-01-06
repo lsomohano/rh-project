@@ -7,12 +7,12 @@ from configuraciones.models import LocacionesPuestos, PuestosOperativos, Locacio
 
 class SolicitudesForm(forms.ModelForm):
 
-    locaciones = forms.ModelChoiceField(queryset=Locaciones.objects.all(), empty_label="-- Locaciones --", to_field_name="id",)
-    puestos_operativos = forms.ModelChoiceField(queryset=PuestosOperativos.objects.all(), empty_label="-- Puestos --", to_field_name="id",)
+    locaciones = forms.ModelChoiceField(queryset=Locaciones.objects.filter(activo='Y'), empty_label="-- Locaciones --", to_field_name="id",)
+    puestos_operativos = forms.ModelChoiceField(queryset=PuestosOperativos.objects.filter(activo='Y'), empty_label="-- Puestos --", to_field_name="id",)
     
     class Meta:
         model = SolicitudesVacantes
-        fields = ['locaciones','puestos_operativos','cantidad','sueldos','periodo_pago','comiciones','bono','garantia','user']
+        fields = ['proveedores','locaciones','puestos_operativos','cantidad','sueldos','periodo_pago','comiciones','bono','garantia','user']
         widgets = {
             'user': forms.HiddenInput(),
         }
@@ -20,6 +20,11 @@ class SolicitudesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.fields['proveedores'].widget.attrs.update({
+            'class':'form-control select2bs4',
+            'placeholder':'Proveedores',
+            'required': 'required',
+        })
         self.fields['locaciones'].widget.attrs.update({
             'class':'form-control select2bs4',
             'placeholder':'Locación',
@@ -231,6 +236,7 @@ class Entrevistas2Form(forms.ModelForm):
         self.fields['asistio'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Asistio',
+            'required':'required'
         })
 
 
@@ -255,7 +261,7 @@ class Entrevistas3Form(forms.ModelForm):
         self.fields['hora_programada'].widget.attrs.update({
             'class':'form-control datetimepicker-input',
             'placeholder':'Hora Programada',
-            'data-target':'#hora_programada'
+            'data-target':'#hora_programada',
         })
         self.fields['indicaciones'].widget.attrs.update({
             'class':'form-control',
@@ -274,6 +280,7 @@ class Entrevistas3Form(forms.ModelForm):
         self.fields['asistio'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Asistio',
+            'required':'required',
         })
 
 class IngresoForm(forms.ModelForm):  
@@ -316,6 +323,7 @@ class IngresoForm(forms.ModelForm):
         self.fields['asistio'].widget.attrs.update({
             'class':'form-control',
             'placeholder':'Asistio',
+            'required':'required',
         })
 
 

@@ -27,34 +27,41 @@
                 Pago: {{solicitud.periodo_pago}}<br>
                 Comiciones: {{solicitud.comiciones}}<br>
                 Bonos: {{solicitud.bono}}<br>
-                Bonos: {{solicitud.garantia}}<br>                
+                Bonos: {{solicitud.garantia}}<br>  
+                {% if  solicitud.locaciones.indicaciones_entrevista %}
+                  <a href="{{solicitud.locaciones.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
+                    <i class="far fa-file-pdf"></i> Instrucciones para la Entrevista.
+                  </a>
+                {% endif %}              
             </div>
             <!-- /.col -->
             <div class="col-sm-3 invoice-col">
-              Lolicitante:
+              {{solicitud.locaciones}} - {{solicitud.locaciones.locacion_name}}
               <address>
                 <strong>Contacto: {{contacto.user.first_name}} {{contacto.user.last_name}}</strong><br>
                 Dias de atención: {{contacto.dias_atencion}}<br>
                 Horario de atención: {{contacto.horario_inicio}} - {{contacto.horario_termino}} hrs.<br>
                 Email: {{contacto.user.email}} <br>
-                {% if  solicitud.locaciones.indicaciones_entrevista %}
-                  <a href="{{solicitud.locaciones.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
-                    <i class="far fa-file-pdf"></i> Instrucciones para la Entrevista.
-                  </a>
-                {% endif %}
-              </address>
-            </div>
-            <!-- /.col -->
-            <div class="col-sm-3 invoice-col">
-              Locacion:
-              <address>
-                <strong>{{solicitud.locaciones}} - {{solicitud.locaciones.locacion_name}}</strong><br>
                 Telefono: {{solicitud.locaciones.telefono}} <br>
-                Email: {{solicitud.locaciones.email}} <br>
                 Dirección: {{solicitud.locaciones.direccion}}<br>
                 <a href="https://www.google.es/maps?q={{solicitud.locaciones.latitud}}, {{solicitud.locaciones.longitud}}" class="btn btn-success btn-xs" target="_blank">
                   <i class="fas fa-map-marker-alt"></i> Ver en Google maps
                 </a>
+              </address>
+            </div>
+            <!-- /.col -->
+            <div class="col-sm-3 invoice-col">
+              Proveedor:
+              <address>
+                <strong>{{solicitud.proveedores}}</strong><br>
+                {{solicitud.proveedores.rfc}} <br>
+                {{solicitud.proveedores.razon_social}}
+                <!--Telefono: {{solicitud.locaciones.telefono}} <br>
+                Email: {{solicitud.locaciones.email}} <br>
+                Dirección: {{solicitud.locaciones.direccion}}<br>
+                <a href="https://www.google.es/maps?q={{solicitud.locaciones.latitud}}, {{solicitud.locaciones.longitud}}" class="btn btn-success btn-xs" target="_blank">
+                  <i class="fas fa-map-marker-alt"></i> Ver en Google maps
+                </a>-->
               </address>
             </div>
             <div class="col-sm-3 invoice-col">
@@ -68,8 +75,6 @@
               <address>
                 <strong>Motivo: {{estatus.motivos_rechazos}}  {% endif %}</strong>
               </address>
-
-
               {% if not estatus.estatus.estatus == "Cancelada" %} 
                   {% if request.user|has_group:"RH Gerentes" or request.user|has_group:"RH Admin" or request.user.is_superuser %}             
                     <button class="btn btn-info btn-sm btn-block" data-toggle="modal" data-target="#modal-lg" {% if not perms.solicitudes.change_solicitudesvacantes  %} disabled {% endif %} onclick="cargaModal('{% url 'EditSolicitudes' solicitud.id %}', 'myModal')" >
@@ -106,6 +111,7 @@
                     <thead>
                       <tr>
                         <th>Id</th>
+                        
                         <th>R.F.C.</th>
                         <th>Nombre</th>
                         <th>Apellidos</th>
@@ -113,12 +119,14 @@
                         <th>Telefono</th>
                         <th>Estatus</th>
                         <th>Acciones</th>
+                        <th>Usuario</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for candidato in candidatos %}
                         <tr>
                           <td>{{candidato.id}} </td>
+                          
                           <td>{{candidato.personas.rfc}} {% if candidato.tipo_candidato == "garantia" %}**{% endif %}</td>
                           <td>{{candidato.personas.nombre}}</td>
                           <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
@@ -128,7 +136,6 @@
                             <button class="btn btn-success btn-xs disabled" >
                               <i class="fas fa-thumbs-up"></i> {{candidato.estatus}} <br> ({{candidato.get_dias_estatus}} días)
                             </button>
-
                           </td>
                           <td>
                             {% if candidato.estatus == "Postulado" %}
@@ -230,6 +237,7 @@
                             {% endif %}
                             
                           </td>
+                          <td>{{candidato.user}}</td>
                         </tr>
                       {% endfor %}
                     </tbody>

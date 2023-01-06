@@ -59,7 +59,8 @@
                   <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
                   <div class="col-md-6 col-sm-6 ">
                     {{field}}
-                    {{field.errors}}
+                    <p class="text-danger">{{field.errors}}</p>
+                    
                   </div>
                 </div>
               {% elif  field.name == 'fecha_nacimiento' %}
@@ -72,7 +73,7 @@
                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                       </div>
                     </div>
-                    {{field.errors}}
+                    <p class="text-danger">{{field.errors}}</p>
                   </div>
                 </div>
               {% endif %}
@@ -92,7 +93,7 @@
               {% if field.name != 'user' and field.name != 'personas' and field.name != 'solicitudes_vacantes' %}
               <div class="form-group row justify-content-md-center">
                 <label class="col-form-label col-md-2 col-sm-2" for="{{ field.id_for_label }}">{{field.label}} <span class="required">*</span></label>
-                <div class="col-md-6 col-sm-6 ">
+                <div class="col-md-6 col-sm-6 text-danger">
                   {{field}}
                 </div>
                 {{field.errors}}

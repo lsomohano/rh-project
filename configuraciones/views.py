@@ -3,6 +3,7 @@ from .models import Ciudades, Contactos, Entidades, PuestosNominas, PuestosOpera
 from .forms import ContactosLocacionesCreation, PuestosLocacionesCreation, ciudadesCreate, entidadesCreate, puestosNominasCreate, puestosOperativosCreate, LocacionesCreate
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, F, Q
+from django.contrib import messages
 
 # Create your views here.
 @login_required(login_url="Log_In")
@@ -21,8 +22,16 @@ def createEntidades(request):
         formulario = entidadesCreate(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Entidades')
-    
+            messages.add_message(request=request,level=messages.SUCCESS, message="La entidad se registro correctamente.")
+           
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La entidad no se pudo registrar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('Entidades')   
+
     formulario = entidadesCreate()
        
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
@@ -31,13 +40,23 @@ def createEntidades(request):
 @login_required(login_url="Log_In")
 def editEntidades(request, id):
     """Vista que permite editar la información una entidad"""
+    
     titles = {"title_page":'Entidades',"sub_title_page":'Editar información de la entidad.'}
     entidades = Entidades.objects.get(id=id)
+    
     if request.method == "POST":
         formulario = entidadesCreate(request.POST or None, instance=entidades)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Entidades')
+            messages.add_message(request=request,level=messages.SUCCESS, message="La entidad se editar correctamente.")
+           
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La entidad no se pudo editar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('Entidades')
     else:
         formulario = entidadesCreate(instance=entidades)
 
@@ -58,7 +77,15 @@ def createCiudades(request):
         formulario = ciudadesCreate(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Ciudades')
+            messages.add_message(request=request,level=messages.SUCCESS, message="La ciudad se registro correctamente.")
+           
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La ciudad no se pudo registrar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('Ciudades')
     
     formulario = ciudadesCreate()
        
@@ -74,7 +101,15 @@ def editCiudades(request, id):
         formulario = ciudadesCreate(request.POST or None, instance=ciudad)
         if formulario.is_valid():
             formulario.save()
-            return redirect('Ciudades')
+            messages.add_message(request=request,level=messages.SUCCESS, message="La ciudad se edito correctamente.")
+           
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La ciudad no se pudo actualizar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('Entidades')
     else:
         formulario = ciudadesCreate(instance=ciudad)
 
@@ -97,8 +132,16 @@ def createPuestoNomina(request):
         formulario = puestosNominasCreate(request.POST or None)
         if formulario.is_valid():
             puesto = formulario.save()
+
+            messages.add_message(request=request,level=messages.SUCCESS, message="El puesto nómina se agregó correctamente.")
             return redirect('DetailsPuestos',id=puesto.id)
-    
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El puesto nómina no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            return redirect('Puestos')
+
     formulario = puestosNominasCreate()
        
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
@@ -113,7 +156,14 @@ def editPuestosNominas(request, id):
         formulario = puestosNominasCreate(request.POST or None, instance=puesto)
         if formulario.is_valid():
             formulario.save()
+            messages.add_message(request=request,level=messages.SUCCESS, message="El puesto nómina se actualizó correctamente.")
             return redirect('DetailsPuestos',id=id)
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El puesto nómina no se pudo actualizar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            return redirect('Puestos')
     else:
         formulario = puestosNominasCreate(instance=puesto)
 
@@ -126,6 +176,8 @@ def deletePuestosNominas(request, id):
     puesto = PuestosNominas.objects.get(id=id)
     puesto.activo='N'
     puesto.save()
+
+    messages.add_message(request=request,level=messages.WARNING, message="El puesto nómina se eliminó correctamente.")
 
     return redirect('Puestos')
 
@@ -152,8 +204,15 @@ def createPuestoOperativo(request,puestos_nominas_id):
         formulario = puestosOperativosCreate(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('DetailsPuestos',id=puestos_nominas_id)
-    
+            messages.add_message(request=request,level=messages.SUCCESS, message="El puesto operativo se creado con éxito.")
+            #return redirect('DetailsPuestos',id=puestos_nominas_id)
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El puesto operativo no se pudo crear.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+        
+        return redirect('DetailsPuestos',id=puestos_nominas_id)
     formulario = puestosOperativosCreate()
        
     return render(request,"configuraciones/create_po.html",{"titles":titles, "formulario":formulario,"puestos_nominas_id":puestos_nominas_id})
@@ -169,7 +228,16 @@ def editPuestosOperativos(request, id):
         if formulario.is_valid():
             puestos_nominas_id = formulario['puestos_nominas'].value()
             formulario.save()
-            return redirect('DetailsPuestos',id=puestos_nominas_id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="El puesto operativo se editó con éxito.")
+
+            #return redirect('DetailsPuestos',id=puestos_nominas_id)
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El contacto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+        return redirect('DetailsPuestos',id=formulario['puestos_nominas'].value())
     else:
         formulario = puestosOperativosCreate(instance=puesto)
 
@@ -183,6 +251,8 @@ def deletePuestosOperativos(request, id):
     puestos_nominas_id = puesto.puestos_nominas_id
     puesto.activo='N'
     puesto.save()
+
+    messages.add_message(request=request,level=messages.WARNING, message="El puesto operativo se eliminó con éxito.")
 
     return redirect('DetailsPuestos',id=puestos_nominas_id)
 
@@ -211,8 +281,18 @@ def createLocaciones(request):
         formulario = LocacionesCreate(request.POST or None, request.FILES)
         if formulario.is_valid():
             locacion = formulario.save()
+
+            messages.add_message(request=request,level=messages.SUCCESS, message="La locación se registró con éxito.")
+
             return redirect('DetailsLocaciones',id=locacion.id)
-    
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La locación no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+            return redirect('Locaciones')
+
     formulario = LocacionesCreate()
        
     return render(request,"configuraciones/create.html",{"titles":titles, "formulario":formulario})
@@ -227,7 +307,14 @@ def editLocaciones(request, id):
         formulario = LocacionesCreate(request.POST or None, request.FILES, instance=locacion)
         if formulario.is_valid():
             formulario.save()
-            return redirect('DetailsLocaciones',id=id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="La locación se registró con éxito.")
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="La locación no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsLocaciones',id=id)
     else:
         formulario = LocacionesCreate(instance=locacion)
 
@@ -248,6 +335,16 @@ def detailsLocaciones(request, id):
         "contactos":contactos, 
         "puestos":puestos})
 
+@login_required(login_url="Log_In")
+def deleteLocaciones(request, id):
+
+    locaciones = Locaciones.objects.get(id=id)
+    locaciones.activo='N'
+    locaciones.save()
+    messages.add_message(request=request,level=messages.WARNING, message="La locación se eliminó correctamente.")
+
+    return redirect('Locaciones')
+
 
 """ Modulo de contactos de las locaciones"""
 
@@ -258,7 +355,15 @@ def createContacto(request, locaciones_id):
         formulario = ContactosLocacionesCreation(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('DetailsLocaciones', id=locaciones_id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="El contacto se agregó correctamente.")
+            
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El contacto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsLocaciones', id=locaciones_id)
     
     formulario = ContactosLocacionesCreation()
        
@@ -273,9 +378,14 @@ def editContacto(request, id):
     if request.method == "POST":
         formulario = ContactosLocacionesCreation(request.POST or None, instance=contacto)
         if formulario.is_valid():
-            locaciones_id = formulario['locaciones'].value()
             formulario.save()
-            return redirect('DetailsLocaciones',id=locaciones_id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="El contacto se actualizó correctamente.")
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El contacto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+        return redirect('DetailsLocaciones',id=formulario['locaciones'].value())
     else:
         formulario = ContactosLocacionesCreation(instance=contacto)
 
@@ -289,8 +399,11 @@ def deleteContacto(request, id):
     locaciones_id = contacto.locaciones_id
     contacto.activo='N'
     contacto.save()
+    
+    messages.add_message(request=request,level=messages.WARNING, message="El contacto se eliminó correctamente.")
 
     return redirect('DetailsLocaciones',id=locaciones_id)
+
 
 """ Asignación de puestos a locaciones """
 
@@ -301,9 +414,17 @@ def createLocacinesPuestos(request, locaciones_id):
         formulario = PuestosLocacionesCreation(request.POST or None)
         if formulario.is_valid():
             formulario.save()
-            return redirect('DetailsLocaciones', id=locaciones_id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="El puesto se agregó correctamente.")
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El puesto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsLocaciones', id=locaciones_id)
     
     formulario = PuestosLocacionesCreation()
+
     return render(request,"configuraciones/create_contactos.html",{"titles":titles, "formulario":formulario,"locaciones_id":locaciones_id})
 
 
@@ -315,10 +436,29 @@ def editLocacinesPuestos(request, id):
     if request.method == "POST":
         formulario = PuestosLocacionesCreation(request.POST or None, instance=puesto)
         if formulario.is_valid():
-            locaciones_id = formulario['locaciones'].value()
             formulario.save()
-            return redirect('DetailsLocaciones',id=locaciones_id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="El puesto se actualizó correctamente.")
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El puesto no se ha podido agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsLocaciones',id=formulario['locaciones'].value())
+
     else:
         formulario = PuestosLocacionesCreation(instance=puesto)
 
     return render(request,"configuraciones/edit_contactos.html",{"titles":titles, "formulario":formulario, "id":id})
+
+@login_required(login_url="Log_In")
+def deletePuesto(request, id):
+
+    puesto = LocacionesPuestos.objects.get(id=id)
+    locaciones_id = puesto.locaciones_id
+    puesto.activo='N'
+    puesto.save()
+    
+    messages.add_message(request=request,level=messages.WARNING, message="El puesto se eliminó correctamente.")
+
+    return redirect('DetailsLocaciones',id=locaciones_id)

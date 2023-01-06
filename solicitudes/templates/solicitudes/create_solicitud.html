@@ -42,6 +42,7 @@
   <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
   <script>
     $(document).ready(function() {
+
       var id_locaciones = $('#id_locaciones').val();
       var id_puestos_operativos = $('#id_puestos_operativos').val();
       var id_cantidad = $('#id_cantidad').val();
@@ -52,7 +53,6 @@
             url:  "/solicitudes/staff_autorizado/"+ id_locaciones +"/" + id_puestos_operativos,
             dataType: 'json',
             success: function(data) {
-                alert(data[0])
                 if (typeof data[0]!== 'undefined' && id_cantidad <= data[0]["fields"]["staf_autorizado"]){
                   $('#id_cantidad').attr({'max':data[0]["fields"]["staf_autorizado"]});
                 }else{
@@ -72,13 +72,12 @@
           url:  "/solicitudes/staff_autorizado/"+ id_locaciones +"/" + id_puestos_operativos  ,
           dataType: 'json',
           success: function(data) {
-              //alert
-              if (typeof data[0]!== 'undefined' && data[0]["fields"]["staf_autorizado"] > 0 ){
+              if (typeof data[0] !== 'undefined' && data[0]["fields"]["staf_autorizado"] > 0 ){
                 
                 $('#id_cantidad').attr({'max':data[0]["fields"]["staf_autorizado"]}).val(data[0]["fields"]["staf_autorizado"]).removeAttr('readonly');
               }else{
                 $('#id_cantidad').attr({'max':0,'readonly':'readonly'}).val("");
-                alert("La locación no cuenta con posiciones autorizadas para el puesto.")
+                toastr.info("La locación no cuenta con posiciones autorizadas para el puesto.!");
               }
           }
       });

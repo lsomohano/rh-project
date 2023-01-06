@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from .models import Facturas, FacturasCandidatos
 from solicitudes.models import Candidatos, CandidatosEstatus, Estatus
 from .forms import FacturacionForm, FacturacionPrefacturaForm, FacturacionfacturaForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -32,8 +32,16 @@ def createFacturacion(request):
         formulario = FacturacionForm(request.POST or None)
         if formulario.is_valid():
             facturacion = formulario.save()
+            messages.add_message(request=request,level=messages.SUCCESS, message="El periodo de facturación se creó correctamente.")
             return redirect('DetailsFacturacion', id=facturacion.id)
-    
+        else:
+            messages.add_message(request=request,level=messages.ERROR, message="El periodo de facturación no se pudo crear.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+            
+            return redirect('Facturacion')
+
     formulario = FacturacionForm()
 
     return render(request,"facturacion/create_facturacion.html",{"titles":titles, "formulario":formulario})
@@ -100,8 +108,13 @@ def addCandidatos(request,proveedores_id,facturas_id,fecha_ini,fecha_fin):
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato, estatus_id=estatus.id)
                 ce.save()
 
-            return redirect('DetailsFacturacion', id=facturas_id)
-    
+            messages.add_message(request=request,level=messages.SUCCESS, message="Los candidatos se agregaron correctamente al proceso de facturación.")
+            
+        else:
+            messages.add_message(request=request,level=messages.WARNING, message="No se envió ningún candidato de la lista.")
+
+        return redirect('DetailsFacturacion', id=facturas_id)
+
     candidatos = Candidatos.objects.raw(""" SELECT c.id, 
         p.rfc, p.nombre, p.apellido_paterno, p.apellido_materno, 
         ce.created AS estatus_fecha, ec.estatus, 
@@ -136,8 +149,15 @@ def addPrefactura(request,id):
         formulario = FacturacionPrefacturaForm(request.POST, request.FILES, instance=facturacion)
         if formulario.is_valid():
             facturacion = formulario.save()
-            return redirect('DetailsFacturacion', id=facturacion.id)
-    
+            messages.add_message(request=request,level=messages.SUCCESS, message="La pre factura se agregó correctamente.")
+        else:
+            messages.add_message(request=request,level=messages.WARNING, message="La pre factura no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsFacturacion', id=id)
+
     formulario = FacturacionPrefacturaForm(instance=facturacion)
 
     return render(request,"facturacion/create_facturacion.html",{"titles":titles, "formulario":formulario})
@@ -162,7 +182,14 @@ def addFactura(request,id):
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.candidatos_id, estatus_id=estatus.id)
                 ce.save()
 
-            return redirect('DetailsFacturacion', id=facturacion.id)
+            messages.add_message(request=request,level=messages.SUCCESS, message="La factura se agregó correctamente.")
+        else:
+            messages.add_message(request=request,level=messages.WARNING, message="La factura no se pudo agregar.")
+            for field, items in formulario.errors.items():
+                for item in items:
+                    messages.add_message(request=request,level=messages.ERROR, message="{}: {}".format(field, item))
+
+        return redirect('DetailsFacturacion', id=id)
     
     formulario = FacturacionfacturaForm(instance=facturacion)
 
@@ -175,5 +202,5 @@ def paymentFactura(request, id):
     factura = Facturas.objects.get(id=id)
     factura.pagado='Y'
     factura.save()
-
+    messages.add_message(request=request,level=messages.SUCCESS, message="La factura fue pagada.")
     return redirect('DetailsFacturacion', id=factura.id)
