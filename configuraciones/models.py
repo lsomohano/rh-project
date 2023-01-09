@@ -55,17 +55,17 @@ class zonas_ciudades(Enum):
 
 
 class Locaciones(models.Model):
-    locacion = models.CharField(max_length=6)
-    locacion_name = models.CharField(max_length=100)
-    direccion = models.TextField()
-    codigo_postal = models.CharField(max_length=5)
-    telefono = models.CharField(max_length=10)
+    locacion = models.CharField(max_length=6, verbose_name='Locación')
+    locacion_name = models.CharField(max_length=100, verbose_name='Nombre de locación')
+    direccion = models.TextField(verbose_name='Dirección',)
+    codigo_postal = models.CharField(max_length=5, verbose_name='Código postal')
+    telefono = models.CharField(max_length=10, verbose_name='Teléfono')
     email = models.EmailField()
     latitud = models.CharField(max_length=15)
     longitud = models.CharField(max_length=15)
     horario_apertura = models.TimeField()
     horario_cierre = models.TimeField()
-    dias_operativos = models.CharField(max_length=50)
+    dias_operativos = models.CharField(max_length=50, verbose_name='Días operativos')
     ciudades = models.ForeignKey(Ciudades, on_delete=models.CASCADE, verbose_name='Ciudad')
     zona_ciudad = models.CharField(max_length=10, choices=[(tag.name, tag.value) for tag in zonas_ciudades], verbose_name='Zona',default='aeropuerto')
     indicaciones_entrevista = models.FileField(upload_to='locaciones/indicaciones/',null=True,blank=True)
@@ -86,7 +86,7 @@ class Locaciones(models.Model):
 class Contactos(models.Model):
     horario_inicio = models.TimeField()
     horario_termino = models.TimeField()
-    dias_atencion = models.CharField(max_length=50)
+    dias_atencion = models.CharField(max_length=50, verbose_name='Días atención')
     locaciones = models.ForeignKey(Locaciones, on_delete=models.CASCADE)
     user=models.ForeignKey(User, on_delete=models.CASCADE)
     activo = models.CharField(max_length=5, choices=[(tag.name, tag.value) for tag in activo], default='Y')

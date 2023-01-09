@@ -204,7 +204,7 @@ class Entrevistas2Form(forms.ModelForm):
         model = Entrevistas
         fields = ['asistio','fecha_entrevista','fecha_programada','hora_programada','indicaciones','candidatos']
         labels = {
-            "asistio":"¿Asistio?"
+            "asistio":"¿Asistió?"
         }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -235,7 +235,7 @@ class Entrevistas2Form(forms.ModelForm):
         })
         self.fields['asistio'].widget.attrs.update({
             'class':'form-control',
-            'placeholder':'Asistio',
+            'placeholder':'Asistió',
             'required':'required'
         })
 

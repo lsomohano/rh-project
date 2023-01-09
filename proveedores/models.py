@@ -17,11 +17,11 @@ class tipos_contactos(Enum):
 
 class Proveedores(models.Model):
     proveedor = models.CharField(max_length=70)
-    rfc = models.CharField(max_length=13)
-    razon_social = models.CharField(max_length=200, null=True, blank=True)
-    direccion = models.TextField(null=True, blank=True)
-    codigo_postal = models.CharField(max_length=5, null=True, blank=True)
-    telefono = models.CharField(max_length=10, null=True, blank=True)
+    rfc = models.CharField(max_length=13, verbose_name='RFC')
+    razon_social = models.CharField(max_length=200, null=True, blank=True,verbose_name='Razón Social')
+    direccion = models.TextField(null=True, blank=True, verbose_name='Dirección')
+    codigo_postal = models.CharField(max_length=5, null=True, blank=True, verbose_name='Código postal')
+    telefono = models.CharField(max_length=10, null=True, blank=True, verbose_name='Teléfono')
     email = models.EmailField(null=True, blank=True)
     activo = models.CharField(max_length=1, choices=[(tag.name, tag.value) for tag in activo], default='Y')
     created = models.DateTimeField(auto_now_add=True)

@@ -601,7 +601,7 @@ def createContratacion(request, candidatos_id):
                 estatus = Estatus.objects.get(tipos='candidato', estatus='Contratación')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
-                messages.add_message(request=request,level=messages.SUCCESS, message="Se agendó el candidato a firmar contrato.")
+                messages.add_message(request=request,level=messages.SUCCESS, message="Se agendó al candidato para firmar contrato.")
             
         else:
             messages.add_message(request=request,level=messages.ERROR, message="No se pudo agendar la contratación, inténtelo de nuevo.")
@@ -688,7 +688,7 @@ WHERE d.activo='Y' """,(pk,))
         candidato = self.model.objects.get(id=candidato_id)
         persona = self.second_model.objects.get(id=candidato.personas_id)
         entrevista = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='entrevista'), (Q(asistio__isnull='True') | Q(asistio='Y')))
-        contratacion = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='contratacion'), (Q(asistio__isnull='True') | Q(asistio='Y')))
+        contratacion = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='contratacion'), Q(asistio__isnull='True'))
 
         form = self.form_class(request.POST, request.FILES, instance=candidato)
         form2 = self.second_form_class(request.POST, request.FILES, instance=persona)

@@ -120,14 +120,14 @@ def editCiudades(request, id):
 
 @login_required(login_url="Log_In")
 def puestosView(request):
-    titles = {"title_page":'Puestos de Nomina',"sub_title_page":'Gestión de los puestos de trabajo.'}
+    titles = {"title_page":'Puestos de Nómina',"sub_title_page":'Gestión de los puestos de trabajo.'}
     puestos = PuestosNominas.objects.filter(activo='Y')
     return render(request,"configuraciones/puestos.html",{"titles":titles, "puestos":puestos})
 
 
 @login_required(login_url="Log_In")
 def createPuestoNomina(request):
-    titles = {"title_page":'Puestos Nomina',"sub_title_page":'Nuevo puesto nomina.'}
+    titles = {"title_page":'Puestos Nómina',"sub_title_page":'Nuevo puesto nomina.'}
     if request.method == "POST":
         formulario = puestosNominasCreate(request.POST or None)
         if formulario.is_valid():
@@ -150,7 +150,7 @@ def createPuestoNomina(request):
 @login_required(login_url="Log_In")
 def editPuestosNominas(request, id):
 
-    titles = {"title_page":'Puestos nominas',"sub_title_page":'Editar información del puesto.'}
+    titles = {"title_page":'Puestos nóminas',"sub_title_page":'Editar información del puesto.'}
     puesto = PuestosNominas.objects.get(id=id)
     if request.method == "POST":
         formulario = puestosNominasCreate(request.POST or None, instance=puesto)
@@ -185,7 +185,7 @@ def deletePuestosNominas(request, id):
 @login_required(login_url="Log_In")
 def detailsPuestos(request, id):
     
-    titles = {"title_page":'Puestos nominas',"sub_title_page":'Información del proveedor.'}
+    titles = {"title_page":'Puestos nóminas',"sub_title_page":'Información del proveedor.'}
     puesto = PuestosNominas.objects.get(id=id)
     puestos_operativos = PuestosOperativos.objects.filter(puestos_nominas_id=id, activo='Y')
 
