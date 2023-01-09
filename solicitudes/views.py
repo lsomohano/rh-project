@@ -688,7 +688,7 @@ WHERE d.activo='Y' """,(pk,))
         candidato = self.model.objects.get(id=candidato_id)
         persona = self.second_model.objects.get(id=candidato.personas_id)
         entrevista = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='entrevista'), (Q(asistio__isnull='True') | Q(asistio='Y')))
-        contratacion = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='contratacion'), Q(asistio__isnull='True'))
+        contratacion = self.third_model.objects.get(Q(candidatos_id=candidato.id), Q(tipo_evento='contratacion'), (Q(asistio__isnull='True') | Q(asistio='Y')))
 
         form = self.form_class(request.POST, request.FILES, instance=candidato)
         form2 = self.second_form_class(request.POST, request.FILES, instance=persona)
