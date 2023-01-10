@@ -67,7 +67,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary" id="guardar_entrevista" onclick="clickEnviar(this)">Guardar</button>
+        <button type="submit" class="btn btn-primary enviar" id="guardar_entrevista" onclick="clickEnviar(this)">Guardar</button>
       </div>
     </div>
     </form>
@@ -83,5 +83,12 @@
             $('#form_entrevistas input, select, textarea').attr('disabled', 'disabled');
             $('#guardar_entrevista').attr('disabled', 'disabled');
         }
+
+        $(".enviar").click(function(event){
+            event.preventDefault();
+            $(".enviar").prop('disabled',true)
+            $('.form-horizontal').submit();
+            return false;
+        })
     })
   </script>

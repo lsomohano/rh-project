@@ -602,7 +602,6 @@ def createContratacion(request, candidatos_id):
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
                 ce.save()
                 messages.add_message(request=request,level=messages.SUCCESS, message="Se agendó al candidato para firmar contrato.")
-            
         else:
             messages.add_message(request=request,level=messages.ERROR, message="No se pudo agendar la contratación, inténtelo de nuevo.")
             for field, items in formulario.errors.items():
@@ -711,10 +710,10 @@ WHERE d.activo='Y' """,(pk,))
                 messages.add_message(request=request,level=messages.SUCCESS, message="Se confirmó la contratación del candidato.")
             else:
                 CandidatosEstatus.objects.filter(candidatos_id=candidato.id).update(activo='N')
-                CandidatosEstatus.objects.filter(candidatos_id=candidato.id, estatus='Entrevistado').update(activo='Y')
-                """estatus = Estatus.objects.get(tipos='candidato', estatus='Postulado')
+                estatus = Estatus.objects.get(tipos='candidato', estatus='Entrevistado')
                 ce = CandidatosEstatus.objects.create(candidatos_id=candidato.id, estatus_id=estatus.id)
-                ce.save()"""
+                ce.save()
+                
                 messages.add_message(request=request,level=messages.WARNING, message="El candidato no fue contratado.")
                 
             return redirect('DetailsSolicitudes',id=candidato.solicitudes_vacantes_id)

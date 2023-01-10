@@ -25,9 +25,9 @@
                 <strong>Cantidad : {{solicitud.cantidad}} ({{solicitud.get_candidatos_contratados}} contratados)</strong><br>
                 Suledo : $ {{solicitud.sueldos}}<br>
                 Pago: {{solicitud.periodo_pago}}<br>
-                Comiciones: {{solicitud.comiciones}}<br>
-                Bonos: {{solicitud.bono}}<br>
-                Bonos: {{solicitud.garantia}}<br>  
+                Comiciones: {% if solicitud.comiciones == 'Y' %} Si {% else %} No {% endif %} <br>
+                Bonos: {% if solicitud.bono == 'Y' %} Si {% else %} No {% endif %} <br>
+                Garantía: {% if solicitud.garantia == 'Y' %} Si {% else %} No {% endif %} <br>  
                 {% if  solicitud.locaciones.indicaciones_entrevista %}
                   <a href="{{solicitud.locaciones.indicaciones_entrevista.url}}" class="btn btn-secondary btn-xs" target="_blank">
                     <i class="far fa-file-pdf"></i> Instrucciones para la Entrevista.
@@ -111,10 +111,10 @@
                     <thead>
                       <tr>
                         <th>Id</th>
-                        
+                        <th>Tipo</th>
                         <th>R.F.C.</th>
-                        <th>Nombre</th>
-                        <th>Apellidos</th>
+                        <th>Nombre Candidato</th>
+                        <!--<th>Apellidos</th>-->
                         <th>Email</th>
                         <th>Teléfono</th>
                         <th>Estatus</th>
@@ -126,10 +126,10 @@
                       {% for candidato in candidatos %}
                         <tr>
                           <td>{{candidato.id}} </td>
-                          
+                          <td>{{candidato.tipo_candidato}}</td>
                           <td>{{candidato.personas.rfc}} {% if candidato.tipo_candidato == "garantia" %}**{% endif %}</td>
-                          <td>{{candidato.personas.nombre}}</td>
-                          <td>{{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
+                          <td>{{candidato.personas.nombre}} {{candidato.personas.apellido_paterno}} {{candidato.personas.apellido_materno }}</td>
+                          <!--<td></td>-->
                           <td>{{candidato.personas.email}}</td>
                           <td>{{candidato.personas.telefono}}</td>
                           <td>
@@ -263,7 +263,7 @@
 <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
   $(document).ready(function() {
-    cargaDataTablet("example1")
+    cargaDataTablet("example1", 0, 'desc',[6,7,8])
   });  
 
   $(function () {

@@ -171,7 +171,7 @@
               <i class="fas fa-times"></i> Cancelar
             </a>
             <a href="#" class="btn btn-info btn-sm" onclick="stepper.previous()"><i class="fas fa-step-backward"></i> Previous</a>
-            <button type="submit" class="btn btn-primary btn-sm pull-right">
+            <button type="submit" class="btn btn-primary btn-sm pull-right enviar">
               <i class="fas fa-save"></i> Guardar</button>
             </div>
           </div>
@@ -241,6 +241,14 @@
     }
   });
 
+  $(document).ready(function() {
+    $(".enviar").click(function(event){
+        event.preventDefault();
+        $(".enviar").prop('disabled',true)
+        $('.form-horizontal').submit();
+        return false;
+    })
+  })
 </script>
 
 {% endblock content %}

@@ -18,7 +18,7 @@ function cargaModal(metodo, div){
  * 
  * 
  */
-function cargaDataTablet(div){
+function cargaDataTablet(div, colum=0, orden='desc', nofil=[0]){
     $('#'+div).DataTable({
         "paging": true,
         "lengthChange": false,
@@ -27,6 +27,11 @@ function cargaDataTablet(div){
         "info": true,
         "autoWidth": false,
         "responsive": true,
+        "order": [[colum, orden]],
+        'columnDefs': [{ 
+            'orderable': false, 
+            'targets': nofil 
+        }],
         "dom": "<'row'<'col-md-6 col-xs-12'B><'col-md-6 col-xs-12'f>>" +
             /*"<'row'<'col-lg' B > >"+*/
             "<'row'<'col-md-12'tr>>" +

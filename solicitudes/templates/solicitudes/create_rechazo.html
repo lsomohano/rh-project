@@ -29,7 +29,7 @@
       </div>
       <div class="modal-footer justify-content-between">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-danger rechazar" data-title="Rechazar candidato" data-content="Esta rechazando un candidato, ¿Desea continuar? ">Aceptar</button>
+        <button type="submit" class="btn btn-danger rechazar enviar" data-title="Rechazar candidato" data-content="Esta rechazando un candidato, ¿Desea continuar? ">Aceptar</button>
       </div>
     </form>
   </div>
@@ -43,4 +43,13 @@
         closeIconClass: 'fas fa-times',
       });
     });
+
+    $(document).ready(function() {
+      $(".enviar").click(function(event){
+          event.preventDefault();
+          $(".enviar").prop('disabled',true)
+          $('.form-horizontal').submit();
+          return false;
+      })
+    })
   </script>

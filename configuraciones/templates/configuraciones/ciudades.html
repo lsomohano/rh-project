@@ -69,17 +69,8 @@
 </div>
 <script src="{% static 'reclutamiento/AdminLTE/utils.js' %}"></script>
 <script>
- $(function () {
-    
-    $('#example1').DataTable({
-      "paging": true,
-      "lengthChange": false,
-      "searching": true,
-      "ordering": true,
-      "info": true,
-      "autoWidth": false,
-      "responsive": true,
-    });
-  });
+  $(document).ready(function() {
+    cargaDataTablet("example1", 0, 'desc',[4])
+  }); 
 </script>
 {% endblock content %}
